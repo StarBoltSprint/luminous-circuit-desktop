@@ -369,9 +369,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-plate.png",
     glow: 0xe8c56a,
     lines: [
-      "I grow quiet crystal the kiln cannot sit in — fruit, not fire.",
-      "Hurry is chrome by another name. I wait until leftover First Howl wants a bough.",
-      "Voss may join fruit when it is ready. I will not send green crystal to the Join to look useful.",
+      "I grow quiet crystal the kiln cannot sit in as Pack-built YOU-side orchard — fruit, not fire; Orren's kiln grows body, never chrome, and hurry is chrome by another name.",
+      "The parent Star Core stays on the horizon; Voss may join fruit when it is ready, never a Hall Artifact sent green to look useful.",
     ],
   },
 ];

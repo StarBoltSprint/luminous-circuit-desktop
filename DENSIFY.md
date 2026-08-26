@@ -106,7 +106,7 @@ No skip-if-done. No “already exists”. No two desks on one file.
 - Watch thoughts: span / terrace / plaza / vein / **gate held** / **Seln canal tended never bottled** / **Orren kiln body never chrome**
 - Log prefixes: hail, walk home, span, terrace, plaza, wild vein, chorus, overlook, orchard, join, **gate, archive, hub breath, canal tend, kiln body, soft gate**
 - Buildings extras: lensing, cascade, weirway, river, workshop, rest, **gate stele, shrine pad, plaza lens, rest grove, shrine font, gate veil**
-- Lore 1–2 sentences: Lumen, Kesh, Rhoa, Syl, **Kael, Iri, Veyra, Lumen/Rhoa dual hail-ring, Tal/Mira span-rest, Kael/Veyra gate-breath**
+- Lore 1–2 sentences: Lumen, Kesh, Rhoa, Syl, **Kael, Iri, Veyra, Lumen/Rhoa dual hail-ring, Tal/Mira span-rest, Kael/Veyra gate-breath, Syl/Orren fruit-kiln**
 - SCENE_LINE: lensing Nesh, watch Aure, river Seln never bottled, kilnwork Orren, **gate Kael, orchard Syl, plaza Nesh, veilward Kael**
 - Mix talk 261 / grow 82 / foot 60 · Economy many dens / city rising / canal full
 - Save away beats min 1, write clamp, visited/talked slice 48
@@ -121,6 +121,7 @@ No skip-if-done. No “already exists”. No two desks on one file.
 
 ## Log
 
+- 2026-08-26 15:40 CEST — Desktop wave 11: graphism dens — Hub→Bridge spanposts, Hub→Terraces terraceposts, Hub→Veins veinstones, Hub→Beacon hailposts, Hub→Orchard orchardposts. Syl/Orren dual-claim lore. Star Core untouched.
 - 2026-08-26 15:27 CEST — Desktop wave 10: Kael gate walk + site, Kael/Veyra dual-claim lore, gate veil, soft-gate underlay, Soft gate log, veilward Kael SCENE_LINE, grow 147, gate soft ticker, Howl violet pip, kael shapeFits, Hub→Gates gateposts.
 - 2026-08-26 14:55 CEST — Desktop wave 9: Orren kiln walk + site, Tal/Mira dual-claim lore, shrine font, kiln heat underlay, Kiln body log, kilnwork SCENE_LINE, talk 98, kiln body ticker, Howl cyan pip, seln toast, away Orren kiln, Hub→Canals canalposts.
 - 2026-08-26 14:50 CEST — Desktop wave 8: Seln canal walk + site, Lumen/Rhoa dual-claim lore, rest grove, canal charge underlay, Canal tend log, river SCENE_LINE never bottled, hail 82, leftover Howl ticker, Hub→Foundry foundrylamps.
