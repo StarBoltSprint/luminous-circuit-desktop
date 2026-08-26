@@ -7,7 +7,9 @@ release
 !.env.example
 *.local
 .DS_Store
-.grok
+.grok/*
+!.grok/agents/
+!.grok/agents/**
 artifacts
 attachments
 screenshots/*.png

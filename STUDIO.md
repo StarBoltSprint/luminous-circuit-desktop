@@ -36,7 +36,11 @@ Not official xAI product. Not Msg 1. Not a node SKU. Crystal never chrome.
 
 Locked unless Director says: `engine.ts` loop, `world.ts` bodies (except one import), `CircuitApp.tsx` (except Director).
 
-Perf desk may edit `engine.ts` for renderer/loop only. Star Core art is the Hall `star-core.jpg` (cyan lightning globe, gold orbits) — parent still sits at STAR_CORE. Do not move it.
+Perf desk may edit `engine.ts` for renderer/loop only.
+
+**Star Core:** parent still sits at `STAR_CORE`. Do not move or rename it. **Look is iterable** — `star-core` and `graphism` desks may improve the 3D globe, lightning, gold orbits, and meridians.
+
+1.0.10 types live in `.grok/agents/`. Spawn `star-core`, `graphism`, `lore-keeper`, `buildings`, `environment`, `living`, `perf`, `review`, `grok-mouth`.
 
 Haptics stay **off**.
 

@@ -8,17 +8,49 @@
 import * as THREE from "three";
 import { STAR_CORE, SKY_R } from "./atmos";
 
-function addBolt(hex: number, opacity: number) {
-  return new THREE.MeshBasicMaterial({
-    color: hex,
+const OP_CAP = 0.16;
+
+function pulseBoltMat(hex: number, phase: number) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uPhase: { value: phase },
+      uColor: { value: new THREE.Color(hex) },
+    },
     transparent: true,
-    opacity,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     depthTest: true,
     fog: false,
     side: THREE.DoubleSide,
     toneMapped: false,
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uTime;
+      uniform float uPhase;
+      uniform vec3 uColor;
+      varying vec2 vUv;
+      void main() {
+        float along = vUv.x;
+        float travel = fract(along * 1.15 - uTime * 0.18 + uPhase);
+        float head = smoothstep(0.82, 0.92, travel) * (1.0 - smoothstep(0.94, 1.0, travel));
+        float tail = pow(clamp((travel - 0.48) / 0.34, 0.0, 1.0), 1.8)
+          * (1.0 - smoothstep(0.82, 0.92, travel));
+        float tube = 1.0 - abs(vUv.y * 2.0 - 1.0);
+        float core = (head * 1.15 + tail * 0.22) * pow(tube, 1.4);
+        float breath = 0.78 + 0.22 * sin(uTime * 0.7 + uPhase * 6.2832);
+        float a = clamp(core * breath, 0.0, ${OP_CAP.toFixed(2)});
+        vec3 white = vec3(0.91, 1.0, 0.973);
+        vec3 col = mix(uColor, white, head);
+        gl_FragColor = vec4(col, a);
+      }
+    `,
   });
 }
 
@@ -34,11 +66,11 @@ export function growCorePulse(
   root.name = "core-pulse";
   group.add(root);
 
-  const n = coarse ? 4 : 8;
+  const n = coarse ? 3 : 6;
   const R = Math.hypot(STAR_CORE.x, STAR_CORE.y, STAR_CORE.z) || SKY_R * 0.78;
-  const tube = coarse ? 9 : 14;
-  const segs = coarse ? 48 : 96;
-  const arc = Math.PI * (coarse ? 0.48 : 0.62);
+  const tube = coarse ? 5 : 7;
+  const segs = coarse ? 40 : 72;
+  const arc = Math.PI * (coarse ? 0.22 : 0.3);
 
   const core = new THREE.Vector3(STAR_CORE.x, STAR_CORE.y, STAR_CORE.z).normalize();
   const up = Math.abs(core.y) < 0.92 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
@@ -48,9 +80,8 @@ export function growCorePulse(
 
   const geo = new THREE.TorusGeometry(R, tube, 8, segs, arc);
   const holders: THREE.Group[] = [];
-  const mats: THREE.MeshBasicMaterial[] = [];
+  const mats: THREE.ShaderMaterial[] = [];
   const spins: number[] = [];
-  const bases: number[] = [];
 
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI;
@@ -58,9 +89,8 @@ export function growCorePulse(
     const hold = new THREE.Group();
     hold.quaternion.setFromUnitVectors(zAxis, normal);
     hold.frustumCulled = false;
-    const gold = i % 3 === 0;
-    const op = gold ? 0.03 : 0.038;
-    const mat = addBolt(gold ? 0xe8c46a : i % 2 ? 0x7ef0ff : 0x2ee6ff, op);
+    const phase = i / n;
+    const mat = pulseBoltMat(i % 2 ? 0x7ef0ff : 0x2ee6ff, phase);
     const mesh = new THREE.Mesh(geo, mat);
     mesh.rotation.z = (i / n) * Math.PI * 2;
     mesh.castShadow = false;
@@ -72,20 +102,18 @@ export function growCorePulse(
     root.add(hold);
     holders.push(hold);
     mats.push(mat);
-    spins.push((i % 2 ? 1 : -1) * (0.055 + (i % 5) * 0.008));
-    bases.push(op);
+    spins.push((i % 2 ? 1 : -1) * (0.07 + (i % 5) * 0.012));
   }
 
   if (coarse) return { tick() {} };
 
   return {
     tick(t: number) {
-      const breath = 0.62 + 0.38 * Math.sin(t * 0.7);
       for (let i = 0; i < holders.length; i++) {
         const hold = holders[i]!;
         const mesh = hold.children[0] as THREE.Mesh;
         mesh.rotation.z = t * spins[i]!;
-        mats[i]!.opacity = (bases[i] ?? 0.05) * breath;
+        mats[i]!.uniforms.uTime.value = t;
       }
     },
   };

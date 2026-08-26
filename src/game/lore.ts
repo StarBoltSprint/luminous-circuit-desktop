@@ -24,10 +24,10 @@ export type District = {
 
 /** In-game frame. Not a tweet. Not Msg 1. Not a node seal. */
 export const BOLTVERSE_FRAME = [
-  "The Star Core is parent on the horizon. The Circuit is leftover First Howl given streets.",
+  "The Star Core is parent — a rotating cyan-lightning globe on the west horizon. Keepers do not drag it. The Circuit is leftover First Howl given streets.",
   "Origin tether and YOU-side densification walk the same city. Neither bank swallows the other.",
   "Thunderwolf Citadel keeps the Hall. Howling Crucible howled first. We do not run either.",
-  "Charge is tended, never bottled. Crystal grows from Foundry, never chrome. Soft gates. First visit always works.",
+  "Charge is tended, never bottled. Leftover First Howl is seen as meridians around the world — Charge is seen, not stored. Crystal grows from Foundry, never chrome. Soft gates. First visit always works.",
   "$BOLT is outer spark — witness Howl only. No deposit. No coin in this city.",
 ];
 
@@ -61,7 +61,7 @@ export const DISTRICTS: District[] = [
   {
     id: "zone-canal",
     label: "Charge Canals",
-    tag: "Leftover First Howl, tended not bottled",
+    tag: "Leftover First Howl, seen not stored",
     x: -620,
     z: 96,
     kind: "canal",
@@ -69,7 +69,7 @@ export const DISTRICTS: District[] = [
     keeper: "seln",
     duty: "Tend Charge Voss can join",
     purpose:
-      "Seln's civic post: leftover First Howl into Charge that Voss walks to Orren's kiln. The ward exists so leftover love keeps flowing — tended, never bottled, gold and cyan the same river. The empty verge toward Overlook aims the banks at the parent; they do not store it. The verge toward Foundry carries Charge as kiln body, still unbottled; the verge toward Terraces lets it sit; the verge toward Gates leaves it uncounted.",
+      "Seln's civic post: leftover First Howl into Charge that Voss walks to Orren's kiln. The ward exists so leftover love keeps flowing — tended, never bottled, gold and cyan the same river. Charge is seen, not stored. The empty verge toward Overlook aims the banks at the parent globe on the west horizon; meridians around the world are leftover Howl seen, not a bottle on the bank. The verge toward Foundry carries Charge as kiln body, still unbottled; the verge toward Terraces lets it sit; the verge toward Gates leaves it uncounted.",
   },
   {
     id: "zone-foundry",
@@ -108,20 +108,20 @@ export const DISTRICTS: District[] = [
     keeper: "iri",
     duty: "Name what already stood true",
     purpose:
-      "Iri's civic post: leftover light names what already stood, so Aure's parent on the horizon is never decoration. Year 0 became this city; Hall scripture stays in the Hall. The empty verge toward Overlook names the parent without moving it; the verge toward Join names the paper fill — $BOLT witnesses, never deposits; the verge toward Foundry names kiln body that already stood.",
+      "Iri's civic post: leftover light names what already stood, so Aure's parent — a rotating cyan-lightning globe on the west horizon — is never decoration. Year 0 became this city; Hall scripture stays in the Hall. Leftover First Howl is seen as meridians around the world; Charge is seen, not stored. The empty verge toward Overlook names the parent without dragging it; the verge toward Join names the paper fill — $BOLT witnesses, never deposits; the verge toward Foundry names kiln body that already stood.",
   },
   {
     id: "zone-overlook",
     label: "Star-core Overlook",
-    tag: "Parent still sits on the horizon",
+    tag: "Parent globe on the west horizon. Keepers do not drag it.",
     x: -880,
     z: 220,
     kind: "overlook",
     radius: 140,
     keeper: "aure",
-    duty: "Aim the city. Do not move the parent",
+    duty: "Aim the city. Do not drag the parent",
     purpose:
-      "Aure's civic post: keep the Circuit aimed at the Star Core. Aim is a building — watch the parent, do not move it, do not rename it. The empty verge toward Join does not price the parent in paper; the verge toward Foundry keeps kiln body looking up; the verge toward Beacon hails those still landing without moving the horizon. The Core is not furniture and not a throne.",
+      "Aure's civic post: keep the Circuit aimed at the Star Core — a rotating cyan-lightning globe on the west horizon. Aim is a building — watch the parent, do not drag it, do not rename it. Leftover First Howl is seen as meridians around the world; Charge is seen, not stored. The empty verge toward Join does not price the parent in paper; the verge toward Foundry keeps kiln body looking up; the verge toward Beacon hails those still landing without moving the horizon. The Core is not furniture and not a throne.",
   },
   {
     id: "zone-market",
@@ -227,7 +227,7 @@ export const CITIZENS: CitizenMind[] = [
     glow: 0x7ef0ff,
     lines: [
       "I tend leftover First Howl into Charge as Pack-built YOU-side banks — gold and cyan the same river walking to Orren's kiln, sitting at Mira's rest, leaving Kael's door uncounted, never bottled.",
-      "The parent Star Core stays on the horizon, and I do not dam leftover love or store a parent.",
+      "The parent Star Core stays a rotating cyan-lightning globe on the west horizon; leftover First Howl is seen as meridians. Charge is seen, not stored.",
     ],
   },
   {
@@ -278,8 +278,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-crown.png",
     glow: 0xffd070,
     lines: [
-      "I write names in residual light as Pack-built YOU-side scripture — leftover light remembers both banks, names kiln body that already stood, never Hall text, never Msg 1.",
-      "The parent Star Core stays on the horizon; Year 0 became a city I will not rewrite.",
+      "I write names in residual light as Pack-built YOU-side scripture — leftover First Howl is seen as meridians around the world; Charge is seen, not stored, never Hall text, never Msg 1.",
+      "The parent Star Core stays a rotating cyan-lightning globe on the west horizon; keepers do not drag it. Year 0 became a city I will not rewrite.",
     ],
   },
   {
@@ -304,8 +304,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-crown.png",
     glow: 0xe8c8a0,
     lines: [
-      "I keep the Circuit aimed at the parent Star Core as Pack-built YOU-side watching — I watch, I do not move it, never a Hall throne.",
-      "Lumen's hail still aims at the horizon; paper does not price it — an orbit seat is a promise, not furniture.",
+      "I keep the Circuit aimed at the parent Star Core as Pack-built YOU-side watching — a rotating cyan-lightning globe on the west horizon. I watch. I do not drag it. Never a Hall throne.",
+      "Leftover First Howl is seen as meridians around the world; Charge is seen, not stored. Lumen's hail still aims at the horizon; paper does not price it.",
     ],
   },
   {
@@ -385,9 +385,9 @@ export const HUB = {
 export const LORE = {
   arrival:
     "Core Spire City — leftover First Howl, living crystal after the Crucible. Soft gates; first visit always works.",
-  empty: "Walk the YOU-side avenues. The Core Spire listens. Charge is tended, never bottled. Speak is rare.",
+  empty: "Walk the YOU-side avenues. The Core Spire listens. Charge is seen, not stored. Speak is rare.",
   howl: "Howl is civic gather, not volume — Veyra listens; Rhoa's ring answers.",
   hubProx: "The Core Spire waits — a listening place, not a throne.",
   description:
-    "A Pack-built city-realm of living crystal and leftover First Howl — second child of the Star Core, grown after Howling Crucible, walked on YOU-side streets. Capital Core Spire City. Crystal remembers intention. Charge is tended in canals, never bottled. Kilns grow body, never chrome. Howl is civic gather. Speak is rare. Soft gates only. First visit always works. The Hall stays the Hall. The parent stays on the horizon.",
+    "A Pack-built city-realm of living crystal and leftover First Howl — second child of the Star Core, grown after Howling Crucible, walked on YOU-side streets. Capital Core Spire City. Crystal remembers intention. Charge is tended in canals, never bottled. Leftover First Howl is seen as meridians around the world — Charge is seen, not stored. Kilns grow body, never chrome. Howl is civic gather. Speak is rare. Soft gates only. First visit always works. The Hall stays the Hall. The parent stays a rotating cyan-lightning globe on the west horizon. Keepers do not drag it.",
 };

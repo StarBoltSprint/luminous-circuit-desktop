@@ -118,6 +118,7 @@ import { growAimHail } from "./aimhail";
 import { growCanalGate } from "./canalgate";
 import { growWildFound } from "./wildfound";
 import { growNameFound } from "./namefound";
+import { growAimShards } from "./aimshards";
 import { growCorePulse } from "./corepulse";
 
 const {
@@ -1645,6 +1646,7 @@ export function buildWorld(): CircuitWorld {
 		try { growCanalGate(group, coarse); } catch { /* samsung */ }
 		try { growWildFound(group, coarse); } catch { /* samsung */ }
 		try { growNameFound(group, coarse); } catch { /* samsung */ }
+		try { growAimShards(group, coarse); } catch { /* samsung */ }
 		try { corePulseTick = growCorePulse(group, coarse).tick; } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
