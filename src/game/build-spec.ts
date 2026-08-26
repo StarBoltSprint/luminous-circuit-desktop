@@ -522,7 +522,8 @@ export function composeScene(
       piece("pad", px(10), pz(10), 8, 6.5, rot, mat(1)),
       piece("lamp", rx(9), rz(9), j(3, 10, 15), 3, rot, mat(2)),
       piece("disc", rx(-11), rz(-11), 6, 5, rot, mat(0)),
-      piece("stele", px(-16), pz(-16), j(6, 12, 18), 5, rot, mat(0))
+      piece("stele", px(-16), pz(-16), j(6, 12, 18), 5, rot, mat(0)),
+      piece("veil", rx(14), rz(14), j(7, 12, 18), j(8, 6, 10), rot, mat(0)),
     ];
   }
   if (kind === "shrine") {

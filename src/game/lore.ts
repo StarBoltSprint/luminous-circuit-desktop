@@ -200,7 +200,7 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet-helm.png",
     glow: 0x8a6cff,
     lines: [
-      "I keep Hub breath as Pack-built YOU-side listening so the Core Spire stays a listening place — Rhoa's Outer Howl answers, leftover Charge still meets crystal at Voss, never a Hall throne.",
+      "I keep Hub breath as Pack-built YOU-side listening so the Core Spire stays a listening place — Kael's gates leave uncounted, Rhoa's Outer Howl answers, never a Hall throne.",
       "The parent Star Core stays on the horizon; Resonance is not a rank and not a true name.",
     ],
   },
@@ -265,7 +265,7 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet.png",
     glow: 0x7a50ff,
     lines: [
-      "This threshold is Pack-built YOU-side densification after Lumen's hail — leave and return uncounted, never a Hall lock.",
+      "This threshold is Pack-built YOU-side densification after Lumen's hail — Veyra's Hub still listens so leave and return stay uncounted, never a Hall lock.",
       "The parent Star Core stays on the horizon, and I do not keep score of landing.",
     ],
   },

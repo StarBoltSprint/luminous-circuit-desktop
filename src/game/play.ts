@@ -265,6 +265,7 @@ export function shapeFits(shape: string | null | undefined, keeper: string | nul
   if (keeper === "iri") return shape === "tablet" || shape === "stele";
   if (keeper === "tal") return shape === "bridge" || shape === "arch";
   if (keeper === "mira") return shape === "terrace" || shape === "cradle";
+  if (keeper === "kael") return shape === "arch" || shape === "veil" || shape === "stele";
   return false;
 }
 

@@ -277,6 +277,81 @@ function CanalChargeUnderlay({
     </g>
   );
 }
+/** Soft-gate veil under Kael's den, aimed at Lumen's hail. Pointer-events none. */
+function SoftGateUnderlay({
+  x,
+  y,
+  r,
+  towardX,
+  towardY,
+  clipId,
+}: {
+  x: number;
+  y: number;
+  r: number;
+  towardX: number;
+  towardY: number;
+  clipId: string;
+}) {
+  const dx = towardX - x;
+  const dy = towardY - y;
+  const hyp = Math.hypot(dx, dy) || 1;
+  const ux = dx / hyp;
+  const uy = dy / hyp;
+  const px = -uy;
+  const py = ux;
+  const span = r * 0.82;
+  const glowW = Math.max(7, r * 0.13);
+  const archW = Math.max(1.2, r * 0.022);
+  const moteR = Math.max(1.1, Math.min(3.6, r * 0.015));
+  const ribbons = [-0.28, 0, 0.28].map((off, i) => {
+    const ox = px * r * off;
+    const oy = py * r * off;
+    const bulge = r * (i === 1 ? 0.16 : 0.09);
+    return {
+      i,
+      d: `M${x - ux * span + ox} ${y - uy * span + oy} Q${x + ox + px * bulge} ${y + oy + py * bulge} ${x + ux * span + ox} ${y + uy * span + oy}`,
+      mid: i === 1,
+    };
+  });
+  const motes = [0.22, 0.5, 0.78].map((t, i) => {
+    const w = Math.sin(t * Math.PI);
+    return {
+      i,
+      x: x - ux * span + ux * span * 2 * t + px * r * 0.12 * w,
+      y: y - uy * span + uy * span * 2 * t + py * r * 0.12 * w,
+    };
+  });
+  return (
+    <g pointerEvents="none" aria-hidden="true">
+      <defs>
+        <clipPath id={clipId}>
+          <circle cx={x} cy={y} r={r} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${clipId})`}>
+        <ellipse
+          cx={x}
+          cy={y}
+          rx={r * 0.72}
+          ry={r * 0.28}
+          transform={`rotate(${(Math.atan2(uy, ux) * 180) / Math.PI} ${x} ${y})`}
+          className="map-violet"
+          opacity={0.16}
+        />
+        {ribbons.map((rib) => (
+          <g key={`${clipId}-rib-${rib.i}`}>
+            <path d={rib.d} className="map-violet" style={{ strokeWidth: glowW, fill: "none" }} opacity={0.28} />
+            <path d={rib.d} className="map-stroke" style={{ strokeWidth: archW, fill: "none" }} opacity={rib.mid ? 0.7 : 0.38} />
+          </g>
+        ))}
+        {motes.map((mote) => (
+          <circle key={`${clipId}-mote-${mote.i}`} cx={mote.x} cy={mote.y} r={moteR} className="map-violet" opacity={0.64} />
+        ))}
+      </g>
+    </g>
+  );
+}
 /** Kiln heat under Orren's foundry den, aimed at Join. Pointer-events none. */
 function KilnHeatUnderlay({
   x,
@@ -598,6 +673,7 @@ export function CircuitMap({
   const wards = useMemo(() => DISTRICTS.map(markFor), []);
   const quietLabels = useMemo(() => hiddenFarLabels(wards), [wards]);
   const joinMark = wards.find((m) => m.d.kind === "market");
+  const hailMark = wards.find((m) => m.d.kind === "beacon");
   const brief = civicBrief(hud.stock, hud.zone);
   const den = DISTRICTS.find((d) => d.id === brief.zoneId);
   const dutyX = den?.x ?? 0;
@@ -702,6 +778,16 @@ export function CircuitMap({
                   towardX={joinMark.x}
                   towardY={joinMark.y}
                   clipId="map-kiln-heat-clip"
+                />
+              )}
+              {m.d.kind === "gate" && hailMark && (
+                <SoftGateUnderlay
+                  x={m.x}
+                  y={m.y}
+                  r={m.r}
+                  towardX={hailMark.x}
+                  towardY={hailMark.y}
+                  clipId="map-soft-gate-clip"
                 />
               )}
               {(hud.zone === m.id || hud.zone === m.d.label) && (
@@ -897,6 +983,7 @@ function ZoneSheet({
   const hubX = sx(d.x);
   const hubY = sy(d.z);
   const joinDen = DISTRICTS.find((z) => z.kind === "market");
+  const hailDen = DISTRICTS.find((z) => z.kind === "beacon");
   const growers = folk.filter((p) => isGrowJob(p.job)).length;
   const growingNow = hud.folk.building > 0 && growers > 0;
   const avenues = [0.32, 1.88, 3.42, 5.02].map((a, i) => {
@@ -962,6 +1049,16 @@ function ZoneSheet({
               towardX={sx(joinDen.x)}
               towardY={sy(joinDen.z)}
               clipId="zone-kiln-heat-clip"
+            />
+          )}
+          {d.kind === "gate" && hailDen && (
+            <SoftGateUnderlay
+              x={hubX}
+              y={hubY}
+              r={268}
+              towardX={sx(hailDen.x)}
+              towardY={sy(hailDen.z)}
+              clipId="zone-soft-gate-clip"
             />
           )}
           {avenues.map((a) => (

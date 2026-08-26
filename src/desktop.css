@@ -157,6 +157,19 @@ body.lc-desktop .stick-base:focus-within {
   text-shadow: 0 0 10px color-mix(in oklab, var(--color-accent) 34%, transparent);
 }
 
+/* Soft-gate violet pip — HUD sibling of cyan Howl, never chrome. */
+.lc-keys-howl::after {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-left: 6px;
+  vertical-align: 1px;
+  background: var(--color-violet);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  box-shadow: 0 0 8px color-mix(in oklab, var(--color-violet) 48%, transparent);
+}
+
 .lc-keys-cyan {
   color: var(--color-accent);
   box-shadow:

@@ -55,6 +55,11 @@ function kilnLaborPrefix(id: string, blob: string) {
   return id === "orren" && /kiln|forge|crystal|chrome|body|charge/i.test(blob) ? "Kiln body · " : "";
 }
 
+/** Kael walk-the-gate labor. Leave, return, no score. HUD job is the thought, not raw `watch`. */
+function gateLaborPrefix(id: string, blob: string) {
+  return id === "kael" && /gate|soft|leave|return|score|threshold|lock/i.test(blob) ? "Soft gate · " : "";
+}
+
 function isIdleJob(job: string) {
   const j = (job || "").trim().toLowerCase();
   return !j || j === "at rest" || j === "idle";
@@ -156,7 +161,7 @@ export function LogSheet({
   const liveAll = (hud.live ?? []).slice().reverse();
   const hailNow = liveAll.filter((l) => /hail|crew/i.test(l.kind)).length;
   const feed = tab === "work" ? liveAll.filter((l) => WORK_KINDS.has(l.kind ?? "")).sort((a, b) => {
-    const rank = (k: string, id = "", text = "") => (joinLaborPrefix(id, text) || hailLaborPrefix(id, text) || aimLaborPrefix(id, text) || nameLaborPrefix(id, text) || breathLaborPrefix(id, text) || canalLaborPrefix(id, text) || kilnLaborPrefix(id, text) || k === "crew" || k === "grow" || k === "stood" || k === "build" || k === "forge" || k === "walk" || k === "home" ? 0 : 1);
+    const rank = (k: string, id = "", text = "") => (joinLaborPrefix(id, text) || hailLaborPrefix(id, text) || aimLaborPrefix(id, text) || nameLaborPrefix(id, text) || breathLaborPrefix(id, text) || canalLaborPrefix(id, text) || kilnLaborPrefix(id, text) || gateLaborPrefix(id, text) || k === "crew" || k === "grow" || k === "stood" || k === "build" || k === "forge" || k === "walk" || k === "home" ? 0 : 1);
     return rank(a.kind ?? "", a.id, a.text) - rank(b.kind ?? "", b.id, b.text);
   }) : liveAll;
   const grown = Object.entries(
@@ -253,7 +258,7 @@ export function LogSheet({
                 <span className="log-kind">{joinLaborPrefix(l.id, l.text) ? "join" : l.kind}</span>
                 <p>
                   <span className="log-live-pip inline-block h-[6px] w-[6px] shrink-0 rounded-full align-middle mr-1.5" style={{ background: "var(--color-accent)" }} aria-hidden />
-                  {joinLaborPrefix(l.id, l.text) || hailLaborPrefix(l.id, l.text) || aimLaborPrefix(l.id, l.text) || nameLaborPrefix(l.id, l.text) || breathLaborPrefix(l.id, l.text) || canalLaborPrefix(l.id, l.text) || kilnLaborPrefix(l.id, l.text)}{l.text}
+                  {joinLaborPrefix(l.id, l.text) || hailLaborPrefix(l.id, l.text) || aimLaborPrefix(l.id, l.text) || nameLaborPrefix(l.id, l.text) || breathLaborPrefix(l.id, l.text) || canalLaborPrefix(l.id, l.text) || kilnLaborPrefix(l.id, l.text) || gateLaborPrefix(l.id, l.text)}{l.text}
                 </p>
               </li>
             ))}

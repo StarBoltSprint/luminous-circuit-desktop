@@ -355,6 +355,11 @@ export function createAudio(): AudioBus {
         } catch {
           /* Samsung — quiet fifth optional, ping still sounds */
         }
+        try {
+          voice(c, { freq: 147, dur: 0.26, type: "sine", gain: 0.004, attack: 0.05, delay: 0.24 });
+        } catch {
+          /* Samsung — soft-gate body optional, ping still sounds */
+        }
       });
       buzz("grow");
     },

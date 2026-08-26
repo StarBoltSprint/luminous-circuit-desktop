@@ -104,10 +104,10 @@ No skip-if-done. No “already exists”. No two desks on one file.
 - Map fullscreen, short labels, hide in-ward names, hide foreign-ward keeper names, hide You in a ward, raise halo vein/disc/cascade/weir, folk walk rings, zone folk walk rings, zone hub names hide, zone duty SVG text removed
 - Tal / Mira / Nesh / Kesh / **Kael** idle walk patrols + crew
 - Watch thoughts: span / terrace / plaza / vein / **gate held** / **Seln canal tended never bottled** / **Orren kiln body never chrome**
-- Log prefixes: hail, walk home, span, terrace, plaza, wild vein, chorus, overlook, orchard, join, **gate, archive, hub breath, canal tend, kiln body**
-- Buildings extras: lensing, cascade, weirway, river, workshop, rest, **gate stele, shrine pad, plaza lens, rest grove, shrine font**
-- Lore 1–2 sentences: Lumen, Kesh, Rhoa, Syl, **Kael, Iri, Veyra, Lumen/Rhoa dual hail-ring, Tal/Mira span-rest**
-- SCENE_LINE: lensing Nesh, watch Aure, river Seln never bottled, kilnwork Orren, **gate Kael, orchard Syl, plaza Nesh**
+- Log prefixes: hail, walk home, span, terrace, plaza, wild vein, chorus, overlook, orchard, join, **gate, archive, hub breath, canal tend, kiln body, soft gate**
+- Buildings extras: lensing, cascade, weirway, river, workshop, rest, **gate stele, shrine pad, plaza lens, rest grove, shrine font, gate veil**
+- Lore 1–2 sentences: Lumen, Kesh, Rhoa, Syl, **Kael, Iri, Veyra, Lumen/Rhoa dual hail-ring, Tal/Mira span-rest, Kael/Veyra gate-breath**
+- SCENE_LINE: lensing Nesh, watch Aure, river Seln never bottled, kilnwork Orren, **gate Kael, orchard Syl, plaza Nesh, veilward Kael**
 - Mix talk 261 / grow 82 / foot 60 · Economy many dens / city rising / canal full
 - Save away beats min 1, write clamp, visited/talked slice 48
 - Haptics hail / gate / walk · Jobs dens Soft Gates / Residual Archive
@@ -115,12 +115,13 @@ No skip-if-done. No “already exists”. No two desks on one file.
 
 ## Next unique
 
-- Intelligence: Tal span **site** (still home-orbit) — one keeper, then crew, then arrival thought
+- Intelligence: Tal span **site** / Mira terrace **site** (still home-orbit) — one keeper, then crew, then arrival thought
 - Buildings: extra piece on `font` / `beacon` if still thin
 - Mix / Economy / UI / Save / Jobs / Walker: one real thin hole each turn — never no-op, never locked files. Haptics stay OFF. CSS braces must stay balanced (one stray `}` whitescreens land).
 
 ## Log
 
+- 2026-08-26 15:27 CEST — Desktop wave 10: Kael gate walk + site, Kael/Veyra dual-claim lore, gate veil, soft-gate underlay, Soft gate log, veilward Kael SCENE_LINE, grow 147, gate soft ticker, Howl violet pip, kael shapeFits, Hub→Gates gateposts.
 - 2026-08-26 14:55 CEST — Desktop wave 9: Orren kiln walk + site, Tal/Mira dual-claim lore, shrine font, kiln heat underlay, Kiln body log, kilnwork SCENE_LINE, talk 98, kiln body ticker, Howl cyan pip, seln toast, away Orren kiln, Hub→Canals canalposts.
 - 2026-08-26 14:50 CEST — Desktop wave 8: Seln canal walk + site, Lumen/Rhoa dual-claim lore, rest grove, canal charge underlay, Canal tend log, river SCENE_LINE never bottled, hail 82, leftover Howl ticker, Hub→Foundry foundrylamps.
 - 2026-08-26 14:41 CEST — Desktop wave 7: Veyra Hub breath walk + site, Kesh/Rhoa dual-claim lore, nest pad, hub breath ring, Hub breath log, breath SCENE_LINE, howl 220, hub listens ticker, Howl glow, veyra doLine, Hub→Ring breathposts.

@@ -174,7 +174,7 @@ const SCENE_LINE: Record<string, string> = {
   font: "A listening pool. Speak only if you mean it.",
   boughs: "A crystal bough. Living stone, not chrome.",
   kilnwork: "A grow-kiln. Orren turns Charge into body — never chrome.",
-  veilward: "A ward-veil. Soft. Rest is not a lock.",
+  veilward: "A ward-veil. Kael keeps the gate soft — leave, return, no score.",
   lensing: "A noticing lens. Nesh already saw you.",
   cascade: "A Charge-fall. The canal found a voice.",
   cradle: "A cradle for leftover First Howl. Seln will not kiln it.",

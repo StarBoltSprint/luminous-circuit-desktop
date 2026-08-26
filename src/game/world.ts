@@ -87,6 +87,7 @@ import { growBreathPosts } from "./breathposts";
 import { growFoundryLamps } from "./foundrylamps";
 import { growCanalPosts } from "./canalposts";
 import { growWardGlass } from "./wardglass";
+import { growGatePosts } from "./gateposts";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1581,6 +1582,7 @@ export function buildWorld(): CircuitWorld {
 		try { growFoundryLamps(group, coarse); } catch { /* samsung */ }
 		try { growCanalPosts(group, coarse); } catch { /* samsung */ }
 		try { growWardGlass(group, coarse); } catch { /* samsung */ }
+		try { growGatePosts(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [
