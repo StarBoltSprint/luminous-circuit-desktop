@@ -241,6 +241,41 @@ export function freezeShadows(shadowMap: ShadowMapHandle): void {
   shadowMap.needsUpdate = true;
 }
 
+/** Shadow map stays on. Smaller atlas when fps sags — dens, bloom, core, fly stay. */
+export const SHADOW_MAP = 1024;
+export const SHADOW_MAP_LOW = 512;
+export const FPS_SHADOW_SOFT = 38;
+
+export function shadowMapSize(fps: number): number {
+  if (fps < FPS_SHADOW_SOFT) return SHADOW_MAP_LOW;
+  return SHADOW_MAP;
+}
+
+export type ShadowMapSizeHandle = {
+  set: (w: number, h: number) => void;
+  x?: number;
+};
+
+export function applyShadowMapSize(
+  mapSize: ShadowMapSizeHandle | null | undefined,
+  fps: number,
+): boolean {
+  if (!mapSize) return false;
+  const next = shadowMapSize(fps);
+  if (Math.abs((mapSize.x ?? 0) - next) < 1) return false;
+  mapSize.set(next, next);
+  return true;
+}
+
+/** Skip a compositor frame when fps is very low. Sim + fly still run. Bloom stays on drawn frames. */
+export const FPS_DRAW_SKIP = 26;
+
+export function shouldSkipCompositor(fps: number, frame: number, mode: string): boolean {
+  if (mode !== "play") return false;
+  if (fps >= FPS_DRAW_SKIP) return false;
+  return (frame & 1) === 1;
+}
+
 export function createLaterFreeze(ticksNeeded = LATER_TICKS_TO_FREEZE) {
   let ticks = 0;
   let done = false;

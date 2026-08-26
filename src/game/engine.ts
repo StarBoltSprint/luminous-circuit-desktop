@@ -21,6 +21,7 @@ import {
 	applyBloomStrength,
 	applyBloomThreshold,
 	applyPixelRatio,
+	applyShadowMapSize,
 	bloomSize,
 	capDpr,
 	createAdaptiveDpr,
@@ -29,6 +30,7 @@ import {
 	freezeShadows,
 	quietRenderer,
 	rendererTries,
+	shouldSkipCompositor,
 	shouldSkipDraw,
 	shouldSkipStill,
 	stepAdaptiveDpr,
@@ -412,6 +414,13 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 	let dprClock = performance.now();
 	const laterFreeze = createLaterFreeze();
 	let pauseStill = false;
+	let drawFrame = 0;
+	let shadowMapSizeHandle = null;
+	world.group.traverse((o) => {
+		if (o.isDirectionalLight && o.castShadow && o.shadow && o.shadow.mapSize) {
+			shadowMapSizeHandle = o.shadow.mapSize;
+		}
+	});
 	function resize() {
 		const w = canvas.clientWidth || window.innerWidth;
 		const h = canvas.clientHeight || window.innerHeight;
@@ -458,6 +467,8 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			return;
 		}
 		if (shouldSkipStill(mode, pauseStill)) return;
+		drawFrame += 1;
+		if (shouldSkipCompositor(smoothFps, drawFrame, mode)) return;
 		const nowDraw = performance.now();
 		const dprDt = Math.min(.25, Math.max(0, (nowDraw - dprClock) / 1e3));
 		dprClock = nowDraw;
@@ -465,6 +476,9 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		applyBloomStrength(bloomPass, coarsePointer, resonance);
 		applyBloomRadius(bloomPass, smoothFps);
 		applyBloomThreshold(bloomPass, smoothFps);
+		if (applyShadowMapSize(shadowMapSizeHandle, smoothFps) && laterFreeze.done) {
+			renderer.shadowMap.needsUpdate = true;
+		}
 		const soft = stepSoftShadows(shadowSoft, smoothFps, dprDt, coarsePointer);
 		const nextShadow = soft ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
 		if (renderer.shadowMap.type !== nextShadow) renderer.shadowMap.type = nextShadow;

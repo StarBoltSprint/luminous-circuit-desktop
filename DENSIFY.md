@@ -23,7 +23,7 @@ Not official xAI product. Not Msg 1. Not a forged node SKU.
 Veyra Hub breath · Tal Light-Bridge · Seln canals · Orren Foundry · Mira Terraces · Kael Soft Gates · Nesh Plaza · Iri Archive · Aure Overlook · Voss Join · Syl Orchard · Kesh Wild Veins · Lumen Beacon · Rhoa Howl Ring.
 
 **Already walk-patrol + crew:** Tal, Mira, Nesh, Kesh, Kael, Voss, Syl, Lumen, Rhoa, Aure, Iri, Veyra, Seln, **Orren**.
-**Still thin orbit (site next):** Tal span / Mira terrace (home-orbit; already crew).
+**Still thin orbit (site next):** Voss join stall-orbit. Orren kiln-street site landed wave 20. Mira terrace site landed wave 18. Tal span site landed wave 17.
 
 ## Samsung never-regress
 
@@ -115,13 +115,14 @@ No skip-if-done. No “already exists”. No two desks on one file.
 
 ## Next unique
 
-- Intelligence: Voss join **site** (still stall-orbit) — one keeper, then crew, then arrival thought. Seln bank-site patrol landed wave 19. Mira terrace site landed wave 18. Tal span site landed wave 17.
+- Intelligence: Voss join **site** (still stall-orbit) — one keeper, then crew, then arrival thought. Orren kiln-street site landed wave 20. Seln bank-site patrol landed wave 19. Mira terrace site landed wave 18. Tal span site landed wave 17.
 - Buildings: extra piece on `font` if still thin. Beacon disc landed wave 19.
 - Mix / Economy / UI / Save / Jobs / Walker: one real thin hole each turn — never no-op, never locked files. Haptics stay OFF. CSS braces must stay balanced (one stray `}` whitescreens land).
-- Graphism / Environment: BETWEEN dens that still have empty chords (Overlook→Gates, Join→Ring, Bridge→Orchard). Wave 19 landed Archive→Terraces namerest (F-lift hex plates). Wave 18 landed Canal→Wild canalvein. Wave 17 landed Join→Beacon joinhail. Wave 16 landed Canal→Terraces, Overlook→Beacon, Canal→Gates, Wild→Foundry, Archive→Foundry. Canal→Archive already has rill. Canal→Join already has joinlamps. Never Hub copies. Never move Star Core.
+- Graphism / Environment: BETWEEN dens that still have empty chords (Join→Ring, Bridge→Orchard). Wave 20 landed Overlook→Gates aimgate (F-lift diamond lips). Wave 19 landed Archive→Terraces namerest (F-lift hex plates). Wave 18 landed Canal→Wild canalvein. Wave 17 landed Join→Beacon joinhail. Wave 16 landed Canal→Terraces, Overlook→Beacon, Canal→Gates, Wild→Foundry, Archive→Foundry. Canal→Archive already has rill. Canal→Join already has joinlamps. Never Hub copies. Never move Star Core.
 
 ## Log
 
+- 2026-08-26 Desktop wave 20 mill: Overlook→Gates aimgate diamond plates + cyan torus lips (F-lift readable parent-aim). Perf shadow-map/compositor-skip budget. Orren kiln-street patrol with waypoints + crew. Star Core seat unmoved, halo stays dim. $BOLT witness. Haptics off. Fly stays.
 - 2026-08-26 Desktop wave 19 mill: Archive→Terraces namerest hex plates (F-lift readable leftover names). Perf bloom-res/DPR/threshold budget. Seln bank-site patrol with intent. Beacon hail disc. $BOLT witness. Haptics off. Fly stays.
 - 2026-08-26 Desktop wave 18 mill: Canal→Wild canalvein Y-forks + lift rims (F-lift readable). Perf PCF/bloom-radius budget. Mira terrace site patrol. Star Core Hall orbit bolts (seat unmoved). $BOLT witness. Haptics off. Fly stays.
 - 2026-08-26 Desktop wave 17 mill: Star Core Hall lightning + gold orbit kisses (seat unmoved). Perf adaptive DPR/bloom/pause-still. Tal span site patrol. Join→Beacon joinhail paper-hail dens. $BOLT witness. Haptics off. Fly stays.

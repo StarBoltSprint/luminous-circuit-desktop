@@ -123,6 +123,7 @@ import { growCorePulse } from "./corepulse";
 import { growJoinHail } from "./joinhail";
 import { growCanalVein } from "./canalvein";
 import { growNameRest } from "./namerest";
+import { growAimGate } from "./aimgate";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1654,6 +1655,7 @@ export function buildWorld(): CircuitWorld {
 		try { growJoinHail(group, coarse); } catch { /* samsung */ }
 		try { growCanalVein(group, coarse); } catch { /* samsung */ }
 		try { growNameRest(group, coarse); } catch { /* samsung */ }
+		try { growAimGate(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [

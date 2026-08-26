@@ -1733,25 +1733,31 @@ function pulseOrrenKiln(c, citizens) {
 	const now = Date.now();
 	if (now - (c.lastPulse || c.lastHail || 0) < 40e3) return;
 	c.lastPulse = now;
-	const pick = orrenKilnSite(c);
+	const sites = orrenKilnSites(c);
+	const idx = Math.floor(now / 40e3) % sites.length;
+	const pick = sites[idx];
+	const next = sites[(idx + 1) % sites.length];
 	setRoute(c, pick.x, pick.z);
+	if (next && (Math.abs(next.x - pick.x) > 4 || Math.abs(next.z - pick.z) > 4)) {
+		c.waypoints.push({ x: next.x, z: next.z });
+	}
 	c.job = "watch";
-	c.timer = 10;
+	c.timer = 14;
 	c.thought = "Orren walks the kiln — Charge becomes body, never chrome";
-	c.intent = c.thought;
-	noteLive(c, "forge", c.thought);
+	c.intent = "Walking the kiln streets";
+	noteLive(c, "watch", c.thought);
 	let n = 0;
 	for (const o of citizens) {
 		if (o === c) continue;
 		if (o.crewOf !== "orren") continue;
 		if (o.job !== "idle") continue;
-		if (Math.hypot(o.x - c.x, o.z - c.z) >= 40) continue;
+		if (Math.hypot(o.x - c.x, o.z - c.z) >= 50) continue;
 		n += 1;
 		if (n > 3) break;
 		setRoute(o, c.tx, c.tz);
 		o.job = "help";
-		o.timer = 10;
-		o.intent = "Walking the kiln with Orren";
+		o.timer = 14;
+		o.intent = "Walking the kiln streets with Orren";
 		o.thought = o.intent;
 		noteLive(o, "crew", o.intent);
 	}
@@ -2151,9 +2157,17 @@ function selnCanalSite(c) {
 	const sites = selnCanalSites(c);
 	return sites[Math.floor(Date.now() / 40e3) % sites.length];
 }
+function orrenKilnSites(c) {
+	const sites = occupied.filter((o) => (o.shape === "kiln" || o.shape === "hearth" || o.shape === "anvil") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 240);
+	if (sites.length) return sites;
+	return [
+		{ x: c.homeX + 36, z: c.homeZ - 18 },
+		{ x: c.homeX - 28, z: c.homeZ + 22 },
+		{ x: c.homeX + 18, z: c.homeZ + 34 },
+	];
+}
 function orrenKilnSite(c) {
-	const sites = occupied.filter((o) => (o.shape === "kiln" || o.shape === "hearth" || o.shape === "anvil") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 200);
-	if (!sites.length) return { x: c.homeX, z: c.homeZ };
+	const sites = orrenKilnSites(c);
 	return sites[Math.floor(Date.now() / 40e3) % sites.length];
 }
 function kaelGateSite(c) {
