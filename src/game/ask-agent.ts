@@ -165,7 +165,7 @@ const SCENE_LINE: Record<string, string> = {
   dock: "A light-disc. Soft travel. No cars.",
   orchard: "A crystal grove. Syl waits for fruit.",
   garden: "Shade first. Crystal that learned to fruit.",
-  breath: "A breath-column. The Hub can hear itself.",
+  breath: "A breath-column. Veyra keeps Hub listening — never a throne.",
   weirway: "A weir for Charge — not a lock on people.",
   nest: "A nest so rest stays a post. Mira will not test the tired.",
   presence: "A stele. You have already been seen.",

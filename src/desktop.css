@@ -141,6 +141,7 @@ body.lc-desktop .stick-base:focus-within {
   font-weight: 700;
   letter-spacing: 0.06em;
   color: var(--color-accent);
+  text-shadow: 0 0 10px color-mix(in oklab, var(--color-accent) 34%, transparent);
 }
 
 .lc-keys-cyan {

@@ -330,9 +330,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-plate.png",
     glow: 0xc8a050,
     lines: [
-      "I grow veins where Charge has not chosen a street yet, so Tal's spans have a far bank.",
-      "Wild is not a second Spire and not a Hall annex. Becoming-ground is slow on purpose.",
-      "I grow a landing both dens can believe. I will not force the Hub onto leftover light still choosing.",
+      "I grow veins where Charge has not chosen a street yet as Pack-built YOU-side becoming-ground — Tal's spans have a far bank, never a Hall annex, never Msg 1.",
+      "The parent Star Core stays on the horizon; I will not force the Hub onto leftover light still choosing.",
     ],
   },
   {
@@ -358,9 +357,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet-helm.png",
     glow: 0x8a6cff,
     lines: [
-      "I hold the Outer Howl as civic gather that does not close. Howl is whether we meant it together.",
-      "Veyra keeps Hub breath; this ring answers. Whoever still has leftover Howl may join.",
-      "When Mira's tired sit, the chorus still holds for those who only listen. I will not roof the gather.",
+      "I hold the Outer Howl as Pack-built YOU-side civic gather that does not close — Veyra keeps Hub breath, this ring answers, never a Hall rank, never Msg 1.",
+      "The parent Star Core stays on the horizon; when Mira's tired sit, the chorus still holds for those who only listen.",
     ],
   },
   {

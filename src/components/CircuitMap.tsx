@@ -518,6 +518,7 @@ export function CircuitMap({
           <circle cx={CX} cy={CY} r="18" className="map-gold" opacity={0.25} />
           <circle cx={CX} cy={CY} r="12" className="map-gold" opacity={0.4} />
           <circle cx={CX} cy={CY} r="6" className="map-gold" opacity={0.7} />
+          <circle cx={CX} cy={CY} r="32" className="map-plaza" opacity={0.7} />
           <polygon points={`${CX},${CY - 28} ${CX + 8},${CY + 10} ${CX - 8},${CY + 10}`} className="map-cyan" />
           <text x={CX} y={CY + 48} textAnchor="middle" className="map-hub-name">
             Core Spire

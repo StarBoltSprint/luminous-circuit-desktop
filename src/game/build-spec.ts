@@ -632,6 +632,7 @@ export function composeScene(
       piece("veil", rx(10), rz(10), j(5, 12, 18), j(6, 6, 10), rot, mat(0)),
       piece("lamp", rx(-8), rz(-8), j(4, 9, 14), 2.8, 0, mat(2)),
       piece("cradle", px(-12), pz(-12), j(7, 8, 12), j(8, 6, 10), rot, mat(1)),
+      piece("pad", rx(-14), rz(-14), 6, 5, rot, mat(2)),
     ];
   }
   if (kind === "presence") {

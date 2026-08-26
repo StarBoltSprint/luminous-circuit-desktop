@@ -116,6 +116,7 @@ function doLine(keeper: string): string {
   if (keeper === "rhoa") return "Hold Howl, then chorus at the ring — Chorus.";
   if (keeper === "nesh") return "Hold Howl, then notice what the plaza saw — Notice.";
   if (keeper === "aure") return "Hold Howl, then keep the parent on the horizon — Aim.";
+  if (keeper === "veyra") return "Hold Howl, then keep Hub breath — Breath.";
   return `Hold Howl, then let go on the gold — ${howlVerb(keeper)}.`;
 }
 

@@ -181,6 +181,11 @@ export function createAudio(): AudioBus {
         } catch {
           /* Samsung — overtone optional, howl still sounds */
         }
+        try {
+          voice(c, { freq: 220, dur: 0.36, type: "sine", gain: 0.005, attack: 0.08, delay: 0.48 });
+        } catch {
+          /* Samsung — Hub breath fifth optional, howl still sounds */
+        }
       });
       buzz("howl");
     },
