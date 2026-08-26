@@ -68,7 +68,20 @@ function hudButton(el: EventTarget | null) {
 }
 
 const WALK_KEYS = new Set(["KeyW", "KeyA", "KeyS", "KeyD"]);
-const PLAY_KEYS = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "KeyF", "KeyC", "KeyH", "Space", "ShiftLeft", "ShiftRight"]);
+/** Still apply while a HUD button is focused. Space is Howl/rise, never a button click. */
+const PLAY_KEYS = new Set([
+  ...WALK_KEYS,
+  "KeyF",
+  "KeyC",
+  "KeyH",
+  "KeyE",
+  "KeyT",
+  "Space",
+  "ShiftLeft",
+  "ShiftRight",
+  "ControlLeft",
+  "ControlRight",
+]);
 
 export function createInput(target: HTMLElement): InputHandle {
   const keys = new Set<string>();
@@ -76,10 +89,15 @@ export function createInput(target: HTMLElement): InputHandle {
   const stickLook = { x: 0, y: 0 };
   let howlBtn = false;
   let talkBtn = false;
+  // OR-latch: KeyF and Lift share one pulse. Consumed once in beginFrame.
   let flyQueued = false;
-  const prev = { talk: false, pause: false, howl: false, fly: false };
+  const prev = { talk: false, pause: false, howl: false };
   const actions = empty();
   const justPressed = { talk: false, pause: false, howl: false, fly: false };
+
+  function queueFly() {
+    flyQueued = true;
+  }
 
   const GAME_KEYS = new Set([
     "KeyW",
@@ -109,7 +127,8 @@ export function createInput(target: HTMLElement): InputHandle {
 
   const onKeyDown = (e: KeyboardEvent) => {
     if (hudTyping(e)) return;
-    // Space/Enter activate a focused HUD button; WASD still walks.
+    // Space would click focused Lift/Howl; Space is Howl on foot / rise in lift.
+    if (hudButton(e.target) && e.code === "Space") e.preventDefault();
     if (hudButton(e.target) && !PLAY_KEYS.has(e.code) && e.code !== "Escape") return;
     if (e.code === "Escape") {
       if (pointerLocked || document.pointerLockElement) {
@@ -118,8 +137,14 @@ export function createInput(target: HTMLElement): InputHandle {
         return;
       }
     }
-    if (e.repeat && (e.code === "Space" || e.code === "KeyH" || e.code === "KeyF")) { e.preventDefault(); return; }
-    if (e.code === "KeyF" && !e.repeat) flyQueued = true;
+    if (e.code === "KeyF") {
+      e.preventDefault();
+      // Hold must not strobe; Lift+F the same frame still one pulse.
+      if (!e.repeat && !keys.has("KeyF")) queueFly();
+      keys.add(e.code);
+      return;
+    }
+    if (e.repeat && (e.code === "Space" || e.code === "KeyH")) { e.preventDefault(); return; }
     keys.add(e.code);
     if (GAME_KEYS.has(e.code)) e.preventDefault();
   };
@@ -148,8 +173,8 @@ export function createInput(target: HTMLElement): InputHandle {
     pointerLocked = locked;
   };
 
-  window.addEventListener("keydown", onKeyDown);
-  window.addEventListener("keyup", onKeyUp);
+  window.addEventListener("keydown", onKeyDown, true);
+  window.addEventListener("keyup", onKeyUp, true);
   window.addEventListener("blur", clearKeys);
   target.addEventListener("mousemove", onMouseMove);
   target.addEventListener("click", onCanvasClick);
@@ -180,7 +205,7 @@ export function createInput(target: HTMLElement): InputHandle {
       talkBtn = v;
     },
     tapFly() {
-      flyQueued = true;
+      queueFly();
     },
     beginFrame() {
       // WASD = on-foot: W forward, S back, A left strafe, D right strafe
@@ -224,13 +249,12 @@ export function createInput(target: HTMLElement): InputHandle {
       prev.talk = actions.talk;
       prev.pause = actions.pause;
       prev.howl = actions.howl;
-      prev.fly = keys.has("KeyF");
 
       void target;
     },
     dispose() {
-      window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("keyup", onKeyUp);
+      window.removeEventListener("keydown", onKeyDown, true);
+      window.removeEventListener("keyup", onKeyUp, true);
       window.removeEventListener("blur", clearKeys);
       document.removeEventListener("visibilitychange", visHide);
       document.removeEventListener("pointerlockchange", onPointerLockChange);
