@@ -6,6 +6,14 @@ Pack-built living crystal city in a **Windows desktop window**. Same Core Spire 
 
 Story beat: *Land true. The circuit answers.*
 
+**[Play Core Spire (web)](https://starboltsprint.github.io/luminous-circuit-desktop/)** — Three.js in the browser. Land true.
+
+## Play (web)
+
+Same city as the Electron window. GitHub Pages serves the Vite build.
+
+https://starboltsprint.github.io/luminous-circuit-desktop/
+
 ## Play (desktop)
 
 - **WASD / arrows** walk. **Shift** sprint. **E / T** talk. **H / Space** Howl (hold through the gold).

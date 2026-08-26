@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Desktop vessel of Luminous Circuit / Core Spire City. Pack-built. Not an official xAI product.",
+  "homepage": "https://starboltsprint.github.io/luminous-circuit-desktop/",
   "author": "StarBoltSprint",
   "type": "module",
   "main": "electron/main.mjs",
