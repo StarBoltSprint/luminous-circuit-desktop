@@ -858,7 +858,7 @@ export function buildWorld(): CircuitWorld {
 	const goldKiss = new PointLight(14725216, 3.6, 280, 1.5);
 	goldKiss.position.set(50, 64, 36);
 	group.add(goldKiss);
-	const parentLamp = new PointLight(0x7ef0ff, 8, 6400, 1.05);
+	const parentLamp = new PointLight(0x7ef0ff, 3.4, 6400, 1.05);
 	parentLamp.position.set(STAR_CORE.x * 0.42, STAR_CORE.y * 0.9, STAR_CORE.z * 0.42);
 	parentLamp.name = "star-core-lamp";
 	group.add(parentLamp);
