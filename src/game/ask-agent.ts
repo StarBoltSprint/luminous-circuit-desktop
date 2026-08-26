@@ -180,7 +180,7 @@ const SCENE_LINE: Record<string, string> = {
   cradle: "A cradle for leftover First Howl. Seln will not kiln it.",
   mosaic: "Charge for crystal. No coin. Voss holds the join.",
   beacon: "A hail — welcome, not a score. Lumen keeps those still landing.",
-  archive: "A name in residual light. That is our scripture.",
+  archive: "A name in residual light. Iri writes leftover scripture — never Msg 1.",
   trading: "A Trading Place. Paper join — Charge for crystal. $BOLT stays outer; Voss takes no coin.",
 };
 

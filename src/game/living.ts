@@ -1669,11 +1669,11 @@ function pulseIriResidue(c, citizens) {
 	const now = Date.now();
 	if (now - (c.lastPulse || c.lastHail || 0) < 48e3) return;
 	c.lastPulse = now;
-	const a = ((now / 8000) % (Math.PI * 2));
-	setRoute(c, c.homeX + Math.cos(a) * 26, c.homeZ + Math.sin(a) * 26);
+	const pick = iriArchiveSite(c);
+	setRoute(c, pick.x, pick.z);
 	c.job = "watch";
-	c.timer = 10;
-	c.thought = "Iri writes residual light — names, not chrome";
+	c.timer = 12;
+	c.thought = "Iri walks the archive — leftover light names, never chrome";
 	c.intent = c.thought;
 	noteLive(c, "write", c.thought);
 	let n = 0;
@@ -1686,7 +1686,7 @@ function pulseIriResidue(c, citizens) {
 		if (n > 3) break;
 		setRoute(o, c.tx, c.tz);
 		o.job = "help";
-		o.timer = 10;
+		o.timer = 12;
 		o.intent = "Walking the residue with Iri";
 		o.thought = o.intent;
 		noteLive(o, "crew", o.intent);
@@ -2121,6 +2121,11 @@ function aureOverlookSite(c) {
 	const sites = occupied.filter((o) => (o.shape === "orbit" || o.shape === "lens" || o.shape === "stele") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 220);
 	if (!sites.length) return { x: c.homeX, z: c.homeZ };
 	return sites[Math.floor(Date.now() / 46e3) % sites.length];
+}
+function iriArchiveSite(c) {
+	const sites = occupied.filter((o) => (o.shape === "tablet" || o.shape === "stele") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 220);
+	if (!sites.length) return { x: c.homeX, z: c.homeZ };
+	return sites[Math.floor(Date.now() / 48e3) % sites.length];
 }
 function folkEnactDuty(c, kitId, duty) {
 	const post = postOf(kitId);
@@ -2759,7 +2764,8 @@ function decide(c, room, sense, byId) {
 		name: "write",
 		score: 80 - (boredOf(c, "write") ? 8 : 0),
 		run: () => {
-			setRoute(c, -24, 128);
+			const pick = iriArchiveSite(c);
+			setRoute(c, pick.x, pick.z);
 			c.job = "write";
 			c.timer = 14;
 			c.thought = `Scripture ${Math.round(stock.scripture)}, crystal grown ${Math.round(stock.crystal)}. I write before it fades.`;
@@ -3417,8 +3423,8 @@ export function stepLiving(citizens, dt, room, sense, applyPieces) {
 					c.timer = 1.8;
 				} else if (c.job === "watch") {
 					if (sense.ledger.scripture < 12) sense.ledger.scripture += .25;
-					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : c.mind.id === "lumen" ? "Hail held. Welcome, not a score." : c.mind.id === "rhoa" ? "Chorus gathers. Does not close." : c.mind.id === "aure" ? "Aim held. Parent still sits." : "The parent still sits on the horizon. Aim held.";
-					c.intent = c.mind.id === "rhoa" ? "Holding the chorus" : c.mind.id === "aure" ? "Keeping the parent" : "Keeping the aim";
+					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : c.mind.id === "lumen" ? "Hail held. Welcome, not a score." : c.mind.id === "rhoa" ? "Chorus gathers. Does not close." : c.mind.id === "aure" ? "Aim held. Parent still sits." : c.mind.id === "iri" ? "Name held. Leftover light." : "The parent still sits on the horizon. Aim held.";
+					c.intent = c.mind.id === "rhoa" ? "Holding the chorus" : c.mind.id === "aure" ? "Keeping the parent" : c.mind.id === "iri" ? "Keeping scripture" : "Keeping the aim";
 					noteLive(c, "watch", c.thought);
 					reportDone(c, c.thought);
 					c.job = "idle";

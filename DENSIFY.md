@@ -115,11 +115,12 @@ No skip-if-done. No “already exists”. No two desks on one file.
 
 ## Next unique
 
-- Buildings: extra piece on `breath` / `nest` if still thin
+- Buildings: extra piece on `nest` / `font` if still thin
 - Mix / Economy / UI / Save / Jobs / Walker: one real thin hole each turn — never no-op, never locked files. Haptics stay OFF. CSS braces must stay balanced (one stray `}` whitescreens land).
 
 ## Log
 
+- 2026-08-26 14:36 CEST — Desktop wave 6: Iri archive walk + site, Nesh/Voss dual-claim lore, breath pad, archive name diamond, Leftover name log, archive SCENE_LINE, talk fifth, archive writes ticker, keys under-hairline, away Iri named, Hub→Archive namestones.
 - 2026-08-26 14:28 CEST — Desktop wave 5: Aure overlook walk + site, Iri/Aure dual-claim lore, cradle pad, overlook aim glyph, Parent aim log, watch SCENE_LINE, grow quiet fifth, leftover named ticker, keys rail, aure doLine, Hub→Overlook aimposts.
 
 ## Log

@@ -82,6 +82,7 @@ import { growCairn } from "./cairn";
 import { growJoinLamps } from "./joinlamps";
 import { growHubVeil } from "./hubveil";
 import { growAimPosts } from "./aimposts";
+import { growNameStones } from "./namestones";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1559,6 +1560,7 @@ export function buildWorld(): CircuitWorld {
 		try { growJoinLamps(group, coarse); } catch { /* samsung */ }
 		try { growHubVeil(group, coarse); } catch { /* samsung */ }
 		try { growAimPosts(group, coarse); } catch { /* samsung */ }
+		try { growNameStones(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [

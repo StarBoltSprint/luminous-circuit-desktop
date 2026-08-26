@@ -231,7 +231,12 @@ function civicAwaySummary(raw: unknown, beats: number, ledger?: Ledger, log?: Se
     s = s.replace(/\s*No coin\.?\s*$/i, "").replace(/\s*[.]*\s*$/, "");
     const extra = `. ${who} labored. No coin.`;
     const body = s || "While you were gone";
-    return `${body.slice(0, Math.max(0, 180 - extra.length)).trimEnd()}${extra}`;
+    s = `${body.slice(0, Math.max(0, 180 - extra.length)).trimEnd()}${extra}`;
+  }
+  const scripture = clamp(Math.round(Number(ledger?.scripture) || 0), 0, 99);
+  if (beats > 0 && scripture >= 1 && !/iri|leftover light/i.test(s)) {
+    const iri = " Iri named leftover light.";
+    s = `${s.slice(0, Math.max(0, 180 - iri.length)).trimEnd()}${iri}`;
   }
   return s.slice(0, 180);
 }

@@ -208,6 +208,11 @@ export function createAudio(): AudioBus {
         } catch {
           /* Samsung — overtone optional, chime still sounds */
         }
+        try {
+          voice(c, { freq: 196, dur: 0.26, type: "sine", gain: 0.005, attack: 0.04, delay: 0.16 });
+        } catch {
+          /* Samsung — leftover-light fifth optional, chime still sounds */
+        }
       });
       buzz("talk");
     },

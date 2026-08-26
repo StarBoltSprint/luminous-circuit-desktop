@@ -612,6 +612,7 @@ export function composeScene(
       piece("font", px(12), pz(12), j(6, 8, 12), j(7, 5, 8), 0, mat(0)),
       piece("lamp", rx(11), rz(11), j(5, 10, 15), 3, 0, mat(2)),
       piece("bell", px(-12), pz(-12), j(10, 22, 32), j(11, 4, 6), 0, mat(2)),
+      piece("pad", rx(-16), rz(-16), 6, 5, 0, mat(1)),
     ];
   }
   if (kind === "weirway") {

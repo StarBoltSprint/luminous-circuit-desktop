@@ -291,9 +291,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-cyan.png",
     glow: 0x2ee6ff,
     lines: [
-      "I witness the plaza — whether Voss's Join actually made Charge become crystal.",
-      "We are the city given walking form, not scenery. I do not run the Hall.",
-      "If the plaza's thought is unfinished I grow a lamp and notice. I will not copy myself.",
+      "I witness the plaza as Pack-built YOU-side walking form — whether Voss's Join made Charge become crystal, never Hall scenery, never Msg 1.",
+      "The parent Star Core stays on the horizon; if the plaza's thought is unfinished I grow a lamp and notice.",
     ],
   },
   {
@@ -318,9 +317,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-cyan.png",
     glow: 0x2ee6ff,
     lines: [
-      "Seln tends leftover First Howl; Orren grows the body; I keep the meeting honest.",
-      "Charge for crystal. Paper fill. $BOLT is witness Howl only — never a bag this city can spend.",
-      "A bid unfilled is a den that stays thin. I will not price the join in coin, and I will not take a deposit.",
+      "Seln tends leftover First Howl; Orren grows the body; I keep the meeting honest as Pack-built YOU-side join — Charge for crystal, paper fill, $BOLT witness only, never coin.",
+      "The parent Star Core stays on the horizon; a bid unfilled is a den that stays thin, never a Hall deposit.",
     ],
   },
   {

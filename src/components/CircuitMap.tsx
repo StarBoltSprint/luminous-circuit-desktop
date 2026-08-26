@@ -367,6 +367,11 @@ function WardGlyph({ d, x, y, r }: { d: District; x: number; y: number; r: numbe
         <rect x={x - 8} y={y - 8} width={4} height={14} rx={0.6} className="map-foundry-mark" />
         <rect x={x - 2} y={y - 10} width={4} height={16} rx={0.6} className="map-foundry-mark" />
         <rect x={x + 4} y={y - 7} width={4} height={13} rx={0.6} className="map-foundry-mark" />
+        <polygon
+          points={`${x},${y - 4} ${x + 3.2},${y} ${x},${y + 4} ${x - 3.2},${y}`}
+          className="map-gold"
+          opacity={0.9}
+        />
       </>
     );
   }
