@@ -103,6 +103,11 @@ import { growFruitKiln } from "./fruitkiln";
 import { growHailGates } from "./hailgates";
 import { growFruitJoin } from "./fruitjoin";
 import { growRestChorus } from "./restchorus";
+import { growCanalAim } from "./canalaim";
+import { growGateHowl } from "./gatehowl";
+import { growVeinBough } from "./veinbough";
+import { growNameJoin } from "./namejoin";
+import { growSpanHail } from "./spanhail";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1613,6 +1618,11 @@ export function buildWorld(): CircuitWorld {
 		try { growHailGates(group, coarse); } catch { /* samsung */ }
 		try { growFruitJoin(group, coarse); } catch { /* samsung */ }
 		try { growRestChorus(group, coarse); } catch { /* samsung */ }
+		try { growCanalAim(group, coarse); } catch { /* samsung */ }
+		try { growGateHowl(group, coarse); } catch { /* samsung */ }
+		try { growVeinBough(group, coarse); } catch { /* samsung */ }
+		try { growNameJoin(group, coarse); } catch { /* samsung */ }
+		try { growSpanHail(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [

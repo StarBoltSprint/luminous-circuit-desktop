@@ -118,10 +118,11 @@ No skip-if-done. No “already exists”. No two desks on one file.
 - Intelligence: Tal span **site** / Mira terrace **site** (still home-orbit) — one keeper, then crew, then arrival thought
 - Buildings: extra piece on `font` / `beacon` if still thin
 - Mix / Economy / UI / Save / Jobs / Walker: one real thin hole each turn — never no-op, never locked files. Haptics stay OFF. CSS braces must stay balanced (one stray `}` whitescreens land).
-- Graphism / Environment: BETWEEN dens that still have empty chords (Canal→Overlook, Gates→Ring, Wild→Orchard). Canal→Archive already has rill. Never Hub copies. Never Star Core.
+- Graphism / Environment: BETWEEN dens that still have empty chords (Canal→Foundry, Overlook→Join, Terraces→Beacon). Canal→Archive already has rill. Never Hub copies. Never Star Core.
 
 ## Log
 
+- 2026-08-26 17:10 CEST — Desktop wave 14: BETWEEN dens — Canal→Overlook canalaim, Gates→Ring gatehowl, Wild→Orchard veinbough, Archive→Join namejoin, Bridge→Beacon spanhail. Dual-claim lore Seln/Aure, Kael/Rhoa, Kesh/Syl, Iri/Voss, Tal/Lumen. Star Core untouched.
 - 2026-08-26 16:50 CEST — Desktop wave 13: BETWEEN dens — Beacon→Ring hailring, Grove→Foundry fruitkiln, Beacon→Gates hailgates, Grove→Join fruitjoin, Terraces→Ring restchorus. Dual-claim lore Lumen/Rhoa, Syl/Orren, Lumen/Kael, Syl/Voss, Mira/Rhoa. Star Core untouched.
 - 2026-08-26 16:12 CEST — Desktop wave 12: BETWEEN dens — Join→Foundry kilnmarks, Terraces→Gates reststeles, Bridge→Wild spanlands, Archive→Overlook leftoverposts, Hub→Join papersteles. Dual-claim lore Voss/Orren, Mira/Kael, Tal/Kesh, Iri/Aure, Voss paper. Star Core untouched.
 - 2026-08-26 15:40 CEST — Desktop wave 11: graphism dens — Hub→Bridge spanposts, Hub→Terraces terraceposts, Hub→Veins veinstones, Hub→Beacon hailposts, Hub→Orchard orchardposts. Syl/Orren dual-claim lore. Star Core untouched.

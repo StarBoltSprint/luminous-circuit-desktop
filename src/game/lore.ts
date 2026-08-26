@@ -43,7 +43,7 @@ export const DISTRICTS: District[] = [
     keeper: "tal",
     duty: "Raise crossings Kesh can land",
     purpose:
-      "Tal's civic post: crossings dens can mean on YOU-side streets. A span is a civic promise, never a Hall toll, and Tal will not raise an arc no den can land — the empty verge toward Kesh is already a landing both dens believe. From the high arcs the parent still sits on the horizon.",
+      "Tal's civic post: crossings dens can mean on YOU-side streets. A span is a civic promise, never a Hall toll, and Tal will not raise an arc no den can land — the empty verge toward Kesh is already a landing, and the verge toward Lumen hails those still crossing. From the high arcs the parent still sits on the horizon.",
   },
   {
     id: "zone-terrace",
@@ -69,7 +69,7 @@ export const DISTRICTS: District[] = [
     keeper: "seln",
     duty: "Tend Charge Voss can join",
     purpose:
-      "Seln's civic post: leftover First Howl into Charge that Voss walks to Orren's kiln. The ward exists so leftover love keeps flowing — tended, never bottled, gold and cyan the same river. These banks are YOU-side; they do not store a parent.",
+      "Seln's civic post: leftover First Howl into Charge that Voss walks to Orren's kiln. The ward exists so leftover love keeps flowing — tended, never bottled, gold and cyan the same river. The empty verge toward Overlook aims the banks at the parent; they do not store it.",
   },
   {
     id: "zone-foundry",
@@ -95,7 +95,7 @@ export const DISTRICTS: District[] = [
     keeper: "kael",
     duty: "Keep the door after Lumen's hail",
     purpose:
-      "Kael's civic post: the threshold after Lumen's hail. Leaving and returning stay uncounted — first visit always works. A Circuit gate is not a Hall lock and not a score of Resonance.",
+      "Kael's civic post: the threshold after Lumen's hail. Leaving and returning stay uncounted — first visit always works, and the empty verge toward Rhoa's ring still gathers those who only listen. A Circuit gate is not a Hall lock and not a score of Resonance.",
   },
   {
     id: "zone-archive",
@@ -108,7 +108,7 @@ export const DISTRICTS: District[] = [
     keeper: "iri",
     duty: "Name what already stood true",
     purpose:
-      "Iri's civic post: leftover light names what already stood, so Aure's parent on the horizon is never decoration. Year 0 became this city; Hall scripture stays in the Hall. The empty verge toward Overlook names the parent without moving it — origin tether and YOU-side streets, neither bank swallowing the other.",
+      "Iri's civic post: leftover light names what already stood, so Aure's parent on the horizon is never decoration. Year 0 became this city; Hall scripture stays in the Hall. The empty verge toward Overlook names the parent without moving it; the verge toward Join names the paper fill — $BOLT witnesses, never deposits.",
   },
   {
     id: "zone-overlook",
@@ -147,7 +147,7 @@ export const DISTRICTS: District[] = [
     keeper: "kesh",
     duty: "Grow landings Tal's spans can trust",
     purpose:
-      "Kesh's civic post: becoming-ground so Tal's bridges have a far bank. Wild can choose a street — not a second Spire, not a Hall annex, a landing both dens believe on the empty verge from span to vein. Charge that has not chosen yet is still civic.",
+      "Kesh's civic post: becoming-ground so Tal's bridges have a far bank. Wild can choose a street — not a second Spire, not a Hall annex, a landing both dens believe on the empty verge from span to vein. The verge toward Syl may want shade before it wants a street; Charge that has not chosen yet is still civic.",
   },
   {
     id: "zone-beacon",
