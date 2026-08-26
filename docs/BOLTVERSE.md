@@ -121,6 +121,7 @@ Duty chain for leftover light: **Seln → Orren → Voss → Iri** (tend, kiln, 
 Dual-claim chords on empty ground (wave 12): Voss/Orren Join→Foundry; Mira/Kael Terraces→Gates; Tal/Kesh Bridge→Wild; Iri/Aure Archive→Overlook; Voss paper Hub→Join.
 Dual-claim chords (wave 13): Lumen/Rhoa Beacon→Ring; Syl/Orren Grove→Foundry; Lumen/Kael Beacon→Gates; Syl/Voss Grove→Join fruit when ready; Mira/Rhoa Terraces→Ring.
 Dual-claim chords (wave 14): Seln/Aure Canal→Overlook; Kael/Rhoa Gates→Ring; Kesh/Syl Wild→Orchard; Iri/Voss Archive→Join ($BOLT witness); Tal/Lumen Bridge→Beacon. None of them move the parent.
+Dual-claim chords (wave 15): Seln/Orren Canal→Foundry; Aure/Voss Overlook→Join ($BOLT witness); Mira/Lumen Terraces→Beacon; Tal/Orren Bridge→Foundry; Orren/Aure Foundry→Overlook. None of them move the parent.
 
 ## Vessels (same Boltverse, different windows)
 

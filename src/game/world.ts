@@ -108,6 +108,11 @@ import { growGateHowl } from "./gatehowl";
 import { growVeinBough } from "./veinbough";
 import { growNameJoin } from "./namejoin";
 import { growSpanHail } from "./spanhail";
+import { growCanalFound } from "./canalfound";
+import { growAimJoin } from "./aimjoin";
+import { growWardHail } from "./wardhail";
+import { growSpanFound } from "./spanfound";
+import { growFoundAim } from "./foundaim";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1623,6 +1628,11 @@ export function buildWorld(): CircuitWorld {
 		try { growVeinBough(group, coarse); } catch { /* samsung */ }
 		try { growNameJoin(group, coarse); } catch { /* samsung */ }
 		try { growSpanHail(group, coarse); } catch { /* samsung */ }
+		try { growCanalFound(group, coarse); } catch { /* samsung */ }
+		try { growAimJoin(group, coarse); } catch { /* samsung */ }
+		try { growWardHail(group, coarse); } catch { /* samsung */ }
+		try { growSpanFound(group, coarse); } catch { /* samsung */ }
+		try { growFoundAim(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [

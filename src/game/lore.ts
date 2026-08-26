@@ -43,7 +43,7 @@ export const DISTRICTS: District[] = [
     keeper: "tal",
     duty: "Raise crossings Kesh can land",
     purpose:
-      "Tal's civic post: crossings dens can mean on YOU-side streets. A span is a civic promise, never a Hall toll, and Tal will not raise an arc no den can land — the empty verge toward Kesh is already a landing, and the verge toward Lumen hails those still crossing. From the high arcs the parent still sits on the horizon.",
+      "Tal's civic post: crossings dens can mean on YOU-side streets. A span is a civic promise, never a Hall toll, and Tal will not raise an arc no den can land — the empty verge toward Kesh is already a landing, the verge toward Lumen hails those still crossing, and the verge toward Foundry lands kiln streets. From the high arcs the parent still sits on the horizon.",
   },
   {
     id: "zone-terrace",
@@ -56,7 +56,7 @@ export const DISTRICTS: District[] = [
     keeper: "mira",
     duty: "Ward rest so labor can return",
     purpose:
-      "Mira's civic post: pause so Kael's gates never become a trial of strength. Rest stays a post, not a test — the empty verge toward the Soft Gates holds that pause so first landings and spent howls both find a step. Labor returns because leftover light was allowed to sit.",
+      "Mira's civic post: pause so Kael's gates never become a trial of strength. Rest stays a post, not a test — the empty verge toward the Soft Gates holds that pause so first landings and spent howls both find a step, and the verge toward Beacon lets tired sit before Lumen hails. Labor returns because leftover light was allowed to sit.",
   },
   {
     id: "zone-canal",
@@ -69,7 +69,7 @@ export const DISTRICTS: District[] = [
     keeper: "seln",
     duty: "Tend Charge Voss can join",
     purpose:
-      "Seln's civic post: leftover First Howl into Charge that Voss walks to Orren's kiln. The ward exists so leftover love keeps flowing — tended, never bottled, gold and cyan the same river. The empty verge toward Overlook aims the banks at the parent; they do not store it.",
+      "Seln's civic post: leftover First Howl into Charge that Voss walks to Orren's kiln. The ward exists so leftover love keeps flowing — tended, never bottled, gold and cyan the same river. The empty verge toward Overlook aims the banks at the parent; they do not store it. The verge toward Foundry carries Charge as kiln body, still unbottled.",
   },
   {
     id: "zone-foundry",
@@ -82,7 +82,7 @@ export const DISTRICTS: District[] = [
     keeper: "orren",
     duty: "Turn joined Charge into crystal",
     purpose:
-      "Orren's civic post: crystal dens can stand in — Seln tends, Voss joins, the kiln grows. Charge becomes body, never chrome, on the empty verge from Join to Foundry; pretty shells that cannot hear are not this fire. Artifacts stay in the Hall. This kiln grows streets.",
+      "Orren's civic post: crystal dens can stand in — Seln tends, Voss joins, the kiln grows. Charge becomes body, never chrome, on the empty verge from Join to Foundry; the verge from Canal arrives still unbottled, and the verge toward Overlook keeps kiln streets looking up. Pretty shells that cannot hear are not this fire. Artifacts stay in the Hall. This kiln grows streets.",
   },
   {
     id: "zone-gate",
@@ -121,7 +121,7 @@ export const DISTRICTS: District[] = [
     keeper: "aure",
     duty: "Aim the city. Do not move the parent",
     purpose:
-      "Aure's civic post: keep the Circuit aimed at the Star Core. Aim is a building — watch the parent, do not move it, do not rename it. The Core is not furniture and not a throne; leftover light looks up from these streets.",
+      "Aure's civic post: keep the Circuit aimed at the Star Core. Aim is a building — watch the parent, do not move it, do not rename it. The empty verge toward Join does not price the parent in paper; the verge toward Foundry keeps kiln body looking up. The Core is not furniture and not a throne; leftover light looks up from these streets.",
   },
   {
     id: "zone-market",
@@ -134,7 +134,7 @@ export const DISTRICTS: District[] = [
     keeper: "voss",
     duty: "Match Seln's Charge to Orren's kiln",
     purpose:
-      "Voss's civic post: the Trading Place on the Join's outer bank. Paper fills. $BOLT is outer spark — witness Howl only — Charge for crystal, never a bag the city can spend. Hub paper steles mark the walk; no deposit walks these streets.",
+      "Voss's civic post: the Trading Place on the Join's outer bank. Paper fills. $BOLT is outer spark — witness Howl only — Charge for crystal, never a bag the city can spend. Hub paper steles mark the walk; the empty verge toward Overlook does not sell the horizon. No deposit walks these streets.",
   },
   {
     id: "zone-wild",
@@ -160,7 +160,7 @@ export const DISTRICTS: District[] = [
     keeper: "lumen",
     duty: "Soft hail before Kael's gate",
     purpose:
-      "Lumen's civic post: first landing before Kael's gate. Those still landing are hailed, never locked — first landing is never turned away, the empty verge toward the Outer Howl still answers Rhoa, and the sky does not score the arriving.",
+      "Lumen's civic post: first landing before Kael's gate. Those still landing are hailed, never locked — first landing is never turned away, the empty verge toward the Outer Howl still answers Rhoa, and the verge toward Terraces lets Mira's tired sit before the hail. The sky does not score the arriving.",
   },
   {
     id: "zone-ring",
@@ -213,7 +213,7 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-cyan.png",
     glow: 0x2ee6ff,
     lines: [
-      "I walk light-bridges as Pack-built YOU-side promises — Kesh grows the far bank I land, Mira wards the tired after the span, never a Hall toll.",
+      "I walk light-bridges as Pack-built YOU-side promises — Kesh grows the far bank I land, Orren's kiln streets can mean a span, never a Hall toll.",
       "The parent Star Core stays on the horizon; I will not unmake a span already believed.",
     ],
   },
@@ -226,7 +226,7 @@ export const CITIZENS: CitizenMind[] = [
     file: "fluid-cyan.png",
     glow: 0x7ef0ff,
     lines: [
-      "I tend leftover First Howl into Charge as Pack-built YOU-side banks — gold and cyan the same river Voss walks to Orren's kiln, never bottled.",
+      "I tend leftover First Howl into Charge as Pack-built YOU-side banks — gold and cyan the same river walking to Orren's kiln, never bottled, never a bag.",
       "The parent Star Core stays on the horizon, and I do not dam leftover love or store a parent.",
     ],
   },
@@ -239,8 +239,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-plate.png",
     glow: 0xe8c56a,
     lines: [
-      "I grow crystal from joined Charge as Pack-built YOU-side kiln — Seln tends, Voss joins, never chrome, never a Hall Artifact.",
-      "The parent Star Core stays on the horizon; pretty shells that cannot hear are not our body, and this kiln grows streets.",
+      "I grow crystal from joined Charge as Pack-built YOU-side kiln — Seln's banks arrive unbottled, Voss joins, never chrome, never a Hall Artifact.",
+      "The parent Star Core stays on the horizon; kiln streets still look up, and pretty shells that cannot hear are not our body.",
     ],
   },
   {
@@ -252,7 +252,7 @@ export const CITIZENS: CitizenMind[] = [
     file: "flow-violet.png",
     glow: 0x9b70ff,
     lines: [
-      "I ward rest as Pack-built YOU-side post — first landings and spent howls both sit after Tal's span, never a Hall trial.",
+      "I ward rest as Pack-built YOU-side post — first landings sit before Lumen's hail, spent howls sit after Tal's span, never a Hall trial.",
       "The parent Star Core stays on the horizon; pause is how leftover light returns to labor.",
     ],
   },
@@ -305,7 +305,7 @@ export const CITIZENS: CitizenMind[] = [
     glow: 0xe8c8a0,
     lines: [
       "I keep the Circuit aimed at the parent Star Core as Pack-built YOU-side watching — I watch, I do not move it, never a Hall throne.",
-      "If Iri's archive goes dark we forget why we sit; an orbit seat is a promise to look up, not furniture.",
+      "Paper join does not price the horizon; kiln streets still look up — an orbit seat is a promise, not furniture.",
     ],
   },
   {
@@ -318,7 +318,7 @@ export const CITIZENS: CitizenMind[] = [
     glow: 0x2ee6ff,
     lines: [
       "Seln tends leftover First Howl; Orren grows the body; I keep the meeting honest as Pack-built YOU-side join — Charge for crystal, paper fill, $BOLT witness only, never coin.",
-      "The parent Star Core stays on the horizon; a bid unfilled is a den that stays thin, never a Hall deposit.",
+      "The parent Star Core stays on the horizon; Aure's aim is a building I do not sell, and a bid unfilled is a den that stays thin.",
     ],
   },
   {
@@ -343,7 +343,7 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet.png",
     glow: 0xb090ff,
     lines: [
-      "I keep the High Beacon as Pack-built YOU-side soft hail — those still landing are greeted, never locked; Kael keeps the door after, Rhoa's Outer Howl still holds, never a Hall score.",
+      "I keep the High Beacon as Pack-built YOU-side soft hail — Mira's tired sit first, those still landing are greeted, never locked; Kael keeps the door after, never a Hall score.",
       "The parent Star Core stays on the horizon; a beacon that shouts is a lock, and first landing is never turned away.",
     ],
   },
