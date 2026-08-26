@@ -1,0 +1,44 @@
+{
+  "name": "luminous-circuit-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Desktop vessel of Luminous Circuit / Core Spire City. Pack-built. Not an official xAI product.",
+  "author": "StarBoltSprint",
+  "type": "module",
+  "main": "electron/main.mjs",
+  "scripts": {
+    "dev": "concurrently -k \"vite --port 5174 --strictPort\" \"wait-on tcp:5174 && electron .\"",
+    "dev:web": "vite --port 5174 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "start": "electron .",
+    "typecheck": "tsc --noEmit",
+    "dist": "npm run build && electron-builder --win"
+  },
+  "build": {
+    "appId": "sprint.starbolt.luminous-circuit",
+    "productName": "Luminous Circuit",
+    "directories": { "output": "release" },
+    "files": ["dist/**/*", "electron/**/*", "package.json"],
+    "win": { "target": ["nsis", "portable"] }
+  },
+  "dependencies": {
+    "lucide-react": "^0.510.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.185.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.1.2",
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.2",
+    "wait-on": "^8.0.4"
+  }
+}

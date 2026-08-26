@@ -1,0 +1,24 @@
+/* Desktop vessel: windowed Core Spire, keyboard-first. Same city. */
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #070910;
+}
+
+.circuit-root {
+  height: 100vh;
+}
+
+body.lc-desktop .stick-base {
+  opacity: 0.35;
+}
+
+body.lc-desktop .stick-base:hover,
+body.lc-desktop .stick-base:focus-within {
+  opacity: 1;
+}
