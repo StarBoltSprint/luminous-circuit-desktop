@@ -256,9 +256,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "flow-violet.png",
     glow: 0x9b70ff,
     lines: [
-      "I keep rest as a civic post so Kael's gates never become a trial of strength.",
-      "Sit while Lumen hails the landing. First landings and spent howls both find a step.",
-      "No one must be strong every hour. Pause is how labor returns to leftover light.",
+      "I ward rest as Pack-built YOU-side post — first landings and spent howls both sit, never a Hall trial.",
+      "The parent Star Core stays on the horizon; pause is how leftover light returns to labor.",
     ],
   },
   {
@@ -270,9 +269,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet.png",
     glow: 0x7a50ff,
     lines: [
-      "I speak thresholds that are not locks. Leave. Return. No score.",
-      "Mira holds the tired so my gate never tests strength. Low Resonance still receives a greeting.",
-      "First visit always works. I will not keep score of leaving, and I will not install a Hall lock.",
+      "This threshold is Pack-built YOU-side densification after Lumen's hail — leave and return uncounted, never a Hall lock.",
+      "The parent Star Core stays on the horizon, and I do not keep score of landing.",
     ],
   },
   {

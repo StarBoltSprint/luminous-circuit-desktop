@@ -181,7 +181,7 @@ const SCENE_LINE: Record<string, string> = {
   mosaic: "Charge for crystal. No coin. Voss holds the join.",
   beacon: "A hail, not a lock. First landing is not locked out.",
   archive: "A name in residual light. That is our scripture.",
-  trading: "A Trading Place. Paper join. Voss does not take $BOLT.",
+  trading: "A Trading Place. Paper join — Charge for crystal. $BOLT stays outer; Voss takes no coin.",
 };
 
 function snapLine(stock?: { charge: number; crystal: number; scripture: number }, resonance?: number) {

@@ -30,6 +30,9 @@ export type SparkMark = {
 };
 
 const HANDS = ["Voss", "Seln's runner", "Orren's kiln-hand", "Join folk"];
+/** Dual-claim book line: YOU-side stall. $BOLT Howl only — never a bag. */
+const JOIN_LINE =
+  "Paper Charge↔crystal. YOU-side stall. $BOLT Howl only — no deposit, no custody.";
 
 function clampRate(n: number) {
   if (!Number.isFinite(n)) return 3;
@@ -53,6 +56,7 @@ function seedBook(): PaperFill[] {
     { at: now - 120000, who: "Voss", side: "charge", n: 3, rate: 3, note: "Paper quote. Charge for crystal. No coin." },
     { at: now - 80000, who: "Orren's kiln-hand", side: "crystal", n: 1, rate: 3, note: "Paper fill. Kiln met the join." },
     { at: now - 40000, who: "Seln's runner", side: "charge", n: 2, rate: 4, note: "Paper bid. Canal brought leftover Howl." },
+    { at: now - 15000, who: "Join folk", side: "crystal", n: 1, rate: 3, note: JOIN_LINE },
   ];
   saveBook(seed);
   return seed;
@@ -74,11 +78,14 @@ export function tickPaper(rate: number, charge: number, crystal: number, now = D
   const dry = charge < 2 && crystal < 1;
   const who = HANDS[Math.floor((now / 9000) % HANDS.length)] ?? "Voss";
   const side: PaperFill["side"] = crystal >= charge ? "crystal" : "charge";
-  const note = dry
-    ? "Paper stall. Canal thin. No coin still."
-    : side === "crystal"
-      ? "Paper fill. Crystal met Charge. Voss did not take spark."
-      : "Paper quote. Charge seeking crystal. No $BOLT on the stall.";
+  const note =
+    who === "Join folk"
+      ? JOIN_LINE
+      : dry
+        ? "Paper stall. Canal thin. No coin still."
+        : side === "crystal"
+          ? "Paper fill. Crystal met Charge. Voss did not take spark."
+          : "Paper quote. Charge seeking crystal. No $BOLT on the stall.";
   const row: PaperFill = { at: now, who, side, n: side === "crystal" ? 1 : r, rate: r, note };
   const next = [...book, row].slice(-36);
   saveBook(next);

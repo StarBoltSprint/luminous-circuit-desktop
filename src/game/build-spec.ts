@@ -754,6 +754,7 @@ export function composeScene(
       piece("tablet", rx(-10), rz(-10), j(7, 8, 12), j(8, 3.5, 6), rot, mat(0)),
       piece("inlay", rx(14), rz(14), 6, j(9, 12, 18), 0, mat(2)),
       piece("lamp", rx(-16), rz(-16), j(10, 10, 16), 3, 0, mat(1)),
+      piece("stele", px(16), pz(16), j(11, 12, 18), 5, rot, mat(0)),
     ];
   }
   if (kind === "beacon") {

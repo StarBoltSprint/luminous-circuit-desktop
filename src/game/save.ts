@@ -129,7 +129,7 @@ export function loadSave(): SaveData {
       kin: Array.isArray(parsed.kin)
         ? (parsed.kin as KinSeed[]).filter((k) => k && typeof k.id === "string" && typeof k.crew === "string").slice(0, 24)
         : [],
-      lastAway: clampLastAway(parsed.lastAway),
+      lastAway: clampLastAway(parsed.lastAway, ledger),
     };
   } catch {
     return emptySave();
@@ -145,7 +145,7 @@ export function writeSave(data: SaveData) {
         version: SAVE_VERSION,
         log: data.log.slice(-36),
         structures: data.structures.slice(-CITY_CAP),
-        lastAway: clampLastAway(data.lastAway),
+        lastAway: clampLastAway(data.lastAway, data.ledger),
       }),
     );
   } catch {
@@ -175,18 +175,36 @@ function emptySave(): SaveData {
   };
 }
 
-function clampLastAway(raw: Partial<LastAway> | undefined): LastAway {
+function clampLastAway(raw: Partial<LastAway> | undefined, ledger?: Ledger): LastAway {
   if (!raw || typeof raw !== "object") return { ...EMPTY_AWAY };
   const beats = Number(raw.beats);
   const at = Number(raw.at);
-  const summary = typeof raw.summary === "string" ? raw.summary.slice(0, 180) : "";
   let n = Number.isFinite(beats) ? clamp(Math.floor(beats), 0, MAX_AWAY_BEATS) : 0;
+  const summary = civicAwaySummary(raw.summary, n, ledger);
   if (summary && n === 0) n = 1;
   return {
     summary,
     beats: n,
     at: Number.isFinite(at) && at > 0 ? at : 0,
   };
+}
+
+/** Away-card: Charge / crystal / scripture. Never coin. */
+function civicAwaySummary(raw: unknown, beats: number, ledger?: Ledger): string {
+  let s = typeof raw === "string" ? raw.replace(/\s+/g, " ").trim() : "";
+  s = s
+    .replace(/\$\s*\d+(?:\.\d+)?/g, "")
+    .replace(/\b((?:no|never|not|without)\s+)?coins?\b/gi, (m, keep: string | undefined) => (keep ? m : "Charge"))
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  if (beats > 0 && !/charge|crystal|scripture/i.test(s)) {
+    const charge = clamp(Math.round(Number(ledger?.charge) || 0), 0, 99);
+    const crystal = clamp(Math.round(Number(ledger?.crystal) || 0), 0, 99);
+    const scripture = clamp(Math.round(Number(ledger?.scripture) || 0), 0, 99);
+    const stock = `Charge ${charge} · crystal ${crystal}${scripture >= 1 ? ` · scripture ${scripture}` : ""}`;
+    s = s ? `${s} · ${stock}` : `While you were gone — ${beats} beat${beats === 1 ? "" : "s"}. ${stock}. No coin.`;
+  }
+  return s.slice(0, 180);
 }
 
 function clamp(n: number, a: number, b: number) {

@@ -181,6 +181,15 @@ function raiseHalo(x: number, y: number, s: number) {
     />
   );
 }
+/** Folk walk: inner stroke + dashed civic ring. Pointer-events none. */
+function FolkRing({ x, y, r }: { x: number; y: number; r: number }) {
+  return (
+    <g pointerEvents="none" aria-hidden="true">
+      <circle cx={x} cy={y} r={r + 3.2} className="map-plaza" />
+      <circle cx={x} cy={y} r={r} className="map-stroke" />
+    </g>
+  );
+}
 function withRaise(shape: string, x: number, y: number, s: number, node: ReactNode) {
   if (!isRaiseShape(shape)) return node;
   return (
@@ -524,9 +533,7 @@ export function CircuitMap({
           {hud.people.filter((p) => p.keeper).map((p) => (
             <g key={p.id}>
               {isGrowJob(p.job) && raiseHalo(mx(p.x), mz(p.z), 1)}
-              {isWalkJob(p.job) && (
-                <circle cx={mx(p.x)} cy={mz(p.z)} r={7} className="map-stroke" />
-              )}
+              {isWalkJob(p.job) && <FolkRing x={mx(p.x)} y={mz(p.z)} r={7} />}
               <circle
                 cx={mx(p.x)}
                 cy={mz(p.z)}
@@ -543,9 +550,7 @@ export function CircuitMap({
           {hud.people.filter((p) => !p.keeper).slice(0, 40).map((p) => (
             <g key={p.id}>
               {isGrowJob(p.job) && raiseHalo(mx(p.x), mz(p.z), 1)}
-              {isWalkJob(p.job) && (
-                <circle cx={mx(p.x)} cy={mz(p.z)} r={5} className="map-stroke" />
-              )}
+              {isWalkJob(p.job) && <FolkRing x={mx(p.x)} y={mz(p.z)} r={5} />}
               <circle
                 cx={mx(p.x)}
                 cy={mz(p.z)}
@@ -752,9 +757,7 @@ function ZoneSheet({
           {folk.filter((p) => p.keeper).map((p) => (
             <g key={p.id}>
               {isGrowJob(p.job) && raiseHalo(sx(p.x), sy(p.z), 1)}
-              {isWalkJob(p.job) && (
-                <circle cx={sx(p.x)} cy={sy(p.z)} r={8} className="map-stroke" />
-              )}
+              {isWalkJob(p.job) && <FolkRing x={sx(p.x)} y={sy(p.z)} r={8} />}
               <circle cx={sx(p.x)} cy={sy(p.z)} r={isGrowJob(p.job) ? 6 : 5} className="map-violet" />
               {Math.hypot(sx(p.x) - hubX, sy(p.z) - hubY) > 48 && (
                 <text x={sx(p.x)} y={sy(p.z) - 12} textAnchor="middle" className="map-name">
@@ -766,9 +769,7 @@ function ZoneSheet({
           {folk.filter((p) => !p.keeper).slice(0, 20).map((p) => (
             <g key={p.id}>
               {isGrowJob(p.job) && raiseHalo(sx(p.x), sy(p.z), 1)}
-              {isWalkJob(p.job) && (
-                <circle cx={sx(p.x)} cy={sy(p.z)} r={5} className="map-stroke" />
-              )}
+              {isWalkJob(p.job) && <FolkRing x={sx(p.x)} y={sy(p.z)} r={5} />}
               <circle
                 cx={sx(p.x)}
                 cy={sy(p.z)}

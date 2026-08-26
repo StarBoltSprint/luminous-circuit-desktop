@@ -20,6 +20,11 @@ export type LogTab = (typeof LOG_TABS)[number]["id"];
 
 const WORK_KINDS = new Set(["grow", "build", "forge", "flow", "harvest", "trade", "write", "hail", "watch", "crew", "stood", "walk", "home", "howl", "gather"]);
 
+/** Voss walk-the-Join labor. HUD job is the thought, not raw `watch`. */
+function joinLaborPrefix(id: string, blob: string) {
+  return id === "voss" && /join|paper/i.test(blob) ? "Paper join · " : "";
+}
+
 function isIdleJob(job: string) {
   const j = (job || "").trim().toLowerCase();
   return !j || j === "at rest" || j === "idle";
@@ -121,8 +126,8 @@ export function LogSheet({
   const liveAll = (hud.live ?? []).slice().reverse();
   const hailNow = liveAll.filter((l) => /hail|crew/i.test(l.kind)).length;
   const feed = tab === "work" ? liveAll.filter((l) => WORK_KINDS.has(l.kind ?? "")).sort((a, b) => {
-    const rank = (k: string) => (k === "crew" || k === "grow" || k === "stood" || k === "build" || k === "forge" || k === "walk" || k === "home" ? 0 : 1);
-    return rank(a.kind ?? "") - rank(b.kind ?? "");
+    const rank = (k: string, id = "", text = "") => (joinLaborPrefix(id, text) || k === "crew" || k === "grow" || k === "stood" || k === "build" || k === "forge" || k === "walk" || k === "home" ? 0 : 1);
+    return rank(a.kind ?? "", a.id, a.text) - rank(b.kind ?? "", b.id, b.text);
   }) : liveAll;
   const grown = Object.entries(
     (hud.crystal ?? []).reduce<Record<string, number>>((acc, p) => {
@@ -215,10 +220,10 @@ export function LogSheet({
             {feed.map((l, i) => (
               <li key={`${l.at}-${i}`} className="log-row">
                 <span className="text-accent">{l.name.split(" ")[0]}</span>
-                <span className="log-kind">{l.kind}</span>
+                <span className="log-kind">{joinLaborPrefix(l.id, l.text) ? "join" : l.kind}</span>
                 <p>
                   <span className="log-live-pip inline-block h-[6px] w-[6px] shrink-0 rounded-full align-middle mr-1.5" style={{ background: "var(--color-accent)" }} aria-hidden />
-                  {l.text}
+                  {joinLaborPrefix(l.id, l.text)}{l.text}
                 </p>
               </li>
             ))}
@@ -239,7 +244,7 @@ export function LogSheet({
                       </span>
                       <span className="text-xs text-accent">{/hail/i.test(a.job) ? "Hailing you" : a.job}</span>
                     </span>
-                    <span className="block text-xs text-muted">{a.id === "lumen" && /hail|watch/i.test(a.job) ? "Soft hail · " : a.id === "kael" && /watch|hail/i.test(a.job) ? "On the gate · " : a.id === "veyra" && /watch|hail|breath/i.test(a.job) ? "Hub breath · " : (a.job || "").trim().toLowerCase() === "hail" ? "Hailing · " : a.id === "kesh" && /walk|watch/i.test(a.job) ? "On the wild vein · " : ((a.job || "").includes("Back to the post") || (a.job || "").trim().toLowerCase() === "walk") ? "Walking home · " : a.id === "tal" && /watch/i.test(a.job) ? "On the span · " : a.id === "mira" && /watch/i.test(a.job) ? "On the terrace · " : a.id === "aure" && /watch/i.test(a.job) ? "At the overlook · " : /watch/i.test(a.job) && a.id === "nesh" ? "On the plaza · " : a.id === "rhoa" && /gather|watch/i.test(a.job) ? "At the ring · " : a.id === "syl" && /harvest|watch/i.test(a.job) ? "In the orchard · " : a.id === "voss" && /trade|watch/i.test(a.job) ? "At the join · " : a.id === "iri" && /write|watch/i.test(a.job) ? "At the archive · " : a.id === "orren" && /forge|watch/i.test(a.job) ? "At the kiln · " : a.id === "seln" && /flow|watch/i.test(a.job) ? "On the canal · " : ""}{post?.duty ?? a.role}{a.intent ? ` · ${a.intent}` : ""}</span>
+                    <span className="block text-xs text-muted">{joinLaborPrefix(a.id, a.job) || (a.id === "lumen" && /hail|watch/i.test(a.job) ? "Soft hail · " : a.id === "kael" && /watch|hail/i.test(a.job) ? "On the gate · " : a.id === "veyra" && /watch|hail|breath/i.test(a.job) ? "Hub breath · " : (a.job || "").trim().toLowerCase() === "hail" ? "Hailing · " : a.id === "kesh" && /walk|watch/i.test(a.job) ? "On the wild vein · " : ((a.job || "").includes("Back to the post") || (a.job || "").trim().toLowerCase() === "walk") ? "Walking home · " : a.id === "tal" && /watch/i.test(a.job) ? "On the span · " : a.id === "mira" && /watch/i.test(a.job) ? "On the terrace · " : a.id === "aure" && /watch/i.test(a.job) ? "At the overlook · " : /watch/i.test(a.job) && a.id === "nesh" ? "On the plaza · " : a.id === "rhoa" && /gather|watch/i.test(a.job) ? "At the ring · " : a.id === "syl" && /harvest|watch/i.test(a.job) ? "In the orchard · " : a.id === "voss" && /trade|watch/i.test(a.job) ? "At the join · " : a.id === "iri" && /write|watch/i.test(a.job) ? "At the archive · " : a.id === "orren" && /forge|watch/i.test(a.job) ? "At the kiln · " : a.id === "seln" && /flow|watch/i.test(a.job) ? "On the canal · " : "")}{post?.duty ?? a.role}{a.intent ? ` · ${a.intent}` : ""}</span>
                   </button>
                 </li>
               );

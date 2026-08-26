@@ -15,10 +15,74 @@ const STOOD_KEY = "lc-stood";
 const CHAIN_KEY = "lc-chain";
 const CHAIN_MS = 12 * 60 * 1000;
 const CHAIN_NEED = ["seln", "orren", "voss"] as const;
+const WITH_MS = 2400;
+const KEEPERS = new Set([
+  "veyra",
+  "tal",
+  "seln",
+  "orren",
+  "mira",
+  "kael",
+  "iri",
+  "nesh",
+  "aure",
+  "voss",
+  "kesh",
+  "lumen",
+  "rhoa",
+  "syl",
+]);
+
+type WithSnap = { who: string | null; still: boolean; present: boolean; at: number };
+const withSnap: WithSnap = { who: null, still: true, present: true, at: 0 };
+let lastNeedle = 180;
+let leftWindow = false;
+
+/** This desktop window is the den. Hidden or unfocused Howl is thin. */
+export function deskPresent(): boolean {
+  try {
+    if (typeof document === "undefined") return true;
+    if (document.visibilityState === "hidden") return false;
+    if (typeof document.hasFocus === "function" && !document.hasFocus()) return false;
+    return true;
+  } catch {
+    return true;
+  }
+}
+
+function stampWith(part: Partial<Omit<WithSnap, "at">>) {
+  if (part.who !== undefined) withSnap.who = part.who;
+  if (part.still !== undefined) withSnap.still = part.still;
+  if (part.present !== undefined) withSnap.present = part.present;
+  withSnap.at = Date.now();
+}
+
+function withFresh(): boolean {
+  return withSnap.at > 0 && Date.now() - withSnap.at <= WITH_MS;
+}
+
+function namedKeeper(id: string | null | undefined): id is string {
+  return !!id && KEEPERS.has(id);
+}
+
+function withThemNow(): boolean {
+  return namedKeeper(withSnap.who) && withSnap.still && withSnap.present && withFresh();
+}
+
+/** Gold timing, this window, nearest body is that keeper. No XP. */
+export function withHowl(g: HowlGrade, keeper: string | null): boolean {
+  if (g === "thin" || !namedKeeper(keeper)) return false;
+  if (!withSnap.still || !withSnap.present || !withFresh()) return false;
+  return withSnap.who === keeper;
+}
 
 export function gradeHowl(holdSec: number, target = 1.15): HowlGrade {
   const t = Math.max(0.4, target);
   const r = holdSec / t;
+  const present = deskPresent();
+  leftWindow = !present;
+  stampWith({ present });
+  if (!present) return "thin";
   if (r < 0.72) return "thin";
   if (r > 1.55) return "thin";
   if (r >= 0.92 && r <= 1.18) return "held";
@@ -26,15 +90,21 @@ export function gradeHowl(holdSec: number, target = 1.15): HowlGrade {
 }
 
 export function howlMult(g: HowlGrade): number {
-  if (g === "held") return 1.4;
   if (g === "thin") return 0.45;
-  return 1;
+  const withThem = withThemNow();
+  if (g === "held") return withThem ? 1.65 : 1.4;
+  return withThem ? 1.2 : 1;
 }
 
 export function gradeLine(g: HowlGrade, verb: string): string {
-  if (g === "held") return `${verb} landed true. The den felt you.`;
-  if (g === "thin") return `${verb} was thin. Hold through the gold, then let go.`;
-  return `${verb} heard. Not empty.`;
+  if (g === "thin") {
+    if (leftWindow) return `${verb} was thin. Stay in this window through the gold.`;
+    return `${verb} was thin. Hold through the gold, then let go.`;
+  }
+  if (g === "held") {
+    return withThemNow() ? `${verb} landed true. You stood with them.` : `${verb} landed true. The den felt you.`;
+  }
+  return withThemNow() ? `${verb} heard. You stood with them.` : `${verb} heard. Not empty.`;
 }
 
 /** Star Core sits west-low. Aim: yaw toward −X, slight look-up. */
@@ -58,7 +128,9 @@ export function loadStood(): number {
 }
 
 export function markStood(): number {
-  const n = loadStood() + 1;
+  const n0 = loadStood();
+  if (!withThemNow()) return n0;
+  const n = n0 + 1;
   try {
     localStorage.setItem(STOOD_KEY, String(n));
   } catch {
@@ -114,7 +186,7 @@ export function loadChain(): string[] {
 export function markChain(keeper: string, grade: HowlGrade): { n: number; complete: boolean } {
   const row = readChain();
   const before = chainHit(row.steps);
-  if ((grade === "true" || grade === "held") && keeper) {
+  if (withHowl(grade, keeper)) {
     row.steps.push(keeper);
     if (!row.at) row.at = Date.now();
     writeChain(row);
@@ -127,7 +199,7 @@ export function dutyDone(duty: Duty | null, keeper: string | null, g: HowlGrade)
   if (!duty || !keeper) return false;
   if (duty.keeper !== keeper) return false;
   if (!duty.here) return false;
-  return g !== "thin";
+  return withHowl(g, keeper);
 }
 
 /** HUD needle: 0 = in front of you. Duty zone relative to walk heading. */
@@ -136,17 +208,35 @@ export function needleDeg(px: number, pz: number, tx: number, tz: number, yaw: n
   let d = ((want - yaw) * 180) / Math.PI;
   while (d > 180) d -= 360;
   while (d < -180) d += 360;
+  lastNeedle = d;
   return d;
 }
 
+/** Mouse-look at a body. WASD does not turn you. */
+export function facingWho(px: number, pz: number, whoX: number, whoZ: number, yaw: number, maxDeg = 22): boolean {
+  if (![px, pz, whoX, whoZ, yaw].every(Number.isFinite)) return false;
+  const want = Math.atan2(whoX - px, whoZ - pz);
+  let d = ((want - yaw) * 180) / Math.PI;
+  while (d > 180) d -= 360;
+  while (d < -180) d += 360;
+  return Math.abs(d) <= maxDeg;
+}
+
+export function facingDen(maxDeg = 22): boolean {
+  return Number.isFinite(lastNeedle) && Math.abs(lastNeedle) <= maxDeg;
+}
+
 export function talkWitness(nearbyId: string | null, dutyKeeper: string | null): boolean {
+  stampWith({ who: nearbyId || null, present: deskPresent() });
   if (!nearbyId || !dutyKeeper) return false;
   return nearbyId === dutyKeeper;
 }
 
 /** Howl while walking is thin. Stand. Speed is world units. */
 export function stillHowl(speed: number): boolean {
-  return !Number.isFinite(speed) || speed < 5.5;
+  const still = !Number.isFinite(speed) || speed < 5.5;
+  stampWith({ still, present: deskPresent() });
+  return still;
 }
 
 export function shapeFits(shape: string | null | undefined, keeper: string | null): boolean {

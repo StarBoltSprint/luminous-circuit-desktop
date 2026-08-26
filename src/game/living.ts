@@ -1875,13 +1875,14 @@ function pulseSylShade(c, citizens) {
 	const now = Date.now();
 	if (now - (c.lastPulse || c.lastHail || 0) < 48e3) return;
 	c.lastPulse = now;
-	const a = ((now / 8000) % (Math.PI * 2));
-	setRoute(c, c.homeX + Math.cos(a) * 28, c.homeZ + Math.sin(a) * 28);
+	const sites = occupied.filter((o) => o.shape === "grove" || o.shape === "bough");
+	const pick = sites.length ? sites[Math.floor(now / 48e3) % sites.length] : null;
+	setRoute(c, pick ? pick.x : c.homeX, pick ? pick.z : c.homeZ);
 	c.job = "watch";
-	c.timer = 10;
-	c.thought = "Syl waits for shade — fruit, not a kiln";
+	c.timer = 12;
+	c.thought = "Syl walks the orchard — rest fruit, leftover light";
 	c.intent = c.thought;
-	noteLive(c, "harvest", c.thought);
+	noteLive(c, "watch", c.thought);
 	let n = 0;
 	for (const o of citizens) {
 		if (o === c) continue;
@@ -1892,7 +1893,7 @@ function pulseSylShade(c, citizens) {
 		if (n > 3) break;
 		setRoute(o, c.tx, c.tz);
 		o.job = "help";
-		o.timer = 10;
+		o.timer = 12;
 		o.intent = "Walking the orchard with Syl";
 		o.thought = o.intent;
 		noteLive(o, "crew", o.intent);
@@ -3395,7 +3396,7 @@ export function stepLiving(citizens, dt, room, sense, applyPieces) {
 					c.timer = 1.8;
 				} else if (c.job === "watch") {
 					if (sense.ledger.scripture < 12) sense.ledger.scripture += .25;
-					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : "The parent still sits on the horizon. Aim held.";
+					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : "The parent still sits on the horizon. Aim held.";
 					c.intent = "Keeping the aim";
 					noteLive(c, "watch", c.thought);
 					reportDone(c, c.thought);
