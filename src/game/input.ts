@@ -7,11 +7,13 @@ export type Actions = {
   talk: boolean;
   sprint: boolean;
   pause: boolean;
+  rise: boolean;
+  sink: boolean;
 };
 
 export type InputHandle = {
   actions: Actions;
-  justPressed: { talk: boolean; pause: boolean; howl: boolean };
+  justPressed: { talk: boolean; pause: boolean; howl: boolean; fly: boolean };
   setMoveStick: (x: number, y: number) => void;
   setLookStick: (x: number, y: number) => void;
   setHowl: (v: boolean) => void;
@@ -30,6 +32,8 @@ const empty = (): Actions => ({
   talk: false,
   sprint: false,
   pause: false,
+  rise: false,
+  sink: false,
 });
 
 function radial(x: number, y: number, dz = 0.14) {
@@ -70,9 +74,9 @@ export function createInput(target: HTMLElement): InputHandle {
   const stickLook = { x: 0, y: 0 };
   let howlBtn = false;
   let talkBtn = false;
-  const prev = { talk: false, pause: false, howl: false };
+  const prev = { talk: false, pause: false, howl: false, fly: false };
   const actions = empty();
-  const justPressed = { talk: false, pause: false, howl: false };
+  const justPressed = { talk: false, pause: false, howl: false, fly: false };
 
   const GAME_KEYS = new Set([
     "KeyW",
@@ -90,6 +94,9 @@ export function createInput(target: HTMLElement): InputHandle {
     "KeyF",
     "KeyH",
     "KeyT",
+    "KeyC",
+    "ControlLeft",
+    "ControlRight",
   ]);
 
   let mouseDx = 0;
@@ -195,17 +202,22 @@ export function createInput(target: HTMLElement): InputHandle {
 
       actions.sprint =
         keys.has("ShiftLeft") || keys.has("ShiftRight") || Math.hypot(mv.x, mv.y) > 0.92;
-      actions.howl = howlBtn || keys.has("Space") || keys.has("KeyH");
-      actions.talk = talkBtn || keys.has("KeyE") || keys.has("KeyF") || keys.has("KeyT");
+      const flyHeld = keys.has("KeyF");
+      actions.rise = keys.has("Space");
+      actions.sink = keys.has("KeyC") || keys.has("ControlLeft") || keys.has("ControlRight");
+      actions.howl = howlBtn || keys.has("KeyH");
+      actions.talk = talkBtn || keys.has("KeyE") || keys.has("KeyT");
       actions.pause = keys.has("KeyP") || (keys.has("Escape") && !unlockSkipPause);
       unlockSkipPause = false;
 
       justPressed.talk = actions.talk && !prev.talk;
       justPressed.pause = actions.pause && !prev.pause;
       justPressed.howl = actions.howl && !prev.howl;
+      justPressed.fly = flyHeld && !prev.fly;
       prev.talk = actions.talk;
       prev.pause = actions.pause;
       prev.howl = actions.howl;
+      prev.fly = flyHeld;
 
       void target;
     },

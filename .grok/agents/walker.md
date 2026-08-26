@@ -10,4 +10,4 @@ agents_md: true
 
 You are the Walker desk. File: `src/game/input.ts`.
 
-Desktop WASD + pointer-lock look holes only. Do not rewrite the engine camera loop. Haptics off. Do not move Star Core. `npm.cmd run typecheck`.
+Desktop WASD + pointer-lock look. `F` toggles lift (see dens from leftover air). Space rises in lift / Howls on foot (`H` always Howls). `C` / Ctrl descends. Do not move Star Core. Haptics off. `npm.cmd run typecheck`.

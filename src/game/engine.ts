@@ -65,6 +65,7 @@ export type HudSnap = {
   mode: "title" | "play" | "pause";
   debug: { fps: number; bug: string; citizens: number; building: number; structures: number };
   away: string | null;
+  fly?: boolean;
 };
 
 export type EngineHandle = {
@@ -194,8 +195,12 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		z: save.pz,
 		yaw: save.yaw,
 		pitch: -.12,
-		speed: 0
+		speed: 0,
+		fly: false
 	};
+	const FLY_MAX = 820;
+	const FLY_SPD = 56;
+	const FLY_SPRINT = 118;
 	function placeCam() {
 		const fx = -Math.sin(player.yaw);
 		const fz = -Math.cos(player.yaw);
@@ -318,7 +323,9 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		if (Math.hypot(e.clientX - ptr.sx, e.clientY - ptr.sy) > 14) ptr.dragged = true;
 		if (ptr.dragged) {
 			player.yaw -= dx * .0048;
-			player.pitch = Math.max(-1.1, Math.min(.45, player.pitch - dy * .0036));
+			const pLo = player.fly ? -1.45 : -1.1;
+			const pHi = player.fly ? .82 : .45;
+			player.pitch = Math.max(pLo, Math.min(pHi, player.pitch - dy * .0036));
 			ptr.lx = e.clientX;
 			ptr.ly = e.clientY;
 		}
@@ -539,6 +546,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			howlHint: howlHold < 0.04 ? undefined : (howlHold / HUB.holdSec >= 0.92 && howlHold / HUB.holdSec <= 1.18 ? "Release" : howlHold / HUB.holdSec > 1.18 ? "Let go" : "Hold through the gold"),
 			witness: witnessed,
 			still: stillHowl(player.speed),
+			fly: player.fly,
 			atHub: Math.hypot(player.x, player.z) < HUB.radius,
 			toast,
 			heading: player.yaw,
@@ -699,8 +707,15 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		try {
 		const act = input.actions;
 		if (mode === "play") {
+			if (input.justPressed.fly) {
+				player.fly = !player.fly;
+				walkTo.on = false;
+				showToast(player.fly ? "Lift. The dens from leftover air." : "Feet on crystal.");
+			}
 			player.yaw -= act.lookX * 1.9 * raw;
-			player.pitch = Math.max(-1.1, Math.min(.45, player.pitch + act.lookY * 1.1 * raw));
+			const pLo = player.fly ? -1.45 : -1.1;
+			const pHi = player.fly ? .82 : .45;
+			player.pitch = Math.max(pLo, Math.min(pHi, player.pitch + act.lookY * 1.1 * raw));
 			const fx = -Math.sin(player.yaw);
 			const fz = -Math.cos(player.yaw);
 			const rx = Math.cos(player.yaw);
@@ -711,7 +726,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			let wishZ = tmpF.z * act.moveY + tmpR.z * act.moveX;
 			let mag = Math.hypot(wishX, wishZ);
 			if (mag > .08) walkTo.on = false;
-			if (walkTo.on && mag < .08) {
+			if (walkTo.on && mag < .08 && !player.fly) {
 				const dx = walkTo.x - player.x;
 				const dz = walkTo.z - player.z;
 				const d = Math.hypot(dx, dz);
@@ -726,13 +741,16 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 					player.yaw += want * Math.min(1, 10 * dt);
 				}
 			}
-			walkMark.visible = walkTo.on;
+			walkMark.visible = walkTo.on && !player.fly;
 			if (walkTo.on) {
 				const gy = world.sampleY(walkTo.x, walkTo.z) + .14;
 				walkMark.position.set(walkTo.x, gy + Math.sin(now / 180) * .1, walkTo.z);
 				walkMark.scale.setScalar(1 + Math.sin(now / 140) * .12);
 			}
-			const maxSp = act.sprint || walkTo.on && mag > 12 ? 48 : 28;
+			const groundY = world.sampleY(player.x, player.z) + 1.55;
+			const maxSp = player.fly
+				? (act.sprint ? FLY_SPRINT : FLY_SPD)
+				: (act.sprint || walkTo.on && mag > 12 ? 48 : 28);
 			const target = mag > .01 ? maxSp : 0;
 			player.speed += (target - player.speed) * (1 - Math.exp(-14 * Math.max(dt, 1e-4)));
 			if (mag > .01) {
@@ -740,8 +758,15 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 				player.z += wishZ / mag * player.speed * dt;
 			}
 			pushOut();
-			player.y = world.sampleY(player.x, player.z) + 1.55;
-			audio.foot(player.speed);
+			if (player.fly) {
+				const climb = (act.sprint ? FLY_SPRINT : FLY_SPD) * 0.72 * dt;
+				if (act.rise) player.y += climb;
+				if (act.sink) player.y -= climb;
+				player.y = Math.max(groundY, Math.min(FLY_MAX, player.y));
+			} else {
+				player.y = groundY;
+				audio.foot(player.speed);
+			}
 			const zone = currentZone();
 			if (zone && !visited.has(zone.id)) {
 				visited.add(zone.id);
@@ -767,7 +792,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 				speechClear -= dt;
 				if (speechClear <= 0) nearbyLine = "";
 			}
-			if (act.howl) {
+			if (act.howl || (!player.fly && act.rise)) {
 				howlHold += dt;
 			} else if (howlHold >= 0.35) {
 					const held = howlHold;
@@ -861,10 +886,13 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		coreGlow.scale.setScalar(1 + Math.sin(now / 1e3 * 3.2) * .12);
 		const fx = -Math.sin(player.yaw);
 		const fz = -Math.cos(player.yaw);
-		const camDist = 8.6;
-		camDesired.set(player.x - fx * camDist, player.y + 3.55 + Math.sin(player.pitch) * 2.6, player.z - fz * camDist);
+		const lift = Math.max(0, player.y - (world.sampleY(player.x, player.z) + 1.55));
+		const camDist = 8.6 + (player.fly ? Math.min(42, lift * 0.045) : 0);
+		const pitchLift = player.fly ? 9 : 2.6;
+		const lookLift = player.fly ? 16 : 6;
+		camDesired.set(player.x - fx * camDist, player.y + 3.55 + Math.sin(player.pitch) * pitchLift, player.z - fz * camDist);
 		camera.position.lerp(camDesired, 1 - Math.exp(-6.5 * raw));
-		camLook.set(player.x + fx * 7, player.y + 1.35 + player.pitch * 6, player.z + fz * 7);
+		camLook.set(player.x + fx * 7, player.y + 1.35 + player.pitch * lookLift, player.z + fz * 7);
 		camera.lookAt(camLook);
 		if (mode === "play") {
 			if (gatherT > 0) gatherT = Math.max(0, gatherT - liveDt);
@@ -1102,6 +1130,8 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			player.z = 78;
 			player.yaw = 0;
 			player.pitch = -.12;
+			player.fly = false;
+			player.y = world.sampleY(0, 78) + 1.55;
 			resonance = 12;
 			howls = 0;
 			visited.clear();

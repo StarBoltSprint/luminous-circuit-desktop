@@ -20,13 +20,22 @@ function KeysLegend() {
         <span>sprint</span>
       </p>
       <p className="lc-keys-row">
+        <kbd className="lc-keys-cyan">F</kbd>
+        <span>lift</span>
+        <kbd>Space</kbd>
+        <span>up</span>
+        <kbd>C</kbd>
+        <span>down</span>
+      </p>
+      <p className="lc-keys-row">
         <kbd>E</kbd>
         <kbd>T</kbd>
         <span>talk</span>
         <span className="lc-keys-hold">hold</span>
         <kbd className="lc-keys-cyan">H</kbd>
-        <kbd className="lc-keys-wide lc-keys-cyan">Space</kbd>
         <span className="lc-keys-howl">Howl</span>
+        <kbd className="lc-keys-wide lc-keys-cyan">Space</kbd>
+        <span>Howl on foot</span>
       </p>
       <p className="lc-keys-row">
         <span>click city look</span>
