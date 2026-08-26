@@ -1934,11 +1934,11 @@ function pulseLumenHail(c, citizens) {
 	const now = Date.now();
 	if (now - (c.lastPulse || c.lastHail || 0) < 50e3) return;
 	c.lastPulse = now;
-	const a = ((now / 8000) % (Math.PI * 2));
-	setRoute(c, c.homeX + Math.cos(a) * 40, c.homeZ + Math.sin(a) * 40);
+	const pick = lumenHailSite(c);
+	setRoute(c, pick.x, pick.z);
 	c.job = "watch";
-	c.timer = 10;
-	c.thought = "Lumen holds a soft hail — first landing is not a lock";
+	c.timer = 12;
+	c.thought = "Lumen walks the hail — welcome, not a score";
 	c.intent = c.thought;
 	noteLive(c, "hail", c.thought);
 	let n = 0;
@@ -1951,7 +1951,7 @@ function pulseLumenHail(c, citizens) {
 		if (n > 3) break;
 		setRoute(o, c.tx, c.tz);
 		o.job = "help";
-		o.timer = 10;
+		o.timer = 12;
 		o.intent = "Walking the hail with Lumen";
 		o.thought = o.intent;
 		noteLive(o, "crew", o.intent);
@@ -2107,6 +2107,11 @@ function nearestOf(c, shapes) {
 	}
 	return best;
 }
+function lumenHailSite(c) {
+	const sites = occupied.filter((o) => (o.shape === "lamp" || o.shape === "beacon") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 200);
+	if (!sites.length) return { x: c.homeX, z: c.homeZ };
+	return sites[Math.floor(Date.now() / 50e3) % sites.length];
+}
 function folkEnactDuty(c, kitId, duty) {
 	const post = postOf(kitId);
 	if (duty.act === "flow") {
@@ -2146,7 +2151,8 @@ function folkEnactDuty(c, kitId, duty) {
 		c.thought = `Watch assist · ${duty.line}`;
 		c.intent = `Assist · ${post}`;
 	} else if (duty.act === "hail") {
-		setRoute(c, c.homeX, c.homeZ);
+		const pick = lumenHailSite(c);
+		setRoute(c, pick.x, pick.z);
 		c.job = "hail";
 		c.timer = 14;
 		c.thought = `Beacon assist · ${duty.line}`;
@@ -2300,7 +2306,8 @@ function enact(c, task, reason, kitId, kit, byId, stock) {
 		c.job = "watch";
 		c.timer = 14;
 	} else if (task === "hail") {
-		setRoute(c, c.homeX, c.homeZ);
+		const pick = lumenHailSite(c);
+		setRoute(c, pick.x, pick.z);
 		c.job = "hail";
 		c.timer = 14;
 	} else {
@@ -2788,10 +2795,11 @@ function decide(c, room, sense, byId) {
 		name: "hail",
 		score: 86 + (dPlayer < 80 ? 18 : 0) - (boredOf(c, "hail") ? 8 : 0),
 		run: () => {
-			setRoute(c, c.homeX, c.homeZ);
+			const pick = lumenHailSite(c);
+			setRoute(c, pick.x, pick.z);
 			c.job = "hail";
 			c.timer = 14;
-			c.thought = dPlayer < 80 ? "A landing is near. Soft hail — not a lock." : "Beacon held. First landing is never turned away.";
+			c.thought = dPlayer < 80 ? "A landing is near. Soft hail — welcome, not a score." : "Beacon held. Welcome, not a score.";
 			c.intent = "Holding the beacon";
 			remember(c, "hail");
 			noteLive(c, "hail", c.thought);
@@ -3396,14 +3404,14 @@ export function stepLiving(citizens, dt, room, sense, applyPieces) {
 					c.timer = 1.8;
 				} else if (c.job === "watch") {
 					if (sense.ledger.scripture < 12) sense.ledger.scripture += .25;
-					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : "The parent still sits on the horizon. Aim held.";
+					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : c.mind.id === "lumen" ? "Hail held. Welcome, not a score." : "The parent still sits on the horizon. Aim held.";
 					c.intent = "Keeping the aim";
 					noteLive(c, "watch", c.thought);
 					reportDone(c, c.thought);
 					c.job = "idle";
 					c.timer = 2;
 				} else if (c.job === "hail") {
-					c.thought = "Beacon held. Soft hail. First landing is not locked out.";
+					c.thought = c.mind.id === "lumen" ? "Hail held. Welcome, not a score." : "Beacon held. Soft hail. First landing is not locked out.";
 					c.intent = "Holding the beacon";
 					noteLive(c, "hail", c.thought);
 					reportDone(c, c.thought);

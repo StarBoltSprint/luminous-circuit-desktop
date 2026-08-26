@@ -561,6 +561,7 @@ export function composeScene(
       piece("stele", px(-8), pz(-8), j(4, 18, 28), j(5, 3, 5), rot, mat(2)),
       piece("lamp", rx(-11), rz(-11), j(6, 10, 14), 3, 0, mat(1)),
       piece("lamp", px(12), pz(12), j(7, 10, 14), 3, 0, mat(0)),
+      piece("ring", x, z, j(8, 6, 9), j(9, 14, 20), 0, mat(1)),
     ];
   }
   if (kind === "cistern") {

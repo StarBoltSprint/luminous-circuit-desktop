@@ -23,17 +23,21 @@ body.lc-desktop .stick-base:focus-within {
   opacity: 1;
 }
 
-/* Civic key plaque — bottom-left over the faded move stick. Never the 3D center. */
+/* Civic key plaque — SW corner over the faded stick. Never the 3D center. */
 .lc-keys {
   position: fixed;
   left: max(14px, env(safe-area-inset-left));
   bottom: max(14px, env(safe-area-inset-bottom));
+  right: auto;
+  top: auto;
   z-index: 12;
   width: max-content;
-  max-width: min(22rem, 38vw);
+  max-width: min(20rem, 32vw);
   margin: 0;
   padding: 10px 12px 11px;
   pointer-events: none;
+  outline: 1px solid color-mix(in oklab, var(--color-gold) 62%, transparent);
+  outline-offset: 0;
   color: var(--color-fg);
   font-family: var(--font-sans);
   background:
@@ -128,7 +132,8 @@ body.lc-desktop .stick-base:focus-within {
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-subtle);
+  color: var(--color-accent);
+  box-shadow: 0 1px 0 0 color-mix(in oklab, var(--color-gold) 70%, transparent);
 }
 
 .lc-keys-howl {
@@ -141,7 +146,8 @@ body.lc-desktop .stick-base:focus-within {
 .lc-keys-cyan {
   color: var(--color-accent);
   box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--color-accent) 46%, transparent),
+    0 0 0 1px var(--color-gold),
+    0 0 0 2px color-mix(in oklab, var(--color-accent) 34%, transparent),
     inset 0 1px 0 color-mix(in oklab, var(--color-accent) 16%, transparent);
 }
 
@@ -160,7 +166,7 @@ body.lc-desktop:has(.title-land, .pause-veil, .map-sheet, .debug-sheet, .sheet) 
 
 @media (max-width: 720px) {
   .lc-keys {
-    max-width: min(18rem, calc(100vw - 28px));
+    max-width: min(16rem, calc(42vw - 12px));
   }
 }
 

@@ -293,6 +293,11 @@ export function createAudio(): AudioBus {
         } catch {
           /* Samsung — overtone optional, kiln still sounds */
         }
+        try {
+          voice(c, { freq: 82, dur: 0.5, type: "sine", gain: 0.006, attack: 0.1, delay: 0.28 });
+        } catch {
+          /* Samsung — overtone optional, kiln still sounds */
+        }
       });
       buzz("kiln");
     },

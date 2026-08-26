@@ -323,7 +323,12 @@ export function resolveHowl(keeper: string | null, ledger: Ledger, grade?: HowlG
     const denStood = before.scripture >= 1;
     const howlTrue = g === "true" || g === "held";
     out = {
-      toast: denStood || howlTrue ? `Iri: ${iriScripture()}` : "Iri: Leftover light waits. Hold through the gold.",
+      toast:
+        g === "held"
+          ? "Iri: Leftover light held through the gold. The parent still sits."
+          : denStood || g === "true"
+            ? `Iri: ${iriScripture()}`
+            : "Iri: Leftover light waits. Hold through the gold.",
       gather: false,
       resonance: howlTrue || denStood ? 4 : 3,
     };

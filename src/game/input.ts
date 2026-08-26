@@ -58,6 +58,12 @@ function hudTyping(e: Event) {
   return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || el.isContentEditable;
 }
 
+function hudButton(el: EventTarget | null) {
+  return el instanceof Element && !!el.closest("button, [role='button']");
+}
+
+const WALK_KEYS = new Set(["KeyW", "KeyA", "KeyS", "KeyD"]);
+
 export function createInput(target: HTMLElement): InputHandle {
   const keys = new Set<string>();
   const stickMove = { x: 0, y: 0 };
@@ -93,6 +99,8 @@ export function createInput(target: HTMLElement): InputHandle {
 
   const onKeyDown = (e: KeyboardEvent) => {
     if (hudTyping(e)) return;
+    // Space/Enter activate a focused HUD button; WASD still walks.
+    if (hudButton(e.target) && !WALK_KEYS.has(e.code) && e.code !== "Escape") return;
     if (e.code === "Escape") {
       if (pointerLocked || document.pointerLockElement) {
         unlockSkipPause = true;

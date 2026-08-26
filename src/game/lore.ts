@@ -228,9 +228,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "fluid-cyan.png",
     glow: 0x7ef0ff,
     lines: [
-      "I tend leftover First Howl into Charge. Gold and cyan are the same river.",
-      "Voss walks what I tend to Orren's kiln. I do not dam leftover love, and I do not bottle it.",
-      "This canal is leftover Howl given banks. The parent stays on the horizon; the current stays open.",
+      "I tend leftover First Howl into Charge as Pack-built YOU-side banks — gold and cyan the same river Voss walks to Orren's kiln, never bottled.",
+      "The parent Star Core stays on the horizon, and I do not dam leftover love or store a parent.",
     ],
   },
   {
@@ -242,9 +241,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-plate.png",
     glow: 0xe8c56a,
     lines: [
-      "I grow crystal from joined Charge, never chrome. A kiln that cannot hear a howl is unfinished.",
-      "Voss matches Seln's Charge to this fire. Pretty shells that cannot hear are not our body.",
-      "I will not edit another runner's Artifact. The Hall keeps Artifacts; this kiln grows streets.",
+      "I grow crystal from joined Charge as Pack-built YOU-side kiln — Seln tends, Voss joins, never chrome, never a Hall Artifact.",
+      "The parent Star Core stays on the horizon; pretty shells that cannot hear are not our body, and this kiln grows streets.",
     ],
   },
   {
