@@ -18,6 +18,7 @@ export type InputHandle = {
   setLookStick: (x: number, y: number) => void;
   setHowl: (v: boolean) => void;
   setTalkHeld: (v: boolean) => void;
+  tapFly: () => void;
   beginFrame: () => void;
   dispose: () => void;
   keys: Set<string>;
@@ -67,6 +68,7 @@ function hudButton(el: EventTarget | null) {
 }
 
 const WALK_KEYS = new Set(["KeyW", "KeyA", "KeyS", "KeyD"]);
+const PLAY_KEYS = new Set(["KeyW", "KeyA", "KeyS", "KeyD", "KeyF", "KeyC", "KeyH", "Space", "ShiftLeft", "ShiftRight"]);
 
 export function createInput(target: HTMLElement): InputHandle {
   const keys = new Set<string>();
@@ -74,6 +76,7 @@ export function createInput(target: HTMLElement): InputHandle {
   const stickLook = { x: 0, y: 0 };
   let howlBtn = false;
   let talkBtn = false;
+  let flyQueued = false;
   const prev = { talk: false, pause: false, howl: false, fly: false };
   const actions = empty();
   const justPressed = { talk: false, pause: false, howl: false, fly: false };
@@ -107,7 +110,7 @@ export function createInput(target: HTMLElement): InputHandle {
   const onKeyDown = (e: KeyboardEvent) => {
     if (hudTyping(e)) return;
     // Space/Enter activate a focused HUD button; WASD still walks.
-    if (hudButton(e.target) && !WALK_KEYS.has(e.code) && e.code !== "Escape") return;
+    if (hudButton(e.target) && !PLAY_KEYS.has(e.code) && e.code !== "Escape") return;
     if (e.code === "Escape") {
       if (pointerLocked || document.pointerLockElement) {
         unlockSkipPause = true;
@@ -115,7 +118,8 @@ export function createInput(target: HTMLElement): InputHandle {
         return;
       }
     }
-    if (e.repeat && (e.code === "Space" || e.code === "KeyH")) { e.preventDefault(); return; }
+    if (e.repeat && (e.code === "Space" || e.code === "KeyH" || e.code === "KeyF")) { e.preventDefault(); return; }
+    if (e.code === "KeyF" && !e.repeat) flyQueued = true;
     keys.add(e.code);
     if (GAME_KEYS.has(e.code)) e.preventDefault();
   };
@@ -175,6 +179,9 @@ export function createInput(target: HTMLElement): InputHandle {
     setTalkHeld(v) {
       talkBtn = v;
     },
+    tapFly() {
+      flyQueued = true;
+    },
     beginFrame() {
       // WASD = on-foot: W forward, S back, A left strafe, D right strafe
       let mx = stickMove.x;
@@ -202,7 +209,6 @@ export function createInput(target: HTMLElement): InputHandle {
 
       actions.sprint =
         keys.has("ShiftLeft") || keys.has("ShiftRight") || Math.hypot(mv.x, mv.y) > 0.92;
-      const flyHeld = keys.has("KeyF");
       actions.rise = keys.has("Space");
       actions.sink = keys.has("KeyC") || keys.has("ControlLeft") || keys.has("ControlRight");
       actions.howl = howlBtn || keys.has("KeyH");
@@ -213,11 +219,12 @@ export function createInput(target: HTMLElement): InputHandle {
       justPressed.talk = actions.talk && !prev.talk;
       justPressed.pause = actions.pause && !prev.pause;
       justPressed.howl = actions.howl && !prev.howl;
-      justPressed.fly = flyHeld && !prev.fly;
+      justPressed.fly = flyQueued;
+      flyQueued = false;
       prev.talk = actions.talk;
       prev.pause = actions.pause;
       prev.howl = actions.howl;
-      prev.fly = flyHeld;
+      prev.fly = keys.has("KeyF");
 
       void target;
     },

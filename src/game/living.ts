@@ -1756,12 +1756,12 @@ function pulseTalBridges(c, citizens) {
 	const now = Date.now();
 	if (now - (c.lastPulse || c.lastHail || 0) < 40e3) return;
 	c.lastPulse = now;
-	const a = ((now / 8000) % (Math.PI * 2));
-	setRoute(c, c.homeX + Math.cos(a) * 48, c.homeZ + Math.sin(a) * 48);
+	const pick = talSpanSite(c);
+	setRoute(c, pick.x, pick.z);
 	c.job = "watch";
-	c.timer = 12;
-	c.thought = "Tal keeps the bridges";
-	c.intent = c.thought;
+	c.timer = 14;
+	c.thought = "Tal walks the span — both banks must believe, never a toll";
+	c.intent = "Walking the span";
 	noteLive(c, "watch", c.thought);
 	let n = 0;
 	for (const o of citizens) {
@@ -1773,7 +1773,7 @@ function pulseTalBridges(c, citizens) {
 		if (n > 3) break;
 		setRoute(o, c.tx, c.tz);
 		o.job = "help";
-		o.timer = 12;
+		o.timer = 14;
 		o.intent = "Walking the span with Tal";
 		o.thought = o.intent;
 		noteLive(o, "crew", o.intent);
@@ -2146,6 +2146,11 @@ function kaelGateSite(c) {
 	const sites = occupied.filter((o) => (o.shape === "arch" || o.shape === "veil" || o.shape === "stele") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 200);
 	if (!sites.length) return { x: c.homeX, z: c.homeZ };
 	return sites[Math.floor(Date.now() / 45e3) % sites.length];
+}
+function talSpanSite(c) {
+	const sites = occupied.filter((o) => (o.shape === "bridge" || o.shape === "arch" || o.shape === "disc") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 240);
+	if (!sites.length) return { x: c.homeX + 36, z: c.homeZ + 12 };
+	return sites[Math.floor(Date.now() / 40e3) % sites.length];
 }
 function folkEnactDuty(c, kitId, duty) {
 	const post = postOf(kitId);
@@ -3430,7 +3435,7 @@ export function stepLiving(citizens, dt, room, sense, applyPieces) {
 				} else if (c.job === "watch") {
 					if (sense.ledger.scripture < 12) sense.ledger.scripture += .25;
 					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : c.mind.id === "lumen" ? "Hail held. Welcome, not a score." : c.mind.id === "rhoa" ? "Chorus gathers. Does not close." : c.mind.id === "aure" ? "Aim held. Parent still sits." : c.mind.id === "iri" ? "Name held. Leftover light." : c.mind.id === "veyra" ? "Breath held. Hub listens. Never a throne." : c.mind.id === "seln" ? "Leftover First Howl tended, never bottled." : c.mind.id === "orren" ? "Kiln held. Charge became body, never chrome." : "The parent still sits on the horizon. Aim held.";
-					c.intent = c.mind.id === "rhoa" ? "Holding the chorus" : c.mind.id === "aure" ? "Keeping the parent" : c.mind.id === "iri" ? "Keeping scripture" : c.mind.id === "veyra" ? "Keeping Hub breath" : c.mind.id === "seln" ? "Tending the canals" : c.mind.id === "orren" ? "Keeping the kiln" : c.mind.id === "kael" ? "Keeping the gate" : "Keeping the aim";
+					c.intent = c.mind.id === "rhoa" ? "Holding the chorus" : c.mind.id === "aure" ? "Keeping the parent" : c.mind.id === "iri" ? "Keeping scripture" : c.mind.id === "veyra" ? "Keeping Hub breath" : c.mind.id === "seln" ? "Tending the canals" : c.mind.id === "orren" ? "Keeping the kiln" : c.mind.id === "kael" ? "Keeping the gate" : c.mind.id === "tal" ? "Keeping the span" : "Keeping the aim";
 					noteLive(c, "watch", c.thought);
 					reportDone(c, c.thought);
 					c.job = "idle";

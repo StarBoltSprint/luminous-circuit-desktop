@@ -17,6 +17,7 @@ import { addCharge, defaultLedger, HOWL_YIELD, CITY_CAP, simulateAway, tryWrite,
 import { resolveHowl, enactCivic, howlVerb, civicBrief } from "./civic";
 import { gradeHowl, howlMult, gradeLine, aimingParent, markStood, dutyDone, talkWitness, stillHowl, shapeFits, markChain } from "./play";
 import {
+	applyBloomStrength,
 	applyPixelRatio,
 	bloomSize,
 	capDpr,
@@ -25,6 +26,7 @@ import {
 	freezeShadows,
 	rendererTries,
 	shouldSkipDraw,
+	shouldSkipStill,
 	stepAdaptiveDpr,
 	wrapBloomHalfRes,
 } from "./perf";
@@ -95,6 +97,10 @@ type HudFn = (s: HudSnap) => void;
 function makeRenderer(canvas: HTMLCanvasElement) {
 	const tries = rendererTries(canvas);
 	let last;
+	let coarse = false;
+	try {
+		coarse = window.matchMedia("(pointer: coarse)").matches;
+	} catch {}
 	for (const opts of tries) try {
 		const r = new THREE.WebGLRenderer(opts);
 		r.setPixelRatio(capDpr(window.devicePixelRatio || 1));
@@ -102,8 +108,9 @@ function makeRenderer(canvas: HTMLCanvasElement) {
 		r.outputColorSpace = THREE.SRGBColorSpace;
 		r.toneMapping = THREE.ACESFilmicToneMapping;
 		r.toneMappingExposure = .9;
+		r.autoClear = true;
 		r.shadowMap.enabled = true;
-		r.shadowMap.type = THREE.PCFSoftShadowMap;
+		r.shadowMap.type = coarse ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
 		return r;
 	} catch (err) {
 		last = err;
@@ -398,6 +405,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 	const dprAdapt = createAdaptiveDpr(window.devicePixelRatio || 1);
 	let dprClock = performance.now();
 	const laterFreeze = createLaterFreeze();
+	let pauseStill = false;
 	function resize() {
 		const w = canvas.clientWidth || window.innerWidth;
 		const h = canvas.clientHeight || window.innerHeight;
@@ -442,13 +450,15 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			dprClock = performance.now();
 			return;
 		}
+		if (shouldSkipStill(mode, pauseStill)) return;
 		const nowDraw = performance.now();
 		const dprDt = Math.min(.25, Math.max(0, (nowDraw - dprClock) / 1e3));
 		dprClock = nowDraw;
 		applyPixelRatio(renderer, composer, stepAdaptiveDpr(dprAdapt, smoothFps, dprDt, window.devicePixelRatio || 1));
-		if (bloomPass) bloomPass.strength = (coarsePointer ? .28 : .36) + resonance / 100 * .08;
+		applyBloomStrength(bloomPass, coarsePointer, resonance);
 		if (composer) composer.render();
 		else renderer.render(scene, camera);
+		pauseStill = mode === "pause";
 	}
 	function afterWorldTick() {
 		laterFreeze.afterTick(() => freezeShadows(renderer.shadowMap));
@@ -684,6 +694,12 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 	const camLook = new THREE.Vector3();
 	function loop(now) {
 		if (!running) return;
+		if (shouldSkipDraw(document)) {
+			last = now;
+			dprClock = now;
+			requestAnimationFrame(loop);
+			return;
+		}
 		const wall = Math.max(0, (now - last) / 1e3);
 		last = now;
 		const raw = Math.min(.05, wall);
@@ -1015,6 +1031,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		},
 		setMode(m) {
 			mode = m;
+			if (m !== "pause") pauseStill = false;
 			if (m === "pause") persist();
 		},
 		land,

@@ -437,6 +437,14 @@ export function CircuitApp() {
               <button
                 type="button"
                 className="action-talk"
+                aria-label={hud.fly ? "Land on crystal" : "Lift above the city"}
+                onPointerDown={(e) => { e.preventDefault(); engineRef.current?.input.tapFly(); }}
+              >
+                {hud.fly ? "Land" : "Lift"}
+              </button>
+              <button
+                type="button"
+                className="action-talk"
                 onPointerDown={(e) => { e.preventDefault(); engineRef.current?.input.setTalkHeld(true); }}
                 onPointerUp={() => engineRef.current?.input.setTalkHeld(false)}
                 onPointerCancel={() => engineRef.current?.input.setTalkHeld(false)}

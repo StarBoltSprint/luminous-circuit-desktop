@@ -190,22 +190,25 @@ function lightningShellMat() {
         vec3 n = normalize(vN);
         float t = uTime;
         float bolt = cracks(p, t);
-        bolt += hero(p, vec3(0.22, 0.81, 0.54), 1.7, t) * 0.85;
-        bolt += hero(p, vec3(-0.66, 0.19, 0.73), 4.1, t) * 0.78;
-        bolt += hero(p, vec3(0.58, -0.62, 0.53), 8.3, t) * 0.72;
-        float snap = 0.62 + 0.38 * smoothstep(-0.15, 1.0, sin(t * 9.5 + fbm(p * 6.0) * 28.0));
+        bolt += hero(p, vec3(0.22, 0.81, 0.54), 1.7, t) * 0.92;
+        bolt += hero(p, vec3(-0.66, 0.19, 0.73), 4.1, t) * 0.84;
+        bolt += hero(p, vec3(0.58, -0.62, 0.53), 8.3, t) * 0.78;
+        bolt += hero(p, vec3(-0.31, 0.48, -0.82), 12.6, t) * 0.7;
+        bolt += hero(p, vec3(0.84, 0.12, -0.53), 19.2, t) * 0.58;
+        float crawl = fbm(p * 6.0 + vec3(t * 0.11, t * 0.07, -t * 0.05));
+        float snap = 0.74 + 0.26 * smoothstep(-0.12, 1.0, sin(t * 5.8 + crawl * 22.0));
         bolt *= snap;
-        float fres = pow(1.0 - abs(n.z), 2.15);
-        float sheet = fres * 0.28 + pow(max(0.0, p.y), 2.4) * 0.05;
-        vec3 deep = vec3(0.18, 0.902, 1.0);
+        float fres = pow(1.0 - abs(n.z), 2.05);
+        float sheet = fres * 0.32 + pow(max(0.0, p.y), 2.2) * 0.06;
+        vec3 deep = vec3(0.12, 0.78, 0.98);
         vec3 cyan = vec3(0.494, 0.941, 1.0);
-        vec3 white = vec3(0.91, 1.0, 0.973);
-        vec3 gold = vec3(0.91, 0.769, 0.416);
+        vec3 white = vec3(0.94, 1.0, 0.98);
+        vec3 gold = vec3(0.93, 0.78, 0.42);
         vec3 col = mix(deep, cyan, clamp(bolt * 0.85, 0.0, 1.0));
-        col = mix(col, white, smoothstep(0.7, 1.55, bolt));
-        col = mix(col, gold, smoothstep(1.35, 2.1, bolt) * 0.18);
-        col = mix(col, cyan, fres * 0.35);
-        float a = clamp(bolt * 1.05 + sheet, 0.0, 1.0);
+        col = mix(col, white, smoothstep(0.62, 1.48, bolt));
+        col = mix(col, gold, smoothstep(1.05, 1.95, bolt) * 0.34);
+        col = mix(col, cyan, fres * 0.32);
+        float a = clamp(bolt * 1.12 + sheet, 0.0, 1.0);
         gl_FragColor = vec4(col, a);
       }
     `,
@@ -242,15 +245,18 @@ function rimShellMat() {
 
 function goldRingMat() {
   return new THREE.MeshPhysicalMaterial({
-    color: 0xe8c46a,
+    color: 0xf0d08a,
     emissive: 0xe8c46a,
-    emissiveIntensity: 1.45,
-    roughness: 0.28,
-    metalness: 0.42,
-    iridescence: 0.28,
-    iridescenceIOR: 1.22,
-    clearcoat: 0.38,
-    clearcoatRoughness: 0.22,
+    emissiveIntensity: 1.68,
+    roughness: 0.22,
+    metalness: 0.38,
+    iridescence: 0.46,
+    iridescenceIOR: 1.24,
+    iridescenceThicknessRange: [80, 420],
+    clearcoat: 0.58,
+    clearcoatRoughness: 0.16,
+    sheen: 0.42,
+    sheenColor: new THREE.Color(0xffe6a8),
     fog: false,
     toneMapped: false,
   });
@@ -458,19 +464,19 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
   }
 
   const globeMat = new THREE.MeshPhysicalMaterial({
-    color: 0x0a2436,
-    roughness: 0.22,
-    metalness: 0.06,
-    emissive: 0x127a9c,
-    emissiveIntensity: 0.62,
-    iridescence: 0.82,
-    iridescenceIOR: 1.28,
-    iridescenceThicknessRange: [50, 520],
-    clearcoat: 0.72,
-    clearcoatRoughness: 0.12,
-    sheen: 0.78,
+    color: 0x082032,
+    roughness: 0.18,
+    metalness: 0.05,
+    emissive: 0x1490b4,
+    emissiveIntensity: 0.7,
+    iridescence: 0.9,
+    iridescenceIOR: 1.3,
+    iridescenceThicknessRange: [40, 640],
+    clearcoat: 0.82,
+    clearcoatRoughness: 0.08,
+    sheen: 0.88,
     sheenColor: new THREE.Color(0x7ef0ff),
-    envMapIntensity: 0.85,
+    envMapIntensity: 0.92,
     fog: false,
     toneMapped: false,
   });
@@ -512,7 +518,8 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
   plantCrackBolts(globeSpin, globeR, coarse);
 
   const ringMat = goldRingMat();
-  const ringGlow = addMat(0xe8c46a, 0.16);
+  const ringGlow = addMat(0xe8c46a, 0.2);
+  const ringFilament = addMat(0xffe6a8, 0.42);
   const ringRadii = coarse
     ? [globeR * 1.16, globeR * 1.38]
     : [globeR * 1.18, globeR * 1.4, globeR * 1.64];
@@ -524,6 +531,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
     { rx: 1.48, ry: -0.4, rz: 0.08, spin: 0.022 },
   ];
   const ringMeshes: THREE.Group[] = [];
+  const kissDummy = new THREE.Object3D();
   for (let i = 0; i < ringRadii.length; i++) {
     const o = orbits[i]!;
     const hold = new THREE.Group();
@@ -531,8 +539,9 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
     hold.rotation.set(o.rx, o.ry, o.rz);
     hold.frustumCulled = false;
     const tube = ringTube * (1 - i * 0.1);
+    const R = ringRadii[i]!;
     const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(ringRadii[i], tube, 8, ringSeg),
+      new THREE.TorusGeometry(R, tube, 8, ringSeg),
       ringMat,
     );
     ring.castShadow = false;
@@ -541,7 +550,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
     ring.frustumCulled = false;
     hold.add(ring);
     const glow = new THREE.Mesh(
-      new THREE.TorusGeometry(ringRadii[i], tube * 1.55, 6, ringSeg),
+      new THREE.TorusGeometry(R, tube * 1.7, 6, ringSeg),
       ringGlow,
     );
     glow.castShadow = false;
@@ -549,6 +558,37 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
     glow.renderOrder = -7;
     glow.frustumCulled = false;
     hold.add(glow);
+    const filament = new THREE.Mesh(
+      new THREE.TorusGeometry(R, Math.max(6, tube * 0.28), 6, ringSeg),
+      ringFilament,
+    );
+    filament.name = `star-core-orbit-fil-${i}`;
+    filament.castShadow = false;
+    filament.receiveShadow = false;
+    filament.renderOrder = -5;
+    filament.frustumCulled = false;
+    hold.add(filament);
+    const kissN = coarse ? 4 : 8;
+    const kisses = new THREE.InstancedMesh(
+      new THREE.OctahedronGeometry(globeR * (0.036 - i * 0.004), 0),
+      ringMat,
+      kissN,
+    );
+    kisses.name = `star-core-orbit-kiss-${i}`;
+    for (let k = 0; k < kissN; k++) {
+      const a = (k / kissN) * Math.PI * 2 + i * 0.17;
+      kissDummy.position.set(Math.cos(a) * R, Math.sin(a) * R, 0);
+      kissDummy.rotation.set(hash(i * 11 + k, 1) * 2, a, hash(i * 11 + k, 2));
+      kissDummy.scale.setScalar(0.88 + hash(i * 11 + k, 3) * 0.38);
+      kissDummy.updateMatrix();
+      kisses.setMatrixAt(k, kissDummy.matrix);
+    }
+    kisses.instanceMatrix.needsUpdate = true;
+    kisses.castShadow = false;
+    kisses.receiveShadow = false;
+    kisses.frustumCulled = false;
+    kisses.renderOrder = -5;
+    hold.add(kisses);
     core.add(hold);
     ringMeshes.push(hold);
   }
@@ -621,12 +661,16 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
       bloom.scale.setScalar(1 + Math.sin(t * 0.55) * 0.09);
       globeSpin.rotation.y = t * 0.08;
       boltMat.uniforms.uTime.value = t;
-      globeMat.emissiveIntensity = 0.62 + Math.sin(t * 0.7) * 0.14;
+      globeMat.emissiveIntensity = 0.7 + Math.sin(t * 0.7) * 0.16;
+      ringMat.emissiveIntensity = 1.52 + Math.sin(t * 0.55) * 0.28;
+      ringGlow.opacity = 0.16 + Math.sin(t * 0.55) * 0.07;
+      ringFilament.opacity = 0.34 + Math.sin(t * 0.8) * 0.12;
       for (let i = 0; i < ringMeshes.length; i++) {
         const o = orbits[i]!;
         const ring = ringMeshes[i]!;
         ring.rotation.y = o.ry + t * o.spin;
-        ring.rotation.z = o.rz + Math.sin(t * 0.12 + i) * 0.04;
+        ring.rotation.z = o.rz + Math.sin(t * 0.12 + i) * 0.05;
+        ring.rotation.x = o.rx + Math.sin(t * 0.07 + i * 1.1) * 0.03;
       }
       for (let i = 0; i < skyRivers.length; i++) {
         const mat = skyRivers[i]!.material as THREE.MeshBasicMaterial;

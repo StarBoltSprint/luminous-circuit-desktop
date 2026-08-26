@@ -3,10 +3,10 @@
 export const POWER_PREF = "high-performance" as const;
 
 export const DPR_FLOOR = 1;
-export const DPR_CEIL = 1.5;
-export const FPS_DROP = 40;
+export const DPR_CEIL = 1.4;
+export const FPS_DROP = 42;
 export const FPS_RAISE = 55;
-export const SETTLE_SEC = 1;
+export const SETTLE_SEC = 0.65;
 
 /** world.tick pumps 1–2 laterOn jobs; districts + stamps + grow ≈ 22. */
 export const LATER_TICKS_TO_FREEZE = 28;
@@ -42,6 +42,10 @@ export function rendererTries(canvas: HTMLCanvasElement) {
     alpha: false,
     powerPreference: POWER_PREF,
     failIfMajorPerformanceCaveat: false as const,
+    stencil: false,
+    depth: true,
+    preserveDrawingBuffer: false,
+    premultipliedAlpha: false,
   };
   return [
     { ...base, antialias: true },
@@ -51,18 +55,34 @@ export function rendererTries(canvas: HTMLCanvasElement) {
 
 export function bloomSize(width: number, height: number): { x: number; y: number } {
   return {
-    x: Math.max(1, Math.round(width * 0.5)),
-    y: Math.max(1, Math.round(height * 0.5)),
+    x: Math.max(1, Math.round(width * 0.45)),
+    y: Math.max(1, Math.round(height * 0.45)),
   };
 }
 
-/** Keep UnrealBloomPass at half composer size across resize / DPR changes. */
+export function bloomStrength(coarsePointer: boolean, resonance: number): number {
+  const r = Math.max(0, Math.min(100, Number(resonance) || 0));
+  return (coarsePointer ? 0.28 : 0.36) + r / 100 * 0.08;
+}
+
+export function applyBloomStrength(
+  pass: { strength: number } | null | undefined,
+  coarsePointer: boolean,
+  resonance: number,
+): void {
+  if (!pass) return;
+  const next = bloomStrength(coarsePointer, resonance);
+  if (Math.abs(pass.strength - next) < 0.004) return;
+  pass.strength = next;
+}
+
+/** Keep UnrealBloomPass at 0.45 composer size across resize / DPR changes. */
 export function wrapBloomHalfRes(pass: {
   setSize: (width: number, height: number) => void;
 }): void {
   const native = pass.setSize.bind(pass);
   pass.setSize = (width: number, height: number) => {
-    native(Math.max(1, width * 0.5), Math.max(1, height * 0.5));
+    native(Math.max(1, width * 0.45), Math.max(1, height * 0.45));
   };
 }
 
@@ -82,7 +102,8 @@ export function stepAdaptiveDpr(
     state.lowSec += t;
     state.highSec = 0;
     if (state.lowSec >= SETTLE_SEC) {
-      state.dpr = Math.max(DPR_FLOOR, Math.round((state.dpr - 0.25) * 100) / 100);
+      const step = fps < 28 ? 0.35 : 0.25;
+      state.dpr = Math.max(DPR_FLOOR, Math.round((state.dpr - step) * 100) / 100);
       state.lowSec = 0;
     }
   } else if (fps > FPS_RAISE) {
@@ -114,6 +135,10 @@ export function applyPixelRatio(
 
 export function shouldSkipDraw(doc: { hidden?: boolean } | null | undefined): boolean {
   return !!doc?.hidden;
+}
+
+export function shouldSkipStill(mode: string, alreadyDrawn: boolean): boolean {
+  return mode === "pause" && alreadyDrawn;
 }
 
 export function freezeShadows(shadowMap: ShadowMapHandle): void {
