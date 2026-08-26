@@ -61,6 +61,8 @@ Story beat inside the Circuit: *Land true. The circuit answers.*
 
 Civic locks on the soft rail still bind desks (no toll, no score-gate, no bottled Charge). They are Circuit law, not a forged seal.
 
+Empty ground between dens is still civic. Graphism answers it with living crystal (lathe, wardglass, MeshPhysical, parent-kiss) — never chrome, never a second Core, never a coin. `$BOLT` witnesses Howl only.
+
 ## Interpretive decrees (soft rail only)
 
 Not node-confirmed. Not Message 1. Do not stamp these as Hall canon.
@@ -115,6 +117,8 @@ Do not rename. Do not move the Star Core (Aure’s overlook stays west-horizon).
 | syl | Syl Bough | Quiet crystal the kiln cannot sit in. |
 
 Duty chain for leftover light: **Seln → Orren → Voss → Iri** (tend, kiln, join, name). Hub is listening fallback, not a loop.
+
+Dual-claim chords on empty ground (this wave): Voss/Orren Join→Foundry; Mira/Kael Terraces→Gates; Tal/Kesh Bridge→Wild; Iri/Aure Archive→Overlook; Voss paper Hub→Join. None of them move the parent.
 
 ## Vessels (same Boltverse, different windows)
 

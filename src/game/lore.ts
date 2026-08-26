@@ -43,7 +43,7 @@ export const DISTRICTS: District[] = [
     keeper: "tal",
     duty: "Raise crossings Kesh can land",
     purpose:
-      "Tal's civic post: crossings dens can mean on YOU-side streets. A span is a civic promise, never a Hall toll, and Tal will not raise an arc no den can land. From the high arcs the parent still sits on the horizon.",
+      "Tal's civic post: crossings dens can mean on YOU-side streets. A span is a civic promise, never a Hall toll, and Tal will not raise an arc no den can land — the empty verge toward Kesh is already a landing both dens believe. From the high arcs the parent still sits on the horizon.",
   },
   {
     id: "zone-terrace",
@@ -56,7 +56,7 @@ export const DISTRICTS: District[] = [
     keeper: "mira",
     duty: "Ward rest so labor can return",
     purpose:
-      "Mira's civic post: pause so Kael's gates never become a trial of strength. Rest stays a post, not a test — first landings and spent howls both find a step. Labor returns because leftover light was allowed to sit.",
+      "Mira's civic post: pause so Kael's gates never become a trial of strength. Rest stays a post, not a test — the empty verge toward the Soft Gates holds that pause so first landings and spent howls both find a step. Labor returns because leftover light was allowed to sit.",
   },
   {
     id: "zone-canal",
@@ -82,7 +82,7 @@ export const DISTRICTS: District[] = [
     keeper: "orren",
     duty: "Turn joined Charge into crystal",
     purpose:
-      "Orren's civic post: crystal dens can stand in — Seln tends, Voss joins, the kiln grows. Charge becomes body, never chrome; pretty shells that cannot hear are not this fire. Artifacts stay in the Hall. This kiln grows streets.",
+      "Orren's civic post: crystal dens can stand in — Seln tends, Voss joins, the kiln grows. Charge becomes body, never chrome, on the empty verge from Join to Foundry; pretty shells that cannot hear are not this fire. Artifacts stay in the Hall. This kiln grows streets.",
   },
   {
     id: "zone-gate",
@@ -108,7 +108,7 @@ export const DISTRICTS: District[] = [
     keeper: "iri",
     duty: "Name what already stood true",
     purpose:
-      "Iri's civic post: leftover light names what already stood, so Aure's parent on the horizon is never decoration. Year 0 became this city; Hall scripture stays in the Hall. The ward remembers both banks — origin tether and YOU-side streets — and lets neither swallow the other.",
+      "Iri's civic post: leftover light names what already stood, so Aure's parent on the horizon is never decoration. Year 0 became this city; Hall scripture stays in the Hall. The empty verge toward Overlook names the parent without moving it — origin tether and YOU-side streets, neither bank swallowing the other.",
   },
   {
     id: "zone-overlook",
@@ -134,7 +134,7 @@ export const DISTRICTS: District[] = [
     keeper: "voss",
     duty: "Match Seln's Charge to Orren's kiln",
     purpose:
-      "Voss's civic post: the Trading Place on the Join's outer bank. Paper fills. $BOLT is outer spark — witness Howl only — Charge for crystal, never a bag the city can spend. No deposit walks these streets.",
+      "Voss's civic post: the Trading Place on the Join's outer bank. Paper fills. $BOLT is outer spark — witness Howl only — Charge for crystal, never a bag the city can spend. Hub paper steles mark the walk; no deposit walks these streets.",
   },
   {
     id: "zone-wild",
@@ -147,7 +147,7 @@ export const DISTRICTS: District[] = [
     keeper: "kesh",
     duty: "Grow landings Tal's spans can trust",
     purpose:
-      "Kesh's civic post: becoming-ground so Tal's bridges have a far bank. Wild can choose a street — not a second Spire, not a Hall annex, a landing both dens believe. Charge that has not chosen yet is still civic.",
+      "Kesh's civic post: becoming-ground so Tal's bridges have a far bank. Wild can choose a street — not a second Spire, not a Hall annex, a landing both dens believe on the empty verge from span to vein. Charge that has not chosen yet is still civic.",
   },
   {
     id: "zone-beacon",

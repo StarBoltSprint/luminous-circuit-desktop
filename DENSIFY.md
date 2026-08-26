@@ -118,9 +118,11 @@ No skip-if-done. No “already exists”. No two desks on one file.
 - Intelligence: Tal span **site** / Mira terrace **site** (still home-orbit) — one keeper, then crew, then arrival thought
 - Buildings: extra piece on `font` / `beacon` if still thin
 - Mix / Economy / UI / Save / Jobs / Walker: one real thin hole each turn — never no-op, never locked files. Haptics stay OFF. CSS braces must stay balanced (one stray `}` whitescreens land).
+- Graphism / Environment: BETWEEN dens that still have empty chords (Beacon→Ring, Grove→Foundry, Canal→Archive already has rill). Never Hub copies. Never Star Core.
 
 ## Log
 
+- 2026-08-26 16:12 CEST — Desktop wave 12: BETWEEN dens — Join→Foundry kilnmarks, Terraces→Gates reststeles, Bridge→Wild spanlands, Archive→Overlook leftoverposts, Hub→Join papersteles. Dual-claim lore Voss/Orren, Mira/Kael, Tal/Kesh, Iri/Aure, Voss paper. Star Core untouched.
 - 2026-08-26 15:40 CEST — Desktop wave 11: graphism dens — Hub→Bridge spanposts, Hub→Terraces terraceposts, Hub→Veins veinstones, Hub→Beacon hailposts, Hub→Orchard orchardposts. Syl/Orren dual-claim lore. Star Core untouched.
 - 2026-08-26 15:27 CEST — Desktop wave 10: Kael gate walk + site, Kael/Veyra dual-claim lore, gate veil, soft-gate underlay, Soft gate log, veilward Kael SCENE_LINE, grow 147, gate soft ticker, Howl violet pip, kael shapeFits, Hub→Gates gateposts.
 - 2026-08-26 14:55 CEST — Desktop wave 9: Orren kiln walk + site, Tal/Mira dual-claim lore, shrine font, kiln heat underlay, Kiln body log, kilnwork SCENE_LINE, talk 98, kiln body ticker, Howl cyan pip, seln toast, away Orren kiln, Hub→Canals canalposts.
