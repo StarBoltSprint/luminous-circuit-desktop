@@ -175,3 +175,20 @@ body.lc-desktop:has(.title-land, .pause-veil, .map-sheet, .debug-sheet, .sheet) 
     transition: none;
   }
 }
+
+/* Civic gold rail on the keys plaque — HUD, never chrome. */
+body.lc-desktop .lc-keys {
+  border-left: 2px solid color-mix(in oklab, var(--color-gold) 72%, transparent);
+}
+
+.lc-keys-row span {
+  letter-spacing: 0.04em;
+}
+
+.lc-keys kbd:hover,
+.lc-keys kbd:focus-visible {
+  color: var(--color-fg);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-gold) 70%, transparent),
+    inset 0 1px 0 color-mix(in oklab, var(--color-gold) 28%, transparent);
+}

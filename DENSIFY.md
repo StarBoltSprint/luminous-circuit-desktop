@@ -115,10 +115,12 @@ No skip-if-done. No “already exists”. No two desks on one file.
 
 ## Next unique
 
-- Buildings: extra piece on `cradle` / `mosaic` if still thin
+- Buildings: extra piece on `breath` / `nest` if still thin
 - Mix / Economy / UI / Save / Jobs / Walker: one real thin hole each turn — never no-op, never locked files. Haptics stay OFF. CSS braces must stay balanced (one stray `}` whitescreens land).
 
 ## Log
+
+- 2026-08-26 14:28 CEST — Desktop wave 5: Aure overlook walk + site, Iri/Aure dual-claim lore, cradle pad, overlook aim glyph, Parent aim log, watch SCENE_LINE, grow quiet fifth, leftover named ticker, keys rail, aure doLine, Hub→Overlook aimposts.
 
 ## Log
 

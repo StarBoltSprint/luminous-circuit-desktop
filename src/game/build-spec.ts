@@ -744,6 +744,7 @@ export function composeScene(
       piece("veil", px(-12), pz(-12), j(7, 10, 16), j(8, 6, 10), rot, mat(1)),
       piece("well", rx(-16), rz(-16), j(9, 8, 12), j(10, 5, 8), 0, mat(0)),
       piece("ring", x, z, j(11, 6, 9), j(12, 16, 24), 0, mat(1)),
+      piece("pad", px(16), pz(16), 6, 5, rot, mat(2)),
     ];
   }
   if (kind === "mosaic") {

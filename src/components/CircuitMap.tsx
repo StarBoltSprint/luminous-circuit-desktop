@@ -371,7 +371,16 @@ function WardGlyph({ d, x, y, r }: { d: District; x: number; y: number; r: numbe
     );
   }
   if (k === "overlook") {
-    return <circle cx={x} cy={y} r={6} className="map-stroke-gold" />;
+    return (
+      <>
+        <circle cx={x} cy={y} r={8} className="map-stroke-gold" />
+        <polygon
+          points={`${x},${y - 5} ${x + 4},${y} ${x},${y + 5} ${x - 4},${y}`}
+          className="map-gold"
+          opacity={0.85}
+        />
+      </>
+    );
   }
   if (k === "market") {
     return <polygon points={`${x},${y - 8} ${x + 8},${y + 5} ${x - 8},${y + 5}`} className="map-foundry-mark" />;

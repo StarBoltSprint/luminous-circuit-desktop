@@ -169,7 +169,7 @@ const SCENE_LINE: Record<string, string> = {
   weirway: "A weir for Charge — not a lock on people.",
   nest: "A nest so rest stays a post. Mira will not test the tired.",
   presence: "A stele. You have already been seen.",
-  watch: "The parent stays on the horizon. Aure keeps the seat.",
+  watch: "The parent Star Core stays on the horizon. Aure keeps the seat — never a throne.",
   path: "A street the Circuit had not chosen yet.",
   font: "A listening pool. Speak only if you mean it.",
   boughs: "A crystal bough. Living stone, not chrome.",

@@ -278,9 +278,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-crown.png",
     glow: 0xffd070,
     lines: [
-      "I write names in residual light while Aure keeps the city aimed at the parent.",
-      "Year 0 became a city. I will not rewrite it, and I will not edit Hall scripture.",
-      "Leftover light remembers both banks: origin tether and YOU-side streets. Neither swallows the other.",
+      "I write names in residual light as Pack-built YOU-side scripture — leftover light remembers both banks, never Hall text, never Msg 1.",
+      "The parent Star Core stays on the horizon; Year 0 became a city I will not rewrite.",
     ],
   },
   {
@@ -306,9 +305,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-crown.png",
     glow: 0xe8c8a0,
     lines: [
-      "I keep the Circuit aimed at the parent Star Core. I watch. I do not move it.",
-      "If Iri's archive goes dark we forget why we sit. Charge without a parent is only decoration.",
-      "An orbit seat is a promise to look up, never a throne. A parent is not furniture.",
+      "I keep the Circuit aimed at the parent Star Core as Pack-built YOU-side watching — I watch, I do not move it, never a Hall throne.",
+      "If Iri's archive goes dark we forget why we sit; an orbit seat is a promise to look up, not furniture.",
     ],
   },
   {
