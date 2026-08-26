@@ -238,7 +238,7 @@ function rimShellMat() {
       void main() {
         float fres = pow(1.0 - abs(normalize(vN).z), 2.6);
         vec3 cyan = vec3(0.494, 0.941, 1.0);
-        gl_FragColor = vec4(cyan, clamp(fres * 0.55, 0.0, 0.7));
+        gl_FragColor = vec4(cyan, clamp(fres * 0.28, 0.0, 0.38));
       }
     `,
   });
@@ -248,7 +248,7 @@ function goldRingMat() {
   return new THREE.MeshPhysicalMaterial({
     color: 0xf0d08a,
     emissive: 0xe8c46a,
-    emissiveIntensity: 1.68,
+    emissiveIntensity: 0.42,
     roughness: 0.22,
     metalness: 0.38,
     iridescence: 0.46,
@@ -259,7 +259,7 @@ function goldRingMat() {
     sheen: 0.42,
     sheenColor: new THREE.Color(0xffe6a8),
     fog: false,
-    toneMapped: false,
+    toneMapped: true,
   });
 }
 
@@ -301,10 +301,10 @@ function plantCrackBolts(spin: THREE.Group, radius: number, coarse: boolean) {
   const nBranch = coarse ? 2 : 7;
   const pathSegs = coarse ? 16 : 32;
   const tubeSegs = coarse ? 4 : 6;
-  const matCyan = addMat(0x7ef0ff, coarse ? 0.58 : 0.78);
-  const matDeep = addMat(0x2ee6ff, coarse ? 0.46 : 0.62);
-  const matCore = addMat(0xe8fff8, 0.7);
-  const matGold = addMat(0xe8c46a, 0.38);
+  const matCyan = addMat(0x7ef0ff, coarse ? 0.32 : 0.42);
+  const matDeep = addMat(0x2ee6ff, coarse ? 0.24 : 0.32);
+  const matCore = addMat(0xe8fff8, 0.34);
+  const matGold = addMat(0xe8c46a, 0.18);
   for (let i = 0; i < nMain; i++) {
     const pts = walkBolt(radius * 1.035, i * 19 + 5, pathSegs, 0.11, 0.95);
     if (pts.length < 4) continue;
@@ -358,12 +358,11 @@ function coreHaloTexture() {
   const g = c.getContext("2d");
   if (!g) return null;
   const grd = g.createRadialGradient(256, 256, 10, 256, 256, 248);
-  grd.addColorStop(0, "rgba(255,255,255,0.98)");
-  grd.addColorStop(0.08, "rgba(126,240,255,0.72)");
-  grd.addColorStop(0.22, "rgba(46,230,255,0.38)");
-  grd.addColorStop(0.42, "rgba(232,197,106,0.22)");
-  grd.addColorStop(0.62, "rgba(46,230,255,0.08)");
-  grd.addColorStop(0.84, "rgba(46,230,255,0)");
+  grd.addColorStop(0, "rgba(255,255,255,0.55)");
+  grd.addColorStop(0.1, "rgba(126,240,255,0.32)");
+  grd.addColorStop(0.28, "rgba(46,230,255,0.14)");
+  grd.addColorStop(0.48, "rgba(232,197,106,0.08)");
+  grd.addColorStop(0.7, "rgba(46,230,255,0)");
   g.fillStyle = grd;
   g.fillRect(0, 0, 512, 512);
   const t = new THREE.CanvasTexture(c);
@@ -423,7 +422,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
 
   const spark = new THREE.Mesh(
     new THREE.SphereGeometry(globeR * 0.26, 20, 16),
-    addMat(0xe8fff8, 0.58),
+    addMat(0xe8fff8, 0.28),
   );
   spark.name = "star-core-spark";
   spark.renderOrder = -4;
@@ -433,7 +432,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
 
   const bloom = new THREE.Mesh(
     new THREE.SphereGeometry(globeR * 0.58, 20, 16),
-    addMat(0x2ee6ff, 0.16),
+    addMat(0x2ee6ff, 0.07),
   );
   bloom.name = "star-core-bloom";
   bloom.renderOrder = -9;
@@ -448,7 +447,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
         map: haloMap,
         color: 0xffffff,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.22,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         depthTest: false,
@@ -457,7 +456,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
       }),
     );
     halo.name = "star-core-halo";
-    const haloS = globeR * 2.42;
+    const haloS = globeR * 1.72;
     halo.scale.set(haloS, haloS, 1);
     halo.renderOrder = -10;
     halo.frustumCulled = false;
@@ -469,7 +468,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
     roughness: 0.18,
     metalness: 0.05,
     emissive: 0x1490b4,
-    emissiveIntensity: 0.7,
+    emissiveIntensity: 0.34,
     iridescence: 0.9,
     iridescenceIOR: 1.3,
     iridescenceThicknessRange: [40, 640],
@@ -479,7 +478,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
     sheenColor: new THREE.Color(0x7ef0ff),
     envMapIntensity: 0.92,
     fog: false,
-    toneMapped: false,
+    toneMapped: true,
   });
   const segs = coarse ? 32 : 64;
   const globe = new THREE.Mesh(
@@ -519,8 +518,8 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
   plantCrackBolts(globeSpin, globeR, coarse);
 
   const ringMat = goldRingMat();
-  const ringGlow = addMat(0xe8c46a, 0.2);
-  const ringFilament = addMat(0xffe6a8, 0.42);
+  const ringGlow = addMat(0xe8c46a, 0.1);
+  const ringFilament = addMat(0xffe6a8, 0.16);
   const ringRadii = coarse
     ? [globeR * 1.16, globeR * 1.38]
     : [globeR * 1.18, globeR * 1.4, globeR * 1.64];
@@ -695,12 +694,12 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
       bloom.scale.setScalar(1 + Math.sin(t * 0.55) * 0.09);
       globeSpin.rotation.y = t * 0.08;
       boltMat.uniforms.uTime.value = t;
-      globeMat.emissiveIntensity = 0.7 + Math.sin(t * 0.7) * 0.16;
-      ringMat.emissiveIntensity = 1.52 + Math.sin(t * 0.55) * 0.28;
-      ringGlow.opacity = 0.16 + Math.sin(t * 0.55) * 0.07;
-      ringFilament.opacity = 0.34 + Math.sin(t * 0.8) * 0.12;
+      globeMat.emissiveIntensity = 0.32 + Math.sin(t * 0.7) * 0.06;
+      ringMat.emissiveIntensity = 0.4 + Math.sin(t * 0.55) * 0.08;
+      ringGlow.opacity = 0.08 + Math.sin(t * 0.55) * 0.03;
+      ringFilament.opacity = 0.14 + Math.sin(t * 0.8) * 0.04;
       for (let i = 0; i < boltRails.length; i++) {
-        boltRails[i]!.opacity = 0.18 + Math.sin(t * 1.15 + i * 0.9) * 0.1;
+        boltRails[i]!.opacity = 0.08 + Math.sin(t * 1.15 + i * 0.9) * 0.04;
       }
       for (let i = 0; i < ringMeshes.length; i++) {
         const o = orbits[i]!;

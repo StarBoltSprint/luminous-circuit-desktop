@@ -13,7 +13,7 @@ const LOOK_Y = 190;
 
 const RAY_N = 10;
 const RAY_N_COARSE = 4;
-const RAY_OP = 0.7;
+const RAY_OP = 0.1;
 const RAY_HEX = 0x7ef0ff;
 const RAY_SPIN = 0.03;
 const RAY_ORDER = -6;

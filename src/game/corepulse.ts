@@ -8,7 +8,7 @@
 import * as THREE from "three";
 import { STAR_CORE, SKY_R } from "./atmos";
 
-const OP_CAP = 0.16;
+const OP_CAP = 0.08;
 
 function pulseBoltMat(hex: number, phase: number) {
   return new THREE.ShaderMaterial({
