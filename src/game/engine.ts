@@ -689,7 +689,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			titleYaw += raw * .12;
 			const dist = 390;
 			camera.position.set(Math.sin(titleYaw) * dist, 132, Math.cos(titleYaw) * dist);
-			camera.lookAt(-180, 168, 40);
+			camera.lookAt(-280, 210, 50);
 			world.tick(now / 1e3, raw, camera, resonance);
 			afterWorldTick();
 			draw();

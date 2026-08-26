@@ -90,7 +90,7 @@ function river(
   rz: number,
   y: number,
   segs: number,
-) {
+): THREE.Mesh {
   const mesh = new THREE.Mesh(
     new THREE.TorusGeometry(radius, tube, 6, segs),
     addMat(hex, opacity),
@@ -103,6 +103,53 @@ function river(
   mesh.castShadow = false;
   mesh.receiveShadow = false;
   root.add(mesh);
+  return mesh;
+}
+
+function lightningShellMat() {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+    },
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    depthTest: true,
+    fog: false,
+    toneMapped: false,
+    side: THREE.DoubleSide,
+    vertexShader: `
+      varying vec3 vN;
+      void main() {
+        vN = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uTime;
+      varying vec3 vN;
+      void main() {
+        vec3 n = normalize(vN);
+        float t = uTime;
+        float g1 = abs(n.x * 0.62 + n.y * 0.28 + n.z * 0.72);
+        float g2 = abs(n.x * -0.48 + n.y * 0.82 + n.z * 0.18);
+        float g3 = abs(n.x * 0.22 + n.y * -0.55 + n.z * 0.8);
+        float j1 = abs(g1 - 0.12 * sin(g2 * 18.0 + t * 1.4));
+        float j2 = abs(g2 - 0.1 * sin(g3 * 22.0 - t * 0.9));
+        float j3 = abs(g3 - 0.14 * sin(g1 * 14.0 + t * 2.2));
+        float bolt = pow(1.0 - smoothstep(0.0, 0.055, j1), 2.4)
+          + pow(1.0 - smoothstep(0.0, 0.04, j2), 2.8)
+          + pow(1.0 - smoothstep(0.0, 0.05, j3), 2.2);
+        float sheet = pow(max(0.0, n.y), 2.0) * 0.06;
+        float pulse = 0.55 + 0.45 * sin(t * 0.7);
+        vec3 cyan = vec3(0.49, 0.94, 1.0);
+        vec3 gold = vec3(0.91, 0.77, 0.42);
+        vec3 col = mix(cyan, gold, smoothstep(0.7, 1.6, bolt) * 0.35);
+        float a = clamp(bolt * 0.42 + sheet, 0.0, 1.0) * pulse;
+        gl_FragColor = vec4(col, a);
+      }
+    `,
+  });
 }
 
 function goldRingMat() {
@@ -119,31 +166,6 @@ function goldRingMat() {
     fog: false,
     toneMapped: false,
   });
-}
-
-function hallCoreTexture() {
-  const url = `${import.meta.env.BASE_URL}assets/star-core.jpg`;
-  const tex = new THREE.TextureLoader().load(url);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 8;
-  return tex;
-}
-
-function radialAlpha() {
-  const c = document.createElement("canvas");
-  c.width = c.height = 256;
-  const g = c.getContext("2d");
-  if (!g) return null;
-  const grd = g.createRadialGradient(128, 128, 36, 128, 128, 124);
-  grd.addColorStop(0, "rgba(255,255,255,1)");
-  grd.addColorStop(0.56, "rgba(255,255,255,1)");
-  grd.addColorStop(0.66, "rgba(255,255,255,0.4)");
-  grd.addColorStop(0.76, "rgba(255,255,255,0)");
-  g.fillStyle = grd;
-  g.fillRect(0, 0, 256, 256);
-  const t = new THREE.CanvasTexture(c);
-  t.needsUpdate = true;
-  return t;
 }
 
 function coreHaloTexture() {
@@ -207,25 +229,32 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
   core.frustumCulled = false;
   core.renderOrder = -8;
 
+  const globeR = coarse ? 640 : 980;
+  const globeSpin = new THREE.Group();
+  globeSpin.name = "star-core-spin";
+  globeSpin.rotation.z = 0.18;
+  globeSpin.rotation.x = 0.08;
+  core.add(globeSpin);
+
   const spark = new THREE.Mesh(
-    new THREE.SphereGeometry(coarse ? 36 : 56, 20, 16),
-    addMat(0xe8fff8, 0.34),
+    new THREE.SphereGeometry(globeR * 0.22, 20, 16),
+    addMat(0xe8fff8, 0.42),
   );
   spark.name = "star-core-spark";
   spark.renderOrder = -4;
   spark.castShadow = false;
   spark.receiveShadow = false;
-  core.add(spark);
+  globeSpin.add(spark);
 
   const bloom = new THREE.Mesh(
-    new THREE.SphereGeometry(coarse ? 120 : 180, 20, 16),
-    addMat(0x2ee6ff, 0.08),
+    new THREE.SphereGeometry(globeR * 0.55, 20, 16),
+    addMat(0x2ee6ff, 0.1),
   );
   bloom.name = "star-core-bloom";
   bloom.renderOrder = -9;
   bloom.castShadow = false;
   bloom.receiveShadow = false;
-  core.add(bloom);
+  globeSpin.add(bloom);
 
   const haloMap = coreHaloTexture();
   if (haloMap) {
@@ -234,7 +263,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
         map: haloMap,
         color: 0xffffff,
         transparent: true,
-        opacity: 0.32,
+        opacity: 0.28,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         depthTest: false,
@@ -243,37 +272,59 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
       }),
     );
     halo.name = "star-core-halo";
-    const haloS = coarse ? 780 : 1080;
+    const haloS = globeR * 2.15;
     halo.scale.set(haloS, haloS, 1);
     halo.renderOrder = -10;
     halo.frustumCulled = false;
     core.add(halo);
   }
 
-  const artR = coarse ? 400 : 600;
-  const artMat = new THREE.MeshBasicMaterial({
-    map: hallCoreTexture(),
-    alphaMap: radialAlpha() ?? undefined,
-    color: 0xffffff,
-    transparent: true,
-    opacity: 1,
-    depthWrite: false,
-    depthTest: true,
+  const globeMat = new THREE.MeshPhysicalMaterial({
+    color: 0x163848,
+    roughness: 0.14,
+    metalness: 0.12,
+    emissive: 0x1aa8c8,
+    emissiveIntensity: 0.48,
+    iridescence: 1,
+    iridescenceIOR: 1.32,
+    iridescenceThicknessRange: [40, 620],
+    clearcoat: 0.96,
+    clearcoatRoughness: 0.06,
+    sheen: 0.62,
+    sheenColor: new THREE.Color(0x7ef0ff),
+    envMapIntensity: 1.4,
     fog: false,
     toneMapped: false,
-    side: THREE.DoubleSide,
   });
-  const art = new THREE.Mesh(new THREE.CircleGeometry(artR, coarse ? 48 : 72), artMat);
-  art.name = "star-core-art";
-  art.renderOrder = -5;
-  art.frustumCulled = false;
-  art.castShadow = false;
-  art.receiveShadow = false;
-  core.add(art);
+  const segs = coarse ? 32 : 48;
+  const globe = new THREE.Mesh(
+    new THREE.SphereGeometry(globeR, segs, Math.max(20, segs - 8)),
+    globeMat,
+  );
+  globe.name = "star-core-globe";
+  globe.renderOrder = -5;
+  globe.frustumCulled = false;
+  globe.castShadow = false;
+  globe.receiveShadow = false;
+  globeSpin.add(globe);
+
+  const boltMat = lightningShellMat();
+  const bolts = new THREE.Mesh(
+    new THREE.SphereGeometry(globeR * 1.04, segs, Math.max(20, segs - 8)),
+    boltMat,
+  );
+  bolts.name = "star-core-veins";
+  bolts.renderOrder = -3;
+  bolts.frustumCulled = false;
+  bolts.castShadow = false;
+  bolts.receiveShadow = false;
+  globeSpin.add(bolts);
 
   const ringMat = goldRingMat();
-  const ringRadii = coarse ? [300, 410] : [360, 470, 580];
-  const ringTube = coarse ? 4.2 : 6.2;
+  const ringRadii = coarse
+    ? [globeR * 1.12, globeR * 1.32]
+    : [globeR * 1.14, globeR * 1.34, globeR * 1.56];
+  const ringTube = coarse ? 7 : 11;
   const ringSeg = coarse ? 64 : 96;
   const orbits = [
     { rx: 1.12, ry: 0.18, rz: 0.31, spin: 0.045 },
@@ -296,38 +347,18 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
     core.add(ring);
     ringMeshes.push(ring);
   }
-
-  const boltN = coarse ? 3 : 6;
-  const boltMat = addMat(0x7ef0ff, 0.16);
-  const boltMeshes: THREE.Mesh[] = [];
-  for (let i = 0; i < boltN; i++) {
-    const h = (coarse ? 220 : 340) * (0.7 + hash(i, 11) * 0.6);
-    const bolt = new THREE.Mesh(new THREE.PlaneGeometry(coarse ? 10 : 16, h), boltMat);
-    bolt.rotation.set(hash(i, 3) * 1.4, hash(i, 5) * Math.PI * 2, hash(i, 7) * 1.2);
-    bolt.position.set(
-      (hash(i, 13) - 0.5) * 40,
-      (hash(i, 17) - 0.5) * 40,
-      (hash(i, 19) - 0.5) * 40,
-    );
-    bolt.castShadow = false;
-    bolt.receiveShadow = false;
-    bolt.renderOrder = -4;
-    bolt.frustumCulled = false;
-    bolt.name = `star-core-bolt-${i}`;
-    core.add(bolt);
-    boltMeshes.push(bolt);
-  }
   root.add(core);
-  core.updateMatrixWorld(true);
-  art.lookAt(0, 190, 0);
 
   const bandSegs = coarse ? 40 : 72;
-  river(root, 3920, 22, 0xc4a060, 0.048, 1.49, 0.05, 310, bandSegs);
-  river(root, 3480, 32, 0x3aa8c0, 0.062, 1.22, 0.2, 640, bandSegs);
+  const skyRivers: THREE.Mesh[] = [
+    river(root, 3920, 22, 0xc4a060, 0.048, 1.49, 0.05, 310, bandSegs),
+    river(root, 3480, 32, 0x3aa8c0, 0.062, 1.22, 0.2, 640, bandSegs),
+  ];
   if (!coarse) {
-    river(root, 3060, 18, 0x6a48a8, 0.05, 1.08, -0.34, 980, bandSegs);
-    river(root, 4180, 14, 0xe0c070, 0.032, 1.52, -0.08, 180, bandSegs);
+    skyRivers.push(river(root, 3060, 18, 0x6a48a8, 0.05, 1.08, -0.34, 980, bandSegs));
+    skyRivers.push(river(root, 4180, 14, 0xe0c070, 0.032, 1.52, -0.08, 180, bandSegs));
   }
+  const riverBase = skyRivers.map((m) => (m.material as THREE.MeshBasicMaterial).opacity);
 
   const starN = coarse ? 70 : 180;
   const starMat = new THREE.MeshBasicMaterial({
@@ -383,17 +414,18 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
       const breath = 1 + Math.sin(t * 0.7) * 0.07;
       spark.scale.setScalar(breath);
       bloom.scale.setScalar(1 + Math.sin(t * 0.55) * 0.09);
-      artMat.opacity = 0.92 + Math.sin(t * 0.6) * 0.05;
+      globeSpin.rotation.y = t * 0.08;
+      boltMat.uniforms.uTime.value = t;
+      globeMat.emissiveIntensity = 0.55 + Math.sin(t * 0.7) * 0.12;
       for (let i = 0; i < ringMeshes.length; i++) {
         const o = orbits[i]!;
         const ring = ringMeshes[i]!;
         ring.rotation.y = o.ry + t * o.spin;
         ring.rotation.z = o.rz + Math.sin(t * 0.12 + i) * 0.04;
       }
-      for (let i = 0; i < boltMeshes.length; i++) {
-        const bolt = boltMeshes[i]!;
-        bolt.rotation.z = t * (0.08 + i * 0.02);
-        (bolt.material as THREE.MeshBasicMaterial).opacity = 0.1 + (Math.sin(t * 1.3 + i) + 1) * 0.08;
+      for (let i = 0; i < skyRivers.length; i++) {
+        const mat = skyRivers[i]!.material as THREE.MeshBasicMaterial;
+        mat.opacity = (riverBase[i] ?? 0.05) * (0.72 + 0.28 * Math.sin(t * 0.7 + i * 0.9));
       }
     },
   };

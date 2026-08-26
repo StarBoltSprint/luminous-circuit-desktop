@@ -118,6 +118,7 @@ import { growAimHail } from "./aimhail";
 import { growCanalGate } from "./canalgate";
 import { growWildFound } from "./wildfound";
 import { growNameFound } from "./namefound";
+import { growCorePulse } from "./corepulse";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -244,6 +245,7 @@ export function buildWorld(): CircuitWorld {
 	let poolTick = null;
 	let coronaTick = null;
 	let atmosTick = null;
+	let corePulseTick = null;
 	function laterOn(fn) {
 		later.push(fn);
 	}
@@ -1643,6 +1645,7 @@ export function buildWorld(): CircuitWorld {
 		try { growCanalGate(group, coarse); } catch { /* samsung */ }
 		try { growWildFound(group, coarse); } catch { /* samsung */ }
 		try { growNameFound(group, coarse); } catch { /* samsung */ }
+		try { corePulseTick = growCorePulse(group, coarse).tick; } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [
@@ -2318,10 +2321,16 @@ export function buildWorld(): CircuitWorld {
 		try { poolTick?.(t); } catch { /* samsung */ }
 		try { coronaTick?.(t); } catch { /* samsung */ }
 		try { atmosTick?.(t); } catch { /* samsung */ }
+		try { corePulseTick?.(t); } catch { /* samsung */ }
+		try {
+			const k = 0.86 + 0.14 * Math.sin(t * 0.7);
+			parentLamp.intensity = 8 * k;
+			coreKiss.intensity = 0.48 * k;
+		} catch { /* samsung */ }
 		for (const u of clocks) if (u) u.value = t;
 		innerCore.rotation.y = t * .25;
 		innerCore.scale.y = 2.6 + Math.sin(t * 1.4) * .12;
-		const pulse = .92 + Math.sin(t * 1.1) * .08 + resonance * .002;
+		const pulse = .92 + Math.sin(t * 1.1) * .08 + Math.sin(t * 0.7) * .05 + resonance * .002;
 		matsToPulse.forEach((m, i) => {
 			m.emissiveIntensity = (baseEmissive[i] ?? .4) * pulse;
 		});

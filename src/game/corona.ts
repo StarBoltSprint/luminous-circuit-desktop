@@ -6,23 +6,22 @@
  * Dispose is world group.clear(). No vibrate. No photos.
  */
 import * as THREE from "three";
+import { STAR_CORE } from "./atmos";
 
-/** Same parent Star Core as atmos.ts CORE_X/Y/Z. STAR_CORE is not exported from atmos. */
-const STAR_CORE = { x: -4050, y: 540, z: 195 };
 /** atmos lookAt uses CORE_Y * 0.35 = 189; task pins 190. */
 const LOOK_Y = 190;
 
-const RAY_W = 14;
-const RAY_H = 560;
-const RAY_N = 6;
-const RAY_N_COARSE = 3;
-const RAY_OP = 0.055;
+const RAY_W = 28;
+const RAY_H = 2100;
+const RAY_N = 8;
+const RAY_N_COARSE = 4;
+const RAY_OP = 0.05;
 const RAY_HEX = 0x7ef0ff;
-const RAY_SPIN = 0.035;
+const RAY_SPIN = 0.03;
 const RAY_ORDER = -6;
 
-const INNER_R = 86;
-const INNER_R_COARSE = 52;
+const INNER_R = 220;
+const INNER_R_COARSE = 140;
 const INNER_OP = 0.22;
 const INNER_OP_MIN = 0.14;
 const INNER_OP_MAX = 0.32;
