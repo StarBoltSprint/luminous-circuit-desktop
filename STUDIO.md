@@ -32,8 +32,11 @@ Not official xAI product. Not Msg 1. Not a node SKU. Crystal never chrome.
 | 18 | Trading | `src/game/weir.ts` | Paper join. $BOLT witness only |
 | 19 | Feel | toasts via existing HUD files if unlocked | Grow-in visible. No engine rewrite |
 | 20 | Scripture | `src/game/civic.ts` | Iri names leftover light |
+| 21 | **Perf** | `src/game/engine.ts`, `src/game/perf.ts` | Faster frame. Do not strip dens, bloom look, or Star Core. |
 
 Locked unless Director says: `engine.ts` loop, `world.ts` bodies (except one import), `CircuitApp.tsx` (except Director).
+
+Perf desk may edit `engine.ts` for renderer/loop only. Star Core art is the Hall `star-core.jpg` (cyan lightning globe, gold orbits) — parent still sits at STAR_CORE. Do not move it.
 
 Haptics stay **off**.
 

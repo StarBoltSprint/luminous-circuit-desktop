@@ -17,7 +17,7 @@ const RAY_H = 420;
 const RAY_N = 6;
 const RAY_N_COARSE = 3;
 const RAY_OP = 0.07;
-const RAY_HEX = 0xe8c070;
+const RAY_HEX = 0x7ef0ff;
 const RAY_SPIN = 0.04;
 const RAY_ORDER = -6;
 
@@ -26,7 +26,7 @@ const INNER_R_COARSE = 16;
 const INNER_OP = 0.18;
 const INNER_OP_MIN = 0.12;
 const INNER_OP_MAX = 0.26;
-const INNER_HEX = 0xffe0a0;
+const INNER_HEX = 0xe8fff8;
 const INNER_PULSE = 0.7;
 const INNER_ORDER = -5;
 

@@ -16,6 +16,18 @@ import { readShape } from "./build-spec";
 import { addCharge, defaultLedger, HOWL_YIELD, CITY_CAP, simulateAway, tryWrite, type Ledger } from "./society";
 import { resolveHowl, enactCivic, howlVerb, civicBrief } from "./civic";
 import { gradeHowl, howlMult, gradeLine, aimingParent, markStood, dutyDone, talkWitness, stillHowl, shapeFits, markChain } from "./play";
+import {
+	applyPixelRatio,
+	bloomSize,
+	capDpr,
+	createAdaptiveDpr,
+	createLaterFreeze,
+	freezeShadows,
+	rendererTries,
+	shouldSkipDraw,
+	stepAdaptiveDpr,
+	wrapBloomHalfRes,
+} from "./perf";
 
 export type HudSnap = {
   zone: string | null;
@@ -80,23 +92,11 @@ export type EngineHandle = {
 type HudFn = (s: HudSnap) => void;
 
 function makeRenderer(canvas: HTMLCanvasElement) {
-	const tries = [{
-		canvas,
-		antialias: true,
-		alpha: false,
-		powerPreference: "default",
-		failIfMajorPerformanceCaveat: false
-	}, {
-		canvas,
-		antialias: false,
-		alpha: false,
-		powerPreference: "low-power",
-		failIfMajorPerformanceCaveat: false
-	}];
+	const tries = rendererTries(canvas);
 	let last;
 	for (const opts of tries) try {
 		const r = new THREE.WebGLRenderer(opts);
-		r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+		r.setPixelRatio(capDpr(window.devicePixelRatio || 1));
 		r.setClearColor(131848, 1);
 		r.outputColorSpace = THREE.SRGBColorSpace;
 		r.toneMapping = THREE.ACESFilmicToneMapping;
@@ -385,13 +385,19 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 	let awayAt = save.lastAway?.at ?? 0;
 	let composer = null;
 	let bloomPass = null;
+	const dprAdapt = createAdaptiveDpr(window.devicePixelRatio || 1);
+	let dprClock = performance.now();
+	const laterFreeze = createLaterFreeze();
 	function resize() {
 		const w = canvas.clientWidth || window.innerWidth;
 		const h = canvas.clientHeight || window.innerHeight;
 		renderer.setSize(w, h, false);
 		camera.aspect = w / Math.max(1, h);
 		camera.updateProjectionMatrix();
-		composer?.setSize(w, h);
+		if (composer) {
+			composer.setPixelRatio(renderer.getPixelRatio());
+			composer.setSize(w, h);
+		}
 	}
 	resize();
 	const ro = new ResizeObserver(resize);
@@ -410,7 +416,9 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			composer.addPass(new RenderPass(scene, camera));
 			const bw = canvas.clientWidth || 1280;
 			const bh = canvas.clientHeight || 720;
-			bloomPass = new UnrealBloomPass(new THREE.Vector2(bw, bh), coarsePointer ? .38 : .44, .42, .7);
+			const half = bloomSize(bw, bh);
+			bloomPass = new UnrealBloomPass(new THREE.Vector2(half.x, half.y), coarsePointer ? .38 : .44, .42, .7);
+			wrapBloomHalfRes(bloomPass);
 			composer.addPass(bloomPass);
 			composer.addPass(new OutputPass());
 			resize();
@@ -420,9 +428,20 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		}
 	}, 80);
 	function draw() {
+		if (shouldSkipDraw(document)) {
+			dprClock = performance.now();
+			return;
+		}
+		const nowDraw = performance.now();
+		const dprDt = Math.min(.25, Math.max(0, (nowDraw - dprClock) / 1e3));
+		dprClock = nowDraw;
+		applyPixelRatio(renderer, composer, stepAdaptiveDpr(dprAdapt, smoothFps, dprDt, window.devicePixelRatio || 1));
 		if (bloomPass) bloomPass.strength = (coarsePointer ? .28 : .34) + resonance / 100 * .1;
 		if (composer) composer.render();
 		else renderer.render(scene, camera);
+	}
+	function afterWorldTick() {
+		laterFreeze.afterTick(() => freezeShadows(renderer.shadowMap));
 	}
 	function pushOut() {
 		const r = Math.hypot(player.x, player.z);
@@ -669,6 +688,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			camera.position.set(Math.sin(titleYaw) * dist, 108, Math.cos(titleYaw) * dist);
 			camera.lookAt(0, 64, 0);
 			world.tick(now / 1e3, raw, camera, resonance);
+			afterWorldTick();
 			draw();
 			requestAnimationFrame(loop);
 			return;
@@ -893,6 +913,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			}
 		}
 		world.tick(now / 1e3, dt, camera, resonance);
+		afterWorldTick();
 		if (toastT > 0) toastT -= liveDt;
 		if (!Number.isFinite(toastT) || toastT <= 0) {
 			toastT = 0;

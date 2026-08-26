@@ -98,39 +98,28 @@ function river(
   root.add(mesh);
 }
 
-function goldCrystal() {
+function goldRingMat() {
   return new THREE.MeshPhysicalMaterial({
-    color: 0xe8c888,
-    emissive: 0xd4a040,
-    emissiveIntensity: 0.55,
-    roughness: 0.14,
-    metalness: 0.62,
-    iridescence: 0.48,
-    iridescenceIOR: 1.28,
-    iridescenceThicknessRange: [80, 420],
-    clearcoat: 0.72,
-    clearcoatRoughness: 0.12,
+    color: 0xe8c46a,
+    emissive: 0xc4a040,
+    emissiveIntensity: 0.45,
+    roughness: 0.22,
+    metalness: 0.78,
+    iridescence: 0.4,
+    iridescenceIOR: 1.26,
+    clearcoat: 0.55,
+    clearcoatRoughness: 0.18,
     fog: false,
     toneMapped: false,
   });
 }
 
-function goldCage() {
-  return new THREE.MeshPhysicalMaterial({
-    color: 0xc4a060,
-    emissive: 0x8a6020,
-    emissiveIntensity: 0.22,
-    roughness: 0.28,
-    metalness: 0.7,
-    iridescence: 0.36,
-    iridescenceIOR: 1.26,
-    clearcoat: 0.5,
-    clearcoatRoughness: 0.2,
-    transparent: true,
-    opacity: 0.88,
-    fog: false,
-    toneMapped: false,
-  });
+function hallCoreTexture() {
+  const url = `${import.meta.env.BASE_URL}assets/star-core.jpg`;
+  const tex = new THREE.TextureLoader().load(url);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  return tex;
 }
 
 /**
@@ -171,60 +160,70 @@ export function growAtmos(group: THREE.Group, coarse: boolean): void {
   const core = new THREE.Group();
   core.name = "star-core";
   core.position.set(CORE_X, CORE_Y, CORE_Z);
-  core.lookAt(0, CORE_Y * 0.35, 0);
   core.frustumCulled = false;
   core.renderOrder = -8;
 
-  const heart = new THREE.Mesh(
-    new THREE.IcosahedronGeometry(coarse ? 16 : 20, 1),
-    goldCrystal(),
+  const spark = new THREE.Mesh(
+    new THREE.SphereGeometry(coarse ? 28 : 38, 16, 12),
+    addMat(0x7ef0ff, 0.22),
   );
-  heart.scale.set(1, 1.12, 1);
-  heart.castShadow = false;
-  heart.receiveShadow = false;
-  heart.renderOrder = -6;
-  core.add(heart);
+  spark.name = "star-core-spark";
+  spark.renderOrder = -6;
+  spark.castShadow = false;
+  spark.receiveShadow = false;
+  core.add(spark);
 
-  const cage = new THREE.Mesh(
-    new THREE.OctahedronGeometry(coarse ? 34 : 44, 1),
-    goldCage(),
+  const bloom = new THREE.Mesh(
+    new THREE.SphereGeometry(coarse ? 70 : 96, 16, 12),
+    addMat(0x2ee6ff, 0.08),
   );
-  cage.scale.set(1, 1.18, 1);
-  cage.rotation.y = 0.4;
-  cage.castShadow = false;
-  cage.receiveShadow = false;
-  cage.renderOrder = -7;
-  core.add(cage);
+  bloom.name = "star-core-bloom";
+  bloom.renderOrder = -8;
+  bloom.castShadow = false;
+  bloom.receiveShadow = false;
+  core.add(bloom);
 
-  const inner = new THREE.Mesh(new THREE.SphereGeometry(coarse ? 24 : 32, 12, 10), addMat(0xffe8b0, 0.16));
-  inner.renderOrder = -6;
-  inner.castShadow = false;
-  inner.receiveShadow = false;
-  core.add(inner);
+  const art = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: hallCoreTexture(),
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.94,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      depthTest: true,
+      fog: false,
+      toneMapped: false,
+    }),
+  );
+  art.name = "star-core-art";
+  const artS = coarse ? 260 : 420;
+  art.scale.set(artS, artS, 1);
+  art.renderOrder = -5;
+  art.frustumCulled = false;
+  core.add(art);
 
-  const disc = new THREE.Mesh(new THREE.CircleGeometry(coarse ? 120 : 188, 32), addMat(0xe8c070, 0.14));
-  disc.renderOrder = -9;
-  disc.castShadow = false;
-  disc.receiveShadow = false;
-  core.add(disc);
-
-  const answer = new THREE.Mesh(new THREE.CircleGeometry(coarse ? 90 : 140, 28), addMat(0x48c8d8, 0.05));
-  answer.renderOrder = -9;
-  answer.castShadow = false;
-  answer.receiveShadow = false;
-  core.add(answer);
-
-  const halo = new THREE.Mesh(new THREE.CircleGeometry(coarse ? 220 : 360, 32), addMat(0xc49848, 0.055));
-  halo.renderOrder = -10;
-  halo.castShadow = false;
-  halo.receiveShadow = false;
-  core.add(halo);
-
-  const corona = new THREE.Mesh(new THREE.SphereGeometry(coarse ? 56 : 84, 14, 12), addMat(0xf0d090, 0.09));
-  corona.renderOrder = -8;
-  corona.castShadow = false;
-  corona.receiveShadow = false;
-  core.add(corona);
+  const ringMat = goldRingMat();
+  const ringR = coarse ? 52 : 72;
+  const ringTube = coarse ? 1.4 : 2.1;
+  const ringSeg = coarse ? 48 : 80;
+  const orbits = [
+    { rx: 1.12, ry: 0.18, rz: 0.31 },
+    { rx: 0.42, ry: 1.05, rz: -0.22 },
+    { rx: 1.48, ry: -0.4, rz: 0.08 },
+  ];
+  const nRings = coarse ? 2 : 3;
+  for (let i = 0; i < nRings; i++) {
+    const o = orbits[i]!;
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(ringR, ringTube, 8, ringSeg), ringMat);
+    ring.rotation.set(o.rx, o.ry, o.rz);
+    ring.castShadow = false;
+    ring.receiveShadow = false;
+    ring.renderOrder = -6;
+    ring.frustumCulled = false;
+    ring.name = `star-core-orbit-${i}`;
+    core.add(ring);
+  }
   root.add(core);
 
   const bandSegs = coarse ? 40 : 72;
