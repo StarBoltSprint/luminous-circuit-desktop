@@ -118,7 +118,8 @@ Do not rename. Do not move the Star Core (Aure’s overlook stays west-horizon).
 
 Duty chain for leftover light: **Seln → Orren → Voss → Iri** (tend, kiln, join, name). Hub is listening fallback, not a loop.
 
-Dual-claim chords on empty ground (this wave): Voss/Orren Join→Foundry; Mira/Kael Terraces→Gates; Tal/Kesh Bridge→Wild; Iri/Aure Archive→Overlook; Voss paper Hub→Join. None of them move the parent.
+Dual-claim chords on empty ground (wave 12): Voss/Orren Join→Foundry; Mira/Kael Terraces→Gates; Tal/Kesh Bridge→Wild; Iri/Aure Archive→Overlook; Voss paper Hub→Join.
+Dual-claim chords (wave 13): Lumen/Rhoa Beacon→Ring; Syl/Orren Grove→Foundry; Lumen/Kael Beacon→Gates; Syl/Voss Grove→Join fruit when ready; Mira/Rhoa Terraces→Ring. None of them move the parent. `$BOLT` witnesses Howl only.
 
 ## Vessels (same Boltverse, different windows)
 

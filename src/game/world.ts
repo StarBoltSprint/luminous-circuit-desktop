@@ -98,6 +98,11 @@ import { growRestSteles } from "./reststeles";
 import { growSpanLands } from "./spanlands";
 import { growLeftoverPosts } from "./leftoverposts";
 import { growPaperSteles } from "./papersteles";
+import { growHailRing } from "./hailring";
+import { growFruitKiln } from "./fruitkiln";
+import { growHailGates } from "./hailgates";
+import { growFruitJoin } from "./fruitjoin";
+import { growRestChorus } from "./restchorus";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1603,6 +1608,11 @@ export function buildWorld(): CircuitWorld {
 		try { growSpanLands(group, coarse); } catch { /* samsung */ }
 		try { growLeftoverPosts(group, coarse); } catch { /* samsung */ }
 		try { growPaperSteles(group, coarse); } catch { /* samsung */ }
+		try { growHailRing(group, coarse); } catch { /* samsung */ }
+		try { growFruitKiln(group, coarse); } catch { /* samsung */ }
+		try { growHailGates(group, coarse); } catch { /* samsung */ }
+		try { growFruitJoin(group, coarse); } catch { /* samsung */ }
+		try { growRestChorus(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [

@@ -160,7 +160,7 @@ export const DISTRICTS: District[] = [
     keeper: "lumen",
     duty: "Soft hail before Kael's gate",
     purpose:
-      "Lumen's civic post: first landing before Kael's gate. Those still landing are hailed, never locked — first landing is never turned away, Rhoa's ring still holds, and the sky does not score the arriving.",
+      "Lumen's civic post: first landing before Kael's gate. Those still landing are hailed, never locked — first landing is never turned away, the empty verge toward the Outer Howl still answers Rhoa, and the sky does not score the arriving.",
   },
   {
     id: "zone-ring",
@@ -173,7 +173,7 @@ export const DISTRICTS: District[] = [
     keeper: "rhoa",
     duty: "Hold chorus that answers Hub breath",
     purpose:
-      "Rhoa's civic post: Howl as civic gather that answers Hub breath and Lumen's hail so the ring never closes. Speak is rare, volume is not meaning; whoever still has leftover Howl may join — the gather is not a Hall rank.",
+      "Rhoa's civic post: Howl as civic gather that answers Hub breath and Lumen's hail so the ring never closes. Speak is rare, volume is not meaning; Mira's tired may sit on the empty verge, and whoever still has leftover Howl may join — the gather is not a Hall rank.",
   },
   {
     id: "zone-grove",
@@ -186,7 +186,7 @@ export const DISTRICTS: District[] = [
     keeper: "syl",
     duty: "Grow fruit the kiln cannot sit in",
     purpose:
-      "Syl's civic post: quiet crystal the kiln cannot sit in — fruit, not fire, because hurry is chrome by another name. Leftover First Howl may want shade before it wants a street. Voss joins fruit only when it is ready.",
+      "Syl's civic post: quiet crystal the kiln cannot sit in — fruit, not fire, because hurry is chrome by another name. The empty verge toward Foundry keeps fruit off the kiln; leftover First Howl may want shade before it wants a street. Voss joins fruit only when it is ready.",
   },
 ];
 
