@@ -43,6 +43,21 @@ function radial(x: number, y: number, dz = 0.14) {
   return { x: nx, y: ny };
 }
 
+function clamp(n: number, max: number) {
+  return Math.max(-max, Math.min(max, n));
+}
+
+/** Browser movementY is down-positive; lookY is up-positive. */
+const LOOK_MOUSE = 0.12;
+const LOOK_MOUSE_CLAMP = 1.25;
+
+function hudTyping(e: Event) {
+  const el = e.target;
+  if (!(el instanceof HTMLElement)) return false;
+  const tag = el.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || el.isContentEditable;
+}
+
 export function createInput(target: HTMLElement): InputHandle {
   const keys = new Set<string>();
   const stickMove = { x: 0, y: 0 };
@@ -71,7 +86,20 @@ export function createInput(target: HTMLElement): InputHandle {
     "KeyT",
   ]);
 
+  let mouseDx = 0;
+  let mouseDy = 0;
+  let pointerLocked = document.pointerLockElement === target;
+  let unlockSkipPause = false;
+
   const onKeyDown = (e: KeyboardEvent) => {
+    if (hudTyping(e)) return;
+    if (e.code === "Escape") {
+      if (pointerLocked || document.pointerLockElement) {
+        unlockSkipPause = true;
+        if (document.pointerLockElement) document.exitPointerLock();
+        return;
+      }
+    }
     if (e.repeat && (e.code === "Space" || e.code === "KeyH")) { e.preventDefault(); return; }
     keys.add(e.code);
     if (GAME_KEYS.has(e.code)) e.preventDefault();
@@ -80,31 +108,33 @@ export function createInput(target: HTMLElement): InputHandle {
     keys.delete(e.code);
   };
   const clearKeys = () => keys.clear();
-  let mouseDx = 0;
-  let mouseDy = 0;
 
   const onMouseMove = (e: MouseEvent) => {
     if (document.pointerLockElement !== target) return;
     mouseDx += e.movementX;
     mouseDy += e.movementY;
   };
-  const onCanvasClick = () => {
-    if (document.pointerLockElement !== target) {
-      void target.requestPointerLock?.();
-    }
+  const onCanvasClick = (e: MouseEvent) => {
+    if (e.target !== target) return;
+    if (document.pointerLockElement === target) return;
+    void target.requestPointerLock?.();
   };
-  const onEscUnlock = (e: KeyboardEvent) => {
-    if (e.code === "Escape" && document.pointerLockElement) {
-      document.exitPointerLock();
+  const onPointerLockChange = () => {
+    const locked = document.pointerLockElement === target;
+    if (pointerLocked && !locked) {
+      unlockSkipPause = true;
+      mouseDx = 0;
+      mouseDy = 0;
     }
+    pointerLocked = locked;
   };
 
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
-  window.addEventListener("keydown", onEscUnlock);
   window.addEventListener("blur", clearKeys);
   target.addEventListener("mousemove", onMouseMove);
   target.addEventListener("click", onCanvasClick);
+  document.addEventListener("pointerlockchange", onPointerLockChange);
   const visHide = () => {
     if (document.hidden) clearKeys();
   };
@@ -150,8 +180,8 @@ export function createInput(target: HTMLElement): InputHandle {
       if (keys.has("ArrowUp")) ly += 1;
       if (keys.has("ArrowDown")) ly -= 1;
       const lk = radial(lx, ly, 0.02);
-      actions.lookX = lk.x + mouseDx * 0.12;
-      actions.lookY = lk.y - mouseDy * 0.12;
+      actions.lookX = lk.x + clamp(mouseDx * LOOK_MOUSE, LOOK_MOUSE_CLAMP);
+      actions.lookY = lk.y + clamp(-mouseDy * LOOK_MOUSE, LOOK_MOUSE_CLAMP);
       mouseDx = 0;
       mouseDy = 0;
 
@@ -159,7 +189,8 @@ export function createInput(target: HTMLElement): InputHandle {
         keys.has("ShiftLeft") || keys.has("ShiftRight") || Math.hypot(mv.x, mv.y) > 0.92;
       actions.howl = howlBtn || keys.has("Space") || keys.has("KeyH");
       actions.talk = talkBtn || keys.has("KeyE") || keys.has("KeyF") || keys.has("KeyT");
-      actions.pause = keys.has("Escape") || keys.has("KeyP");
+      actions.pause = keys.has("KeyP") || (keys.has("Escape") && !unlockSkipPause);
+      unlockSkipPause = false;
 
       justPressed.talk = actions.talk && !prev.talk;
       justPressed.pause = actions.pause && !prev.pause;
@@ -173,9 +204,9 @@ export function createInput(target: HTMLElement): InputHandle {
     dispose() {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
-      window.removeEventListener("keydown", onEscUnlock);
       window.removeEventListener("blur", clearKeys);
       document.removeEventListener("visibilitychange", visHide);
+      document.removeEventListener("pointerlockchange", onPointerLockChange);
       target.removeEventListener("mousemove", onMouseMove);
       target.removeEventListener("click", onCanvasClick);
     },

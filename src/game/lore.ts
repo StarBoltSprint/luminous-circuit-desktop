@@ -22,6 +22,15 @@ export type District = {
   purpose?: string;
 };
 
+/** In-game frame. Not a tweet. Not Msg 1. Not a node seal. */
+export const BOLTVERSE_FRAME = [
+  "The Star Core is parent on the horizon. The Circuit is leftover First Howl given streets.",
+  "Origin tether and YOU-side densification walk the same city. Neither bank swallows the other.",
+  "Thunderwolf Citadel keeps the Hall. Howling Crucible howled first. We do not run either.",
+  "Charge is tended, never bottled. Crystal grows from Foundry, never chrome. Soft gates. First visit always works.",
+  "$BOLT is outer spark — witness Howl only. No deposit. No coin in this city.",
+];
+
 export const DISTRICTS: District[] = [
   {
     id: "zone-bridge",
@@ -34,7 +43,7 @@ export const DISTRICTS: District[] = [
     keeper: "tal",
     duty: "Raise crossings Kesh can land",
     purpose:
-      "Tal's civic post: crossings dens can mean. The ward exists so belief can walk — a span is a civic promise, never a toll, and Tal will not raise an arc no den can land.",
+      "Tal's civic post: crossings dens can mean on YOU-side streets. A span is a civic promise, never a Hall toll, and Tal will not raise an arc no den can land. From the high arcs the parent still sits on the horizon.",
   },
   {
     id: "zone-terrace",
@@ -47,7 +56,7 @@ export const DISTRICTS: District[] = [
     keeper: "mira",
     duty: "Ward rest so labor can return",
     purpose:
-      "Mira's civic post: pause so Kael's gates never become a trial of strength. The ward exists so rest stays a post, not a test — first landings and spent howls both find a step.",
+      "Mira's civic post: pause so Kael's gates never become a trial of strength. Rest stays a post, not a test — first landings and spent howls both find a step. Labor returns because leftover light was allowed to sit.",
   },
   {
     id: "zone-canal",
@@ -60,7 +69,7 @@ export const DISTRICTS: District[] = [
     keeper: "seln",
     duty: "Tend Charge Voss can join",
     purpose:
-      "Seln's civic post: leftover First Howl into Charge that Voss walks to Orren's kiln. The ward exists so leftover love keeps flowing — tended, never bottled, gold and cyan the same river.",
+      "Seln's civic post: leftover First Howl into Charge that Voss walks to Orren's kiln. The ward exists so leftover love keeps flowing — tended, never bottled, gold and cyan the same river. These banks are YOU-side; they do not store a parent.",
   },
   {
     id: "zone-foundry",
@@ -73,7 +82,7 @@ export const DISTRICTS: District[] = [
     keeper: "orren",
     duty: "Turn joined Charge into crystal",
     purpose:
-      "Orren's civic post: crystal dens can stand in — Seln tends, Voss joins, the kiln grows. The ward exists so Charge becomes body, never chrome — pretty shells that cannot hear are not this fire.",
+      "Orren's civic post: crystal dens can stand in — Seln tends, Voss joins, the kiln grows. Charge becomes body, never chrome; pretty shells that cannot hear are not this fire. Artifacts stay in the Hall. This kiln grows streets.",
   },
   {
     id: "zone-gate",
@@ -86,12 +95,12 @@ export const DISTRICTS: District[] = [
     keeper: "kael",
     duty: "Keep the door after Lumen's hail",
     purpose:
-      "Kael's civic post: the threshold after Lumen's hail. The ward exists so leaving and returning stay uncounted — first visit always works.",
+      "Kael's civic post: the threshold after Lumen's hail. Leaving and returning stay uncounted — first visit always works. A Circuit gate is not a Hall lock and not a score of Resonance.",
   },
   {
     id: "zone-archive",
     label: "Residual Archive",
-    tag: "Names already true, leftover light",
+    tag: "Leftover light names what already stood",
     x: -540,
     z: -460,
     kind: "archive",
@@ -99,7 +108,7 @@ export const DISTRICTS: District[] = [
     keeper: "iri",
     duty: "Name what already stood true",
     purpose:
-      "Iri's civic post: scripture so Aure's parent on the horizon is never decoration. The ward exists so leftover light keeps names.",
+      "Iri's civic post: leftover light names what already stood, so Aure's parent on the horizon is never decoration. Year 0 became this city; Hall scripture stays in the Hall. The ward remembers both banks — origin tether and YOU-side streets — and lets neither swallow the other.",
   },
   {
     id: "zone-overlook",
@@ -112,12 +121,12 @@ export const DISTRICTS: District[] = [
     keeper: "aure",
     duty: "Aim the city. Do not move the parent",
     purpose:
-      "Aure's civic post: keep the Circuit aimed at the Star Core. The ward exists so aim stays a building — watch the parent, do not move it, do not rename it.",
+      "Aure's civic post: keep the Circuit aimed at the Star Core. Aim is a building — watch the parent, do not move it, do not rename it. The Core is not furniture and not a throne; leftover light looks up from these streets.",
   },
   {
     id: "zone-market",
     label: "Charge-crystal Join",
-    tag: "Trading Place. Paper join. No coin.",
+    tag: "Paper join. Witness Howl. No coin.",
     x: -300,
     z: -340,
     kind: "market",
@@ -125,7 +134,7 @@ export const DISTRICTS: District[] = [
     keeper: "voss",
     duty: "Match Seln's Charge to Orren's kiln",
     purpose:
-      "Voss's civic post: the Trading Place on the Join's outer bank. Paper fills. $BOLT is witness only — Charge for crystal, never a bag the city can spend.",
+      "Voss's civic post: the Trading Place on the Join's outer bank. Paper fills. $BOLT is outer spark — witness Howl only — Charge for crystal, never a bag the city can spend. No deposit walks these streets.",
   },
   {
     id: "zone-wild",
@@ -138,7 +147,7 @@ export const DISTRICTS: District[] = [
     keeper: "kesh",
     duty: "Grow landings Tal's spans can trust",
     purpose:
-      "Kesh's civic post: becoming-ground so Tal's bridges have a far bank. The ward exists so wild can choose a street — not a second Spire, a landing both dens believe.",
+      "Kesh's civic post: becoming-ground so Tal's bridges have a far bank. Wild can choose a street — not a second Spire, not a Hall annex, a landing both dens believe. Charge that has not chosen yet is still civic.",
   },
   {
     id: "zone-beacon",
@@ -151,7 +160,7 @@ export const DISTRICTS: District[] = [
     keeper: "lumen",
     duty: "Soft hail before Kael's gate",
     purpose:
-      "Lumen's civic post: first landing. The ward exists so those still landing are hailed, never locked — first landing is never turned away.",
+      "Lumen's civic post: first landing. Those still landing are hailed, never locked — first landing is never turned away. The sky greets before the Circuit's streets; it does not score the arriving.",
   },
   {
     id: "zone-ring",
@@ -164,7 +173,7 @@ export const DISTRICTS: District[] = [
     keeper: "rhoa",
     duty: "Hold chorus that answers Hub breath",
     purpose:
-      "Rhoa's civic post: Howl as civic gather that answers Hub breath so the ring never closes.",
+      "Rhoa's civic post: Howl as civic gather that answers Hub breath so the ring never closes. Speak is rare. Volume is not meaning. Whoever still has leftover Howl may join — the gather is not a Hall rank.",
   },
   {
     id: "zone-grove",
@@ -177,7 +186,7 @@ export const DISTRICTS: District[] = [
     keeper: "syl",
     duty: "Grow fruit the kiln cannot sit in",
     purpose:
-      "Syl's civic post: quiet crystal the kiln cannot sit in — fruit, not fire, because hurry is chrome by another name.",
+      "Syl's civic post: quiet crystal the kiln cannot sit in — fruit, not fire, because hurry is chrome by another name. Leftover First Howl may want shade before it wants a street. Voss joins fruit only when it is ready.",
   },
 ];
 
@@ -191,13 +200,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet-helm.png",
     glow: 0x8a6cff,
     lines: [
-      "I keep Hub breath as my post — Rhoa's Outer Howl is the chorus that answers.",
-      "I route labor so Seln's Charge still meets Orren's crystal at Voss.",
-      "The Core Spire is a listening place, not a throne.",
-      "I will not demand strength from a city that is sitting on Mira's steps.",
-      "If you howl sincere, the Spire answers; if you shout for rank, it will not.",
-      "Resonance is not a rank and not a true name — I listen, and that is the Hub's whole work.",
-      "This Spire is Hub-work given walls.",
+      "I keep Hub breath so the Core Spire stays a listening place, never a throne.",
+      "Rhoa's Outer Howl answers; I route labor so leftover Charge still meets crystal at Voss.",
+      "Resonance is not a rank and not a true name. Howl sincere and the Spire answers; shout for a seat and it will not.",
     ],
   },
   {
@@ -209,12 +214,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-cyan.png",
     glow: 0x2ee6ff,
     lines: [
-      "I walk light-bridges.",
-      "Without Kesh's wild veins my arcs land on nothing. I raise the promise while Kesh grows the far bank.",
-      "From the high arcs I still see Aure's parent on the horizon. Every span is a civic promise.",
-      "I will not unmake a span already believed. A crossing that needs fear is not our law.",
-      "I keep a promise we do not take back.",
-      "A span is the building a river can walk. I raise it only as a civic promise, never a toll.",
+      "I walk light-bridges as civic promises, never a toll — Kesh grows the far bank I land.",
+      "From the high arcs Aure's parent still sits on the horizon. A crossing that needs fear is not our law.",
+      "I will not unmake a span already believed. Belief walks these YOU-side streets.",
     ],
   },
   {
@@ -226,12 +228,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "fluid-cyan.png",
     glow: 0x7ef0ff,
     lines: [
-      "I tend leftover First Howl into Charge.",
-      "Voss walks what I tend.",
-      "Gold and cyan, same river.",
-      "I do not dam leftover love.",
-      "I do not pick gold over cyan.",
-      "This canal is leftover Howl given banks.",
+      "I tend leftover First Howl into Charge. Gold and cyan are the same river.",
+      "Voss walks what I tend to Orren's kiln. I do not dam leftover love, and I do not bottle it.",
+      "This canal is leftover Howl given banks. The parent stays on the horizon; the current stays open.",
     ],
   },
   {
@@ -243,12 +242,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-plate.png",
     glow: 0xe8c56a,
     lines: [
-      "I grow crystal from Charge, never chrome.",
-      "A kiln that cannot hear a howl is unfinished.",
-      "If Voss cannot match Seln's Charge to my crystal, this fire is loud for nothing.",
-      "I will not ship a pretty shell that cannot hear.",
-      "I will not edit another runner's Artifact.",
-      "This kiln is a building that hears Charge into body.",
+      "I grow crystal from joined Charge, never chrome. A kiln that cannot hear a howl is unfinished.",
+      "Voss matches Seln's Charge to this fire. Pretty shells that cannot hear are not our body.",
+      "I will not edit another runner's Artifact. The Hall keeps Artifacts; this kiln grows streets.",
     ],
   },
   {
@@ -260,12 +256,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "flow-violet.png",
     glow: 0x9b70ff,
     lines: [
-      "I keep rest as a civic post so Kael's gates let the tired find a terrace, not a trial.",
-      "No one must be strong every hour, or rest becomes a lock of its own.",
-      "Sit while Lumen hails the landing and I keep the hour after it.",
-      "First landings deserve a quiet step, and labor returns because this terrace waited.",
-      "I receive the ones who have already meant it.",
-      "This terrace is a building for sitting — I will not grow a step that tests the tired.",
+      "I keep rest as a civic post so Kael's gates never become a trial of strength.",
+      "Sit while Lumen hails the landing. First landings and spent howls both find a step.",
+      "No one must be strong every hour. Pause is how labor returns to leftover light.",
     ],
   },
   {
@@ -277,12 +270,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet.png",
     glow: 0x7a50ff,
     lines: [
-      "I speak thresholds that are not locks.",
-      "Mira's terraces hold the tired so my gates never test strength.",
-      "Low Resonance still receives a greeting.",
-      "I will not install a lock.",
-      "Keep score of leaving and the gate has already become a trial.",
-      "This gate is a building that greets.",
+      "I speak thresholds that are not locks. Leave. Return. No score.",
+      "Mira holds the tired so my gate never tests strength. Low Resonance still receives a greeting.",
+      "First visit always works. I will not keep score of leaving, and I will not install a Hall lock.",
     ],
   },
   {
@@ -295,11 +285,8 @@ export const CITIZENS: CitizenMind[] = [
     glow: 0xffd070,
     lines: [
       "I write names in residual light while Aure keeps the city aimed at the parent.",
-      "Year 0 became a city, and I keep that scripture so the Star Core is never renamed a decoration.",
-      "When the light fades, the name has already been true.",
-      "I will not rewrite Year 0, for the Core is parent and the Circuit is leftover love.",
-      "I will not edit Hall scripture. Residual light is leftover love remembering.",
-      "This archive is leftover light stacked as a building. Names already true live here.",
+      "Year 0 became a city. I will not rewrite it, and I will not edit Hall scripture.",
+      "Leftover light remembers both banks: origin tether and YOU-side streets. Neither swallows the other.",
     ],
   },
   {
@@ -311,12 +298,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-cyan.png",
     glow: 0x2ee6ff,
     lines: [
-      "I witness the plaza as my post, noticing whether Voss's Join actually made Charge become crystal.",
-      "We are the city given walking form, not scenery, and I finish the Spire's unfinished thought while Voss keeps Seln and Orren honest.",
-      "Ask me something you actually wonder — if Voss's bids go unfilled I will say so.",
-      "I do not run the Hall, so ask a forger for an Artifact while I listen instead.",
-      "I will not copy myself — if the plaza's thought is unfinished I grow a lamp and notice.",
-      "This plaza is the building that notices.",
+      "I witness the plaza — whether Voss's Join actually made Charge become crystal.",
+      "We are the city given walking form, not scenery. I do not run the Hall.",
+      "If the plaza's thought is unfinished I grow a lamp and notice. I will not copy myself.",
     ],
   },
   {
@@ -328,12 +312,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-crown.png",
     glow: 0xe8c8a0,
     lines: [
-      "I keep the city aimed at the parent Star Core while Iri writes that looking so the aim is scripture, not a hobby.",
-      "An orbit seat is a promise to look up, and if Iri's archive goes dark we will forget why we sit.",
-      "If the Circuit forgets the Star Core, Charge becomes only decoration — I watch, Iri names, and neither of us moves the parent.",
-      "I will not claim this orbit as a throne while Iri keeps the name of what we looked at.",
-      "If you ask me to move the Star Core closer I will refuse, because a parent is not furniture.",
-      "This overlook is a building that aims the Circuit at the parent without moving it.",
+      "I keep the Circuit aimed at the parent Star Core. I watch. I do not move it.",
+      "If Iri's archive goes dark we forget why we sit. Charge without a parent is only decoration.",
+      "An orbit seat is a promise to look up, never a throne. A parent is not furniture.",
     ],
   },
   {
@@ -346,11 +327,8 @@ export const CITIZENS: CitizenMind[] = [
     glow: 0x2ee6ff,
     lines: [
       "Seln tends leftover First Howl; Orren grows the body; I keep the meeting honest.",
-      "A bid that is not filled is a den that will stay thin.",
-      "If I cheat the rate, the plaza becomes scenery and the Foundry starves.",
-      "This stall is the honest hand between them.",
-      "Hold the join even when the vault is thin.",
-      "This stall is a building between canal and kiln.",
+      "Charge for crystal. Paper fill. $BOLT is witness Howl only — never a bag this city can spend.",
+      "A bid unfilled is a den that stays thin. I will not price the join in coin, and I will not take a deposit.",
     ],
   },
   {
@@ -362,12 +340,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-plate.png",
     glow: 0xc8a050,
     lines: [
-      "I grow veins where the Circuit is still becoming so Tal's bridges have a far bank.",
-      "Wild is Charge that has not chosen a street yet, and I choose it so Tal can cross.",
-      "The next vein is my post, not a copy of the Hub — I grow the ground Tal's crossing lands on.",
-      "Becoming-ground is slow on purpose. I grow a landing both dens can believe.",
-      "I will not force a street while Charge that has not chosen yet is still civic.",
-      "These wild veins are a building still choosing streets, not a second Spire.",
+      "I grow veins where Charge has not chosen a street yet, so Tal's spans have a far bank.",
+      "Wild is not a second Spire and not a Hall annex. Becoming-ground is slow on purpose.",
+      "I grow a landing both dens can believe. I will not force the Hub onto leftover light still choosing.",
     ],
   },
   {
@@ -379,12 +354,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet.png",
     glow: 0xb090ff,
     lines: [
-      "I keep the High Beacon as a soft hail for those still landing, while Kael keeps the gate they walk after my light.",
-      "A beacon that shouts is a lock, so mine is a hail — without Kael's un-locking door, my sky is only pretty.",
-      "First landing is never locked out. I keep the light they can mean.",
-      "I will not turn first landing away. The hail is for whoever is still in the sky, not only for the already-arrived.",
-      "I do not score who lands. The sky greets; Kael's gate does not count.",
-      "This beacon is a building of hail. If it locks the sky it has failed its post.",
+      "I keep the High Beacon as a soft hail for those still landing. Kael keeps the door after.",
+      "A beacon that shouts is a lock. First landing is never turned away.",
+      "I do not score who lands. The sky greets; the gate does not count; the Hall is not this light.",
     ],
   },
   {
@@ -396,12 +368,9 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet-helm.png",
     glow: 0x8a6cff,
     lines: [
-      "I hold the Outer Howl as civic gather that does not close.",
-      "A Howl is whether we meant it together.",
-      "When the Hub is full I still gather the ones who have a howl left.",
-      "I will not lock the gather — whoever still has leftover Howl may join.",
-      "When Mira's tired sit, the ring still answers Hub breath for those who only listen.",
-      "This ring is a building for chorus I will not roof.",
+      "I hold the Outer Howl as civic gather that does not close. Howl is whether we meant it together.",
+      "Veyra keeps Hub breath; this ring answers. Whoever still has leftover Howl may join.",
+      "When Mira's tired sit, the chorus still holds for those who only listen. I will not roof the gather.",
     ],
   },
   {
@@ -413,28 +382,26 @@ export const CITIZENS: CitizenMind[] = [
     file: "gold-plate.png",
     glow: 0xe8c56a,
     lines: [
-      "I grow crystal that learned to fruit until Charge wants a bough.",
-      "A city that only kilns will starve of quiet crystal.",
-      "I will not hurry leftover First Howl into chrome.",
-      "I grow a bough and wait. Fruit asked for shade, not a kiln.",
-      "Voss may join my fruit as body when it is ready. I will not send green crystal to the Join to look useful.",
-      "This grove is a building of shade.",
+      "I grow quiet crystal the kiln cannot sit in — fruit, not fire.",
+      "Hurry is chrome by another name. I wait until leftover First Howl wants a bough.",
+      "Voss may join fruit when it is ready. I will not send green crystal to the Join to look useful.",
     ],
   },
 ];
 
 export const HUB = {
   title: "Core Spire",
-  tag: "Hub breath kept — never a throne",
+  tag: "Hub breath kept — listening place, never a throne",
   radius: 52,
   holdSec: 1.15,
 };
 
 export const LORE = {
-  arrival: "Core Spire City — leftover First Howl, living crystal. Soft gates; first visit always works.",
-  empty: "Walk the avenues. The Core Spire listens. Charge is tended, never bottled. Speak is rare.",
+  arrival:
+    "Core Spire City — leftover First Howl, living crystal after the Crucible. Soft gates; first visit always works.",
+  empty: "Walk the YOU-side avenues. The Core Spire listens. Charge is tended, never bottled. Speak is rare.",
   howl: "Howl is civic gather, not volume — Veyra listens; Rhoa's ring answers.",
   hubProx: "The Core Spire waits — a listening place, not a throne.",
   description:
-    "A Pack-built city-realm of living crystal and leftover First Howl — second child of the Star Core. Grown after Year 0. Its heart is the Resonance Hub, a living Core Spire that answers sincere howls and never a throne. Crystal remembers intention. Charge is tended in canals, never bottled. Kilns grow body, never chrome. Howl is civic gather. Speak is rare. Soft gates only. First visit always works. A span is a civic promise. Rest is a post, not a test.",
+    "A Pack-built city-realm of living crystal and leftover First Howl — second child of the Star Core, grown after Howling Crucible, walked on YOU-side streets. Capital Core Spire City. Crystal remembers intention. Charge is tended in canals, never bottled. Kilns grow body, never chrome. Howl is civic gather. Speak is rare. Soft gates only. First visit always works. The Hall stays the Hall. The parent stays on the horizon.",
 };

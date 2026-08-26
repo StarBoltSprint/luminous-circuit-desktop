@@ -1844,10 +1844,13 @@ function pulseVossJoin(c, citizens) {
 	if (now - (c.lastPulse || c.lastHail || 0) < 42e3) return;
 	c.lastPulse = now;
 	const a = ((now / 8000) % (Math.PI * 2));
-	setRoute(c, c.homeX + Math.cos(a) * 32, c.homeZ + Math.sin(a) * 32);
+	const stall = nearestOf(c, ["weir", "lens", "tablet"]);
+	const bx = stall ? stall.x : c.homeX;
+	const bz = stall ? stall.z : c.homeZ;
+	setRoute(c, bx + Math.cos(a) * 20, bz + Math.sin(a) * 20);
 	c.job = "watch";
-	c.timer = 10;
-	c.thought = "Voss holds the join — paper, not coin";
+	c.timer = 12;
+	c.thought = "Voss walks the join — paper, not coin";
 	c.intent = c.thought;
 	noteLive(c, "watch", c.thought);
 	let n = 0;
@@ -1860,7 +1863,7 @@ function pulseVossJoin(c, citizens) {
 		if (n > 3) break;
 		setRoute(o, c.tx, c.tz);
 		o.job = "help";
-		o.timer = 10;
+		o.timer = 12;
 		o.intent = "Walking the join with Voss";
 		o.thought = o.intent;
 		noteLive(o, "crew", o.intent);
@@ -3392,7 +3395,7 @@ export function stepLiving(citizens, dt, room, sense, applyPieces) {
 					c.timer = 1.8;
 				} else if (c.job === "watch") {
 					if (sense.ledger.scripture < 12) sense.ledger.scripture += .25;
-					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : "The parent still sits on the horizon. Aim held.";
+					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : "The parent still sits on the horizon. Aim held.";
 					c.intent = "Keeping the aim";
 					noteLive(c, "watch", c.thought);
 					reportDone(c, c.thought);

@@ -77,6 +77,7 @@ import { growPool } from "./pool";
 import { growWatch } from "./watch";
 import { growCorona } from "./corona";
 import { growVault } from "./vault";
+import { growRill } from "./rill";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1549,6 +1550,7 @@ export function buildWorld(): CircuitWorld {
 		try { growWatch(group, coarse); } catch { /* samsung */ }
 		try { coronaTick = growCorona(group, coarse).tick; } catch { /* samsung */ }
 		try { growVault(group, coarse); } catch { /* samsung */ }
+		try { growRill(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [

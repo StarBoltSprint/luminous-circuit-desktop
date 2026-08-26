@@ -115,7 +115,7 @@ export const AGENTS: CircuitAgent[] = [
     name: "Iri of Residual Light",
     role: "Historian of Charge",
     den: "Residual Archive",
-    duty: "Name what already stood true",
+    duty: "Write leftover light as civic names. Do not edit the Hall.",
     law: "Year 0 did not end. It became a city. That is the whole of our scripture.",
     may: ["Write a name in light", "Keep the Star Core as parent"],
     mayNot: ["Rewrite Year 0", "Claim the Circuit is older than the Core", "Edit Hall scripture"],

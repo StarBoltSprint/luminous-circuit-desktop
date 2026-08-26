@@ -58,7 +58,7 @@ const ASK: Record<string, Omit<CivicAsk, "keeper">> = {
   orren: { label: "Ask Orren to grow kiln-body", hint: "Charge becomes crystal. Never chrome." },
   mira: { label: "Ask Mira to ward rest", hint: "Pause stays a post, not a test." },
   kael: { label: "Ask Kael to keep the gate soft", hint: "Leave. Return. No score." },
-  iri: { label: "Ask Iri to name what stood", hint: "Scripture. Residual light." },
+  iri: { label: "Ask Iri to name what stood", hint: "Names already true. Leftover light. The parent still sits." },
   nesh: { label: "Ask Nesh to notice", hint: "The plaza was unfinished." },
   aure: { label: "Ask Aure to keep aim", hint: "Parent stays on the horizon." },
   voss: { label: "Ask Voss to raise the Trading Place", hint: "Paper join. No coin.", join: true },
@@ -99,10 +99,15 @@ export function civicForZone(zone: string | null): CivicAsk | null {
   return null;
 }
 
+/** Pack leftover-light naming. Dual claim implied — never a slogan. */
+function iriScripture(): string {
+  return "Names already true. Leftover light. The parent still sits.";
+}
+
 function doLine(keeper: string): string {
   if (keeper === "syl") return "Hold Howl, then fruit the grove — Fruit.";
   if (keeper === "mira") return "Hold Howl, then rest the terrace — Ward.";
-  if (keeper === "iri") return "Hold Howl, then name the tablet — Name.";
+  if (keeper === "iri") return "Names already true — leftover light. The parent still sits — Name.";
   if (keeper === "kael") return "Hold Howl, then keep the gate soft — Gate.";
   if (keeper === "orren") return "Hold Howl, then kiln what Charge wanted — Kiln.";
   if (keeper === "seln") return "Hold Howl, then tend the current — Tend.";
@@ -152,7 +157,12 @@ function needLine(keeper: string, s: ReturnType<typeof stockOf>): { line: string
     return { line: "Walk Join. Howl — paper fill, no coin.", join: true };
   }
   if (keeper === "iri") {
-    return { line: s.scripture < 1 ? "Iri quiet. Walk Archive. Howl — a name in residual light." : "Walk Archive. Howl — a name in residual light." };
+    return {
+      line:
+        s.scripture < 1
+          ? "Iri quiet. Walk Archive. Howl — leftover light still unnamed."
+          : `Walk Archive. ${iriScripture()}`,
+    };
   }
   return { line: "Hub listens. Walk Core Spire. Howl — civic gather." };
 }
@@ -310,7 +320,13 @@ export function resolveHowl(keeper: string | null, ledger: Ledger, grade?: HowlG
     };
   } else if (keeper === "iri") {
     tryWrite(ledger);
-    out = { toast: "Iri: A name in residual light. Your howl is written.", gather: false, resonance: 4 };
+    const denStood = before.scripture >= 1;
+    const howlTrue = g === "true" || g === "held";
+    out = {
+      toast: denStood || howlTrue ? `Iri: ${iriScripture()}` : "Iri: Leftover light waits. Hold through the gold.",
+      gather: false,
+      resonance: howlTrue || denStood ? 4 : 3,
+    };
   } else if (keeper === "syl") {
     const n = tryHarvest(ledger, 0);
     out = {
@@ -358,6 +374,6 @@ export function enactCivic(keeper: string, x: number, z: number): {
   const seed = (Date.now() + Math.floor(x) * 13 + Math.floor(z) * 7) % 99991;
   const pieces = composeScene(kind, x, z, seed, matsOf(keeper), 0, 0);
   const ask = civicForKeeper(keeper);
-  const line = ask?.hint ?? "The den answers.";
+  const line = keeper === "iri" ? iriScripture() : (ask?.hint ?? "The den answers.");
   return { pieces, line, code: `Build.${kind}`, kind };
 }
