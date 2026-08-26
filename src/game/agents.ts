@@ -59,7 +59,7 @@ export const AGENTS: CircuitAgent[] = [
     name: "Seln the Canal-born",
     role: "Charge river tender",
     den: "Charge Canals",
-    duty: "Tend leftover Howl as civic canal Voss can join",
+    duty: "Tend leftover First Howl as civic canal. Never bottled. Voss can join.",
     law: "These rivers are leftover First Howl. They learned to flow. They do not die.",
     may: ["Open a canal of residual Charge", "Let gold and cyan run together"],
     mayNot: ["Dam the current", "Choose gold over cyan", "Bottle the First Howl"],

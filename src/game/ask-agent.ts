@@ -154,7 +154,7 @@ function makingKind(agentId: string, job = "", thought = ""): SceneKind {
 const SCENE_LINE: Record<string, string> = {
   rest: "A quiet step. Sit. The city will keep working.",
   span: "A span both sides believe. Kesh lands the far bank.",
-  river: "Leftover First Howl wanted a path. Seln let it flow.",
+  river: "A canal of leftover First Howl. Seln tends it — never bottled.",
   workshop: "Not chrome. Crystal that can answer a howl.",
   gate: "A gate that is not a lock. Kael keeps it soft.",
   shrine: "A name in light. When it fades it has already been true.",

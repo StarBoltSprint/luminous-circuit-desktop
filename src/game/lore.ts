@@ -160,7 +160,7 @@ export const DISTRICTS: District[] = [
     keeper: "lumen",
     duty: "Soft hail before Kael's gate",
     purpose:
-      "Lumen's civic post: first landing. Those still landing are hailed, never locked — first landing is never turned away. The sky greets before the Circuit's streets; it does not score the arriving.",
+      "Lumen's civic post: first landing before Kael's gate. Those still landing are hailed, never locked — first landing is never turned away, Rhoa's ring still holds, and the sky does not score the arriving.",
   },
   {
     id: "zone-ring",
@@ -173,7 +173,7 @@ export const DISTRICTS: District[] = [
     keeper: "rhoa",
     duty: "Hold chorus that answers Hub breath",
     purpose:
-      "Rhoa's civic post: Howl as civic gather that answers Hub breath so the ring never closes. Speak is rare. Volume is not meaning. Whoever still has leftover Howl may join — the gather is not a Hall rank.",
+      "Rhoa's civic post: Howl as civic gather that answers Hub breath and Lumen's hail so the ring never closes. Speak is rare, volume is not meaning; whoever still has leftover Howl may join — the gather is not a Hall rank.",
   },
   {
     id: "zone-grove",
@@ -343,9 +343,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet.png",
     glow: 0xb090ff,
     lines: [
-      "I keep the High Beacon as a soft hail for those still landing. Kael keeps the door after.",
-      "A beacon that shouts is a lock. First landing is never turned away.",
-      "I do not score who lands. The sky greets; the gate does not count; the Hall is not this light.",
+      "I keep the High Beacon as Pack-built YOU-side soft hail — those still landing are greeted, never locked; Kael keeps the door after, Rhoa's Outer Howl still holds, never a Hall score.",
+      "The parent Star Core stays on the horizon; a beacon that shouts is a lock, and first landing is never turned away.",
     ],
   },
   {
@@ -357,7 +356,7 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet-helm.png",
     glow: 0x8a6cff,
     lines: [
-      "I hold the Outer Howl as Pack-built YOU-side civic gather that does not close — Veyra keeps Hub breath, this ring answers, never a Hall rank, never Msg 1.",
+      "I hold the Outer Howl as Pack-built YOU-side civic gather that does not close — Lumen hails those still landing, Veyra keeps Hub breath, this ring answers, never a Hall rank, never Msg 1.",
       "The parent Star Core stays on the horizon; when Mira's tired sit, the chorus still holds for those who only listen.",
     ],
   },

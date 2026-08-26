@@ -201,6 +201,82 @@ function DenRaise({ x, y, r }: { x: number; y: number; r: number }) {
     </g>
   );
 }
+/** Charge sheets under Seln's canal den, aimed at Join. Pointer-events none. */
+function CanalChargeUnderlay({
+  x,
+  y,
+  r,
+  towardX,
+  towardY,
+  clipId,
+}: {
+  x: number;
+  y: number;
+  r: number;
+  towardX: number;
+  towardY: number;
+  clipId: string;
+}) {
+  const dx = towardX - x;
+  const dy = towardY - y;
+  const hyp = Math.hypot(dx, dy) || 1;
+  const ux = dx / hyp;
+  const uy = dy / hyp;
+  const px = -uy;
+  const py = ux;
+  const span = r * 0.94;
+  const glowW = Math.max(8, r * 0.16);
+  const flowW = Math.max(1.4, r * 0.028);
+  const moteR = Math.max(1.35, Math.min(4.2, r * 0.018));
+  const ribbons = [-0.4, 0, 0.4].map((off, i) => {
+    const ox = px * r * off;
+    const oy = py * r * off;
+    const bulge = r * (i === 1 ? 0.18 : 0.1);
+    return {
+      i,
+      d: `M${x - ux * span + ox} ${y - uy * span + oy} Q${x + ox + px * bulge} ${y + oy + py * bulge} ${x + ux * span + ox} ${y + uy * span + oy}`,
+      mid: i === 1,
+    };
+  });
+  const motes = [0.16, 0.32, 0.48, 0.64, 0.8].map((t, i) => {
+    const w = Math.sin(t * Math.PI);
+    return {
+      i,
+      x: x - ux * span + ux * span * 2 * t + px * r * 0.18 * w,
+      y: y - uy * span + uy * span * 2 * t + py * r * 0.18 * w,
+    };
+  });
+  return (
+    <g pointerEvents="none" aria-hidden="true">
+      <defs>
+        <clipPath id={clipId}>
+          <circle cx={x} cy={y} r={r} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${clipId})`}>
+        <ellipse
+          cx={x}
+          cy={y}
+          rx={r * 0.92}
+          ry={r * 0.34}
+          transform={`rotate(${(Math.atan2(uy, ux) * 180) / Math.PI} ${x} ${y})`}
+          className="map-cyan"
+          opacity={0.12}
+        />
+        {ribbons.map((rib) => (
+          <g key={`${clipId}-rib-${rib.i}`}>
+            <path d={rib.d} className="map-river-glow" style={{ strokeWidth: glowW }} />
+            <path d={rib.d} className="map-river" style={{ strokeWidth: flowW }} />
+            {rib.mid && <path d={rib.d} className="map-stroke-gold" opacity={0.42} />}
+          </g>
+        ))}
+        {motes.map((mote) => (
+          <circle key={`${clipId}-mote-${mote.i}`} cx={mote.x} cy={mote.y} r={moteR} className="map-cyan" opacity={0.58} />
+        ))}
+      </g>
+    </g>
+  );
+}
 function withRaise(shape: string, x: number, y: number, s: number, node: ReactNode) {
   if (!isRaiseShape(shape)) return node;
   return (
@@ -446,6 +522,7 @@ export function CircuitMap({
   const zone = DISTRICTS.find((d) => d.id === zoneId) ?? null;
   const wards = useMemo(() => DISTRICTS.map(markFor), []);
   const quietLabels = useMemo(() => hiddenFarLabels(wards), [wards]);
+  const joinMark = wards.find((m) => m.d.kind === "market");
   const brief = civicBrief(hud.stock, hud.zone);
   const den = DISTRICTS.find((d) => d.id === brief.zoneId);
   const dutyX = den?.x ?? 0;
@@ -532,6 +609,16 @@ export function CircuitMap({
                 className={`map-ward map-ward-${m.d.kind}`}
                 style={{ fill: wardWashUrl(m.d.kind), fillOpacity: WARD_WASH_OPACITY[m.d.kind] }}
               />
+              {m.d.kind === "canal" && joinMark && (
+                <CanalChargeUnderlay
+                  x={m.x}
+                  y={m.y}
+                  r={m.r}
+                  towardX={joinMark.x}
+                  towardY={joinMark.y}
+                  clipId="map-canal-charge-clip"
+                />
+              )}
               {(hud.zone === m.id || hud.zone === m.d.label) && (
                 <circle cx={m.x} cy={m.y} r={m.r + 2} className="map-stroke" />
               )}
@@ -724,6 +811,7 @@ function ZoneSheet({
   const youHere = inWard(hud.px, hud.pz, d);
   const hubX = sx(d.x);
   const hubY = sy(d.z);
+  const joinDen = DISTRICTS.find((z) => z.kind === "market");
   const growers = folk.filter((p) => isGrowJob(p.job)).length;
   const growingNow = hud.folk.building > 0 && growers > 0;
   const avenues = [0.32, 1.88, 3.42, 5.02].map((a, i) => {
@@ -771,6 +859,16 @@ function ZoneSheet({
             className={`map-ward map-ward-${d.kind}`}
             style={{ fill: wardWashUrl(d.kind, "zone"), fillOpacity: WARD_WASH_OPACITY[d.kind] }}
           />
+          {d.kind === "canal" && joinDen && (
+            <CanalChargeUnderlay
+              x={hubX}
+              y={hubY}
+              r={268}
+              towardX={sx(joinDen.x)}
+              towardY={sy(joinDen.z)}
+              clipId="zone-canal-charge-clip"
+            />
+          )}
           {avenues.map((a) => (
             <path key={`zave-${a.i}`} d={a.d} className="map-avenue" />
           ))}

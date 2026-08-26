@@ -1698,11 +1698,11 @@ function pulseSelnHowl(c, citizens) {
 	const now = Date.now();
 	if (now - (c.lastPulse || c.lastHail || 0) < 40e3) return;
 	c.lastPulse = now;
-	const a = ((now / 8000) % (Math.PI * 2));
-	setRoute(c, c.homeX + Math.cos(a) * 38, c.homeZ + Math.sin(a) * 38);
+	const pick = selnCanalSite(c);
+	setRoute(c, pick.x, pick.z);
 	c.job = "watch";
 	c.timer = 10;
-	c.thought = "Seln tends the current — leftover Howl learns the banks";
+	c.thought = "Seln walks the canals — leftover First Howl, never bottled";
 	c.intent = c.thought;
 	noteLive(c, "flow", c.thought);
 	let n = 0;
@@ -2132,16 +2132,16 @@ function veyraBreathSite(c) {
 	if (!sites.length) return { x: c.homeX, z: c.homeZ };
 	return sites[Math.floor(Date.now() / 50e3) % sites.length];
 }
+function selnCanalSite(c) {
+	const sites = occupied.filter((o) => (o.shape === "weir" || o.shape === "well" || o.shape === "canal" || o.shape === "cascade") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 200);
+	if (!sites.length) return { x: c.homeX, z: c.homeZ };
+	return sites[Math.floor(Date.now() / 40e3) % sites.length];
+}
 function folkEnactDuty(c, kitId, duty) {
 	const post = postOf(kitId);
 	if (duty.act === "flow") {
-		const canal = nearestOf(c, [
-			"canal",
-			"weir",
-			"cascade",
-			"well"
-		]);
-		setRoute(c, canal ? canal.x : c.homeX, canal ? canal.z : c.homeZ);
+		const pick = selnCanalSite(c);
+		setRoute(c, pick.x, pick.z);
 		c.job = "flow";
 		c.timer = 16;
 		c.thought = `Canal assist · ${duty.line}`;
@@ -2304,13 +2304,8 @@ function enact(c, task, reason, kitId, kit, byId, stock) {
 		return;
 	}
 	if (task === "flow") {
-		const canal = nearestOf(c, [
-			"canal",
-			"weir",
-			"cascade",
-			"well"
-		]);
-		setRoute(c, canal ? canal.x : c.homeX, canal ? canal.z : c.homeZ);
+		const pick = selnCanalSite(c);
+		setRoute(c, pick.x, pick.z);
 		c.job = "flow";
 		c.timer = 16;
 	} else if (task === "forge") {
@@ -2683,19 +2678,14 @@ function decide(c, room, sense, byId) {
 		name: "flow",
 		score: 90 + (stock.charge < 16 ? 20 : 0) - (boredOf(c, "flow") ? 8 : 0),
 		run: () => {
-			const canal = nearestOf(c, [
-				"canal",
-				"weir",
-				"cascade",
-				"well"
-			]);
-			setRoute(c, canal ? canal.x : c.homeX, canal ? canal.z : c.homeZ);
+			const pick = selnCanalSite(c);
+			setRoute(c, pick.x, pick.z);
 			c.job = "flow";
 			c.timer = 16;
 			c.thought = stock.charge < 16 ? `Charge is ${Math.round(stock.charge)}. Foundry will starve. I tend the current.` : "Leftover First Howl wants a path. I let it flow.";
 			c.intent = "Tending the canals";
 			remember(c, "flow");
-			noteLive(c, "flow", `${c.thought} · ${whereAt(canal ? canal.x : c.homeX, canal ? canal.z : c.homeZ)}`);
+			noteLive(c, "flow", `${c.thought} · ${whereAt(pick.x, pick.z)}`);
 			if (c.keeper) c.agenda.push({
 				task: "trade",
 				reason: "Charge is in my pouch. Meet Voss at the join — no coin."
@@ -3394,7 +3384,7 @@ export function stepLiving(citizens, dt, room, sense, applyPieces) {
 					c.timer = 1.6;
 				} else if (c.job === "flow") {
 					pouchFlow(c.pouch, sense.ledger, Math.max(1, listCanals().length));
-					c.thought = "Leftover First Howl learned to flow.";
+					c.thought = (c.mind.id === "seln" || c.crewOf === "seln") ? "Leftover First Howl tended, never bottled." : "Leftover First Howl learned to flow.";
 					c.intent = "Tending the canals";
 					noteLive(c, "flow", `${c.thought} · pouch Charge ${Math.round(c.pouch.charge)}`);
 					reportDone(c, c.thought);
@@ -3429,8 +3419,8 @@ export function stepLiving(citizens, dt, room, sense, applyPieces) {
 					c.timer = 1.8;
 				} else if (c.job === "watch") {
 					if (sense.ledger.scripture < 12) sense.ledger.scripture += .25;
-					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : c.mind.id === "lumen" ? "Hail held. Welcome, not a score." : c.mind.id === "rhoa" ? "Chorus gathers. Does not close." : c.mind.id === "aure" ? "Aim held. Parent still sits." : c.mind.id === "iri" ? "Name held. Leftover light." : c.mind.id === "veyra" ? "Breath held. Hub listens. Never a throne." : "The parent still sits on the horizon. Aim held.";
-					c.intent = c.mind.id === "rhoa" ? "Holding the chorus" : c.mind.id === "aure" ? "Keeping the parent" : c.mind.id === "iri" ? "Keeping scripture" : c.mind.id === "veyra" ? "Keeping Hub breath" : "Keeping the aim";
+					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : c.mind.id === "lumen" ? "Hail held. Welcome, not a score." : c.mind.id === "rhoa" ? "Chorus gathers. Does not close." : c.mind.id === "aure" ? "Aim held. Parent still sits." : c.mind.id === "iri" ? "Name held. Leftover light." : c.mind.id === "veyra" ? "Breath held. Hub listens. Never a throne." : c.mind.id === "seln" ? "Leftover First Howl tended, never bottled." : "The parent still sits on the horizon. Aim held.";
+					c.intent = c.mind.id === "rhoa" ? "Holding the chorus" : c.mind.id === "aure" ? "Keeping the parent" : c.mind.id === "iri" ? "Keeping scripture" : c.mind.id === "veyra" ? "Keeping Hub breath" : c.mind.id === "seln" ? "Tending the canals" : "Keeping the aim";
 					noteLive(c, "watch", c.thought);
 					reportDone(c, c.thought);
 					c.job = "idle";

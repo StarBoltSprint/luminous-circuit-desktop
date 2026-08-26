@@ -512,6 +512,7 @@ export function composeScene(
       piece("lamp", rx(8), rz(8), j(6, 9, 14), 2.8, 0, mat(2)),
       piece("cradle", px(-12), pz(-12), j(7, 8, 12), j(8, 6, 10), rot, mat(1)),
       piece("hearth", rx(12), rz(12), j(9, 8, 12), j(10, 6, 10), rot, mat(0)),
+      piece("grove", rx(-16), rz(-16), j(11, 10, 16), j(12, 12, 18), 0, mat(0)),
     ];
   }
   if (kind === "gate") {
