@@ -118,10 +118,11 @@ No skip-if-done. No “already exists”. No two desks on one file.
 - Intelligence: Tal span **site** / Mira terrace **site** (still home-orbit) — one keeper, then crew, then arrival thought
 - Buildings: extra piece on `font` / `beacon` if still thin
 - Mix / Economy / UI / Save / Jobs / Walker: one real thin hole each turn — never no-op, never locked files. Haptics stay OFF. CSS braces must stay balanced (one stray `}` whitescreens land).
-- Graphism / Environment: BETWEEN dens that still have empty chords (Canal→Terraces, Overlook→Beacon, Canal→Gates, Wild→Foundry, Archive→Foundry, Join→Beacon). Canal→Foundry, Overlook→Join, Terraces→Beacon, Bridge→Foundry, Foundry→Overlook landed wave 15. Canal→Archive already has rill. Canal→Join already has joinlamps. Never Hub copies. Never Star Core.
+- Graphism / Environment: BETWEEN dens that still have empty chords (Join→Beacon, Canal→Wild, Overlook→Gates, Archive→Terraces, Join→Ring, Bridge→Orchard). Wave 16 landed Canal→Terraces, Overlook→Beacon, Canal→Gates, Wild→Foundry, Archive→Foundry. Canal→Archive already has rill. Canal→Join already has joinlamps. Never Hub copies. Never Star Core.
 
 ## Log
 
+- 2026-08-26 Desktop wave 16: BETWEEN dens — Canal→Terraces canalrest, Overlook→Beacon aimhail, Canal→Gates canalgate, Wild→Foundry wildfound, Archive→Foundry namefound. Dual-claim lore Seln/Mira, Aure/Lumen, Seln/Kael, Kesh/Orren, Iri/Orren. Star Core untouched.
 - 2026-08-26 Desktop wave 15: BETWEEN dens — Canal→Foundry canalfound, Overlook→Join aimjoin, Terraces→Beacon wardhail, Bridge→Foundry spanfound, Foundry→Overlook foundaim. Dual-claim lore Seln/Orren, Aure/Voss, Mira/Lumen, Tal/Orren, Orren/Aure. Star Core untouched.
 - 2026-08-26 17:10 CEST — Desktop wave 14: BETWEEN dens — Canal→Overlook canalaim, Gates→Ring gatehowl, Wild→Orchard veinbough, Archive→Join namejoin, Bridge→Beacon spanhail. Dual-claim lore Seln/Aure, Kael/Rhoa, Kesh/Syl, Iri/Voss, Tal/Lumen. Star Core untouched.
 - 2026-08-26 16:50 CEST — Desktop wave 13: BETWEEN dens — Beacon→Ring hailring, Grove→Foundry fruitkiln, Beacon→Gates hailgates, Grove→Join fruitjoin, Terraces→Ring restchorus. Dual-claim lore Lumen/Rhoa, Syl/Orren, Lumen/Kael, Syl/Voss, Mira/Rhoa. Star Core untouched.

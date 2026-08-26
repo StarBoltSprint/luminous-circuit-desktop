@@ -122,6 +122,7 @@ Dual-claim chords on empty ground (wave 12): Voss/Orren Join→Foundry; Mira/Kae
 Dual-claim chords (wave 13): Lumen/Rhoa Beacon→Ring; Syl/Orren Grove→Foundry; Lumen/Kael Beacon→Gates; Syl/Voss Grove→Join fruit when ready; Mira/Rhoa Terraces→Ring.
 Dual-claim chords (wave 14): Seln/Aure Canal→Overlook; Kael/Rhoa Gates→Ring; Kesh/Syl Wild→Orchard; Iri/Voss Archive→Join ($BOLT witness); Tal/Lumen Bridge→Beacon. None of them move the parent.
 Dual-claim chords (wave 15): Seln/Orren Canal→Foundry; Aure/Voss Overlook→Join ($BOLT witness); Mira/Lumen Terraces→Beacon; Tal/Orren Bridge→Foundry; Orren/Aure Foundry→Overlook. None of them move the parent.
+Dual-claim chords (wave 16): Seln/Mira Canal→Terraces; Aure/Lumen Overlook→Beacon; Seln/Kael Canal→Gates; Kesh/Orren Wild→Foundry; Iri/Orren Archive→Foundry. None of them move the parent.
 
 ## Vessels (same Boltverse, different windows)
 
