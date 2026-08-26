@@ -17,17 +17,21 @@ import { addCharge, defaultLedger, HOWL_YIELD, CITY_CAP, simulateAway, tryWrite,
 import { resolveHowl, enactCivic, howlVerb, civicBrief } from "./civic";
 import { gradeHowl, howlMult, gradeLine, aimingParent, markStood, dutyDone, talkWitness, stillHowl, shapeFits, markChain } from "./play";
 import {
+	applyBloomRadius,
 	applyBloomStrength,
 	applyPixelRatio,
 	bloomSize,
 	capDpr,
 	createAdaptiveDpr,
 	createLaterFreeze,
+	createSoftShadowState,
 	freezeShadows,
+	quietRenderer,
 	rendererTries,
 	shouldSkipDraw,
 	shouldSkipStill,
 	stepAdaptiveDpr,
+	stepSoftShadows,
 	wrapBloomHalfRes,
 } from "./perf";
 
@@ -111,6 +115,7 @@ function makeRenderer(canvas: HTMLCanvasElement) {
 		r.autoClear = true;
 		r.shadowMap.enabled = true;
 		r.shadowMap.type = coarse ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
+		quietRenderer(r);
 		return r;
 	} catch (err) {
 		last = err;
@@ -428,6 +433,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			return false;
 		}
 	})();
+	const shadowSoft = createSoftShadowState(coarsePointer);
 	window.setTimeout(() => {
 		try {
 			composer = new EffectComposer(renderer);
@@ -456,6 +462,10 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		dprClock = nowDraw;
 		applyPixelRatio(renderer, composer, stepAdaptiveDpr(dprAdapt, smoothFps, dprDt, window.devicePixelRatio || 1));
 		applyBloomStrength(bloomPass, coarsePointer, resonance);
+		applyBloomRadius(bloomPass, smoothFps);
+		const soft = stepSoftShadows(shadowSoft, smoothFps, dprDt, coarsePointer);
+		const nextShadow = soft ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
+		if (renderer.shadowMap.type !== nextShadow) renderer.shadowMap.type = nextShadow;
 		if (composer) composer.render();
 		else renderer.render(scene, camera);
 		pauseStill = mode === "pause";

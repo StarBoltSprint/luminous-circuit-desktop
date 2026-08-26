@@ -121,6 +121,7 @@ import { growNameFound } from "./namefound";
 import { growAimShards } from "./aimshards";
 import { growCorePulse } from "./corepulse";
 import { growJoinHail } from "./joinhail";
+import { growCanalVein } from "./canalvein";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1650,6 +1651,7 @@ export function buildWorld(): CircuitWorld {
 		try { growAimShards(group, coarse); } catch { /* samsung */ }
 		try { corePulseTick = growCorePulse(group, coarse).tick; } catch { /* samsung */ }
 		try { growJoinHail(group, coarse); } catch { /* samsung */ }
+		try { growCanalVein(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [

@@ -86,6 +86,80 @@ export function wrapBloomHalfRes(pass: {
   };
 }
 
+/** Bloom stays on. Radius tightens when fps sags so UnrealBloom costs less. */
+export const BLOOM_RADIUS = 0.4;
+export const BLOOM_RADIUS_LOW = 0.3;
+export const FPS_BLOOM_SOFT = 38;
+
+export function bloomRadius(fps: number): number {
+  if (fps < 28) return BLOOM_RADIUS_LOW;
+  if (fps < FPS_BLOOM_SOFT) return 0.34;
+  return BLOOM_RADIUS;
+}
+
+export function applyBloomRadius(
+  pass: { radius: number } | null | undefined,
+  fps: number,
+): void {
+  if (!pass) return;
+  const next = bloomRadius(fps);
+  if (Math.abs(pass.radius - next) < 0.008) return;
+  pass.radius = next;
+}
+
+export type SoftShadowState = {
+  soft: boolean;
+  lowSec: number;
+  highSec: number;
+};
+
+export function createSoftShadowState(coarsePointer: boolean): SoftShadowState {
+  return { soft: !coarsePointer, lowSec: 0, highSec: 0 };
+}
+
+/** PCF when frames drop; PCFSoft when they recover. Shadows stay on. */
+export function stepSoftShadows(
+  state: SoftShadowState,
+  fps: number,
+  dt: number,
+  coarsePointer: boolean,
+): boolean {
+  if (coarsePointer) {
+    state.soft = false;
+    state.lowSec = 0;
+    state.highSec = 0;
+    return false;
+  }
+  const t = Math.max(0, dt);
+  if (fps < FPS_DROP) {
+    state.lowSec += t;
+    state.highSec = 0;
+    if (state.lowSec >= SETTLE_SEC) {
+      state.soft = false;
+      state.lowSec = 0;
+    }
+  } else if (fps > FPS_RAISE) {
+    state.highSec += t;
+    state.lowSec = 0;
+    if (state.highSec >= SETTLE_SEC) {
+      state.soft = true;
+      state.highSec = 0;
+    }
+  } else {
+    state.lowSec = 0;
+    state.highSec = 0;
+  }
+  return state.soft;
+}
+
+export function quietRenderer(renderer: {
+  debug?: { checkShaderErrors?: boolean };
+  info?: { autoReset?: boolean };
+}): void {
+  if (renderer.debug) renderer.debug.checkShaderErrors = false;
+  if (renderer.info) renderer.info.autoReset = true;
+}
+
 export function createAdaptiveDpr(devicePixelRatio: number): AdaptiveDpr {
   return { dpr: capDpr(devicePixelRatio), lowSec: 0, highSec: 0 };
 }

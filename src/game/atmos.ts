@@ -195,6 +195,7 @@ function lightningShellMat() {
         bolt += hero(p, vec3(0.58, -0.62, 0.53), 8.3, t) * 0.78;
         bolt += hero(p, vec3(-0.31, 0.48, -0.82), 12.6, t) * 0.7;
         bolt += hero(p, vec3(0.84, 0.12, -0.53), 19.2, t) * 0.58;
+        bolt += hero(p, vec3(-0.14, 0.93, -0.34), 24.8, t) * 0.62;
         float crawl = fbm(p * 6.0 + vec3(t * 0.11, t * 0.07, -t * 0.05));
         float snap = 0.74 + 0.26 * smoothstep(-0.12, 1.0, sin(t * 5.8 + crawl * 22.0));
         bolt *= snap;
@@ -531,6 +532,7 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
     { rx: 1.48, ry: -0.4, rz: 0.08, spin: 0.022 },
   ];
   const ringMeshes: THREE.Group[] = [];
+  const boltRails: THREE.MeshBasicMaterial[] = [];
   const kissDummy = new THREE.Object3D();
   for (let i = 0; i < ringRadii.length; i++) {
     const o = orbits[i]!;
@@ -568,6 +570,38 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
     filament.renderOrder = -5;
     filament.frustumCulled = false;
     hold.add(filament);
+    const boltRail = new THREE.Mesh(
+      new THREE.TorusGeometry(R, Math.max(4, tube * 0.2), 5, ringSeg),
+      addMat(0x7ef0ff, 0.26),
+    );
+    boltRail.name = `star-core-orbit-bolt-${i}`;
+    boltRail.castShadow = false;
+    boltRail.receiveShadow = false;
+    boltRail.renderOrder = -4;
+    boltRail.frustumCulled = false;
+    hold.add(boltRail);
+    boltRails.push(boltRail.material as THREE.MeshBasicMaterial);
+    const beadN = coarse ? 3 : 6;
+    const beads = new THREE.InstancedMesh(
+      new THREE.TetrahedronGeometry(globeR * (0.022 - i * 0.003), 0),
+      addMat(0x7ef0ff, 0.62),
+      beadN,
+    );
+    beads.name = `star-core-orbit-vein-${i}`;
+    for (let k = 0; k < beadN; k++) {
+      const a = (k / beadN) * Math.PI * 2 + i * 0.41 + 0.22;
+      kissDummy.position.set(Math.cos(a) * R, Math.sin(a) * R, 0);
+      kissDummy.rotation.set(hash(i * 17 + k, 4) * 2, a, hash(i * 17 + k, 5));
+      kissDummy.scale.setScalar(0.9 + hash(i * 17 + k, 6) * 0.4);
+      kissDummy.updateMatrix();
+      beads.setMatrixAt(k, kissDummy.matrix);
+    }
+    beads.instanceMatrix.needsUpdate = true;
+    beads.castShadow = false;
+    beads.receiveShadow = false;
+    beads.frustumCulled = false;
+    beads.renderOrder = -4;
+    hold.add(beads);
     const kissN = coarse ? 4 : 8;
     const kisses = new THREE.InstancedMesh(
       new THREE.OctahedronGeometry(globeR * (0.036 - i * 0.004), 0),
@@ -665,6 +699,9 @@ export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: numb
       ringMat.emissiveIntensity = 1.52 + Math.sin(t * 0.55) * 0.28;
       ringGlow.opacity = 0.16 + Math.sin(t * 0.55) * 0.07;
       ringFilament.opacity = 0.34 + Math.sin(t * 0.8) * 0.12;
+      for (let i = 0; i < boltRails.length; i++) {
+        boltRails[i]!.opacity = 0.18 + Math.sin(t * 1.15 + i * 0.9) * 0.1;
+      }
       for (let i = 0; i < ringMeshes.length; i++) {
         const o = orbits[i]!;
         const ring = ringMeshes[i]!;
