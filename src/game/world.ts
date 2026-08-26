@@ -122,6 +122,7 @@ import { growAimShards } from "./aimshards";
 import { growCorePulse } from "./corepulse";
 import { growJoinHail } from "./joinhail";
 import { growCanalVein } from "./canalvein";
+import { growNameRest } from "./namerest";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1652,6 +1653,7 @@ export function buildWorld(): CircuitWorld {
 		try { corePulseTick = growCorePulse(group, coarse).tick; } catch { /* samsung */ }
 		try { growJoinHail(group, coarse); } catch { /* samsung */ }
 		try { growCanalVein(group, coarse); } catch { /* samsung */ }
+		try { growNameRest(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [
@@ -2330,8 +2332,8 @@ export function buildWorld(): CircuitWorld {
 		try { corePulseTick?.(t); } catch { /* samsung */ }
 		try {
 			const k = 0.86 + 0.14 * Math.sin(t * 0.7);
-			parentLamp.intensity = 8 * k;
-			coreKiss.intensity = 0.48 * k;
+			parentLamp.intensity = 3.4 * k;
+			coreKiss.intensity = 0.26 * k;
 		} catch { /* samsung */ }
 		for (const u of clocks) if (u) u.value = t;
 		innerCore.rotation.y = t * .25;

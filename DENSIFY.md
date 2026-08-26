@@ -115,13 +115,14 @@ No skip-if-done. No “already exists”. No two desks on one file.
 
 ## Next unique
 
-- Intelligence: Voss join **site** (still stall-orbit) — one keeper, then crew, then arrival thought. Mira terrace site landed wave 18. Tal span site landed wave 17.
-- Buildings: extra piece on `font` / `beacon` if still thin
+- Intelligence: Voss join **site** (still stall-orbit) — one keeper, then crew, then arrival thought. Seln bank-site patrol landed wave 19. Mira terrace site landed wave 18. Tal span site landed wave 17.
+- Buildings: extra piece on `font` if still thin. Beacon disc landed wave 19.
 - Mix / Economy / UI / Save / Jobs / Walker: one real thin hole each turn — never no-op, never locked files. Haptics stay OFF. CSS braces must stay balanced (one stray `}` whitescreens land).
-- Graphism / Environment: BETWEEN dens that still have empty chords (Overlook→Gates, Archive→Terraces, Join→Ring, Bridge→Orchard). Wave 18 landed Canal→Wild canalvein. Wave 17 landed Join→Beacon joinhail. Wave 16 landed Canal→Terraces, Overlook→Beacon, Canal→Gates, Wild→Foundry, Archive→Foundry. Canal→Archive already has rill. Canal→Join already has joinlamps. Never Hub copies. Never move Star Core.
+- Graphism / Environment: BETWEEN dens that still have empty chords (Overlook→Gates, Join→Ring, Bridge→Orchard). Wave 19 landed Archive→Terraces namerest (F-lift hex plates). Wave 18 landed Canal→Wild canalvein. Wave 17 landed Join→Beacon joinhail. Wave 16 landed Canal→Terraces, Overlook→Beacon, Canal→Gates, Wild→Foundry, Archive→Foundry. Canal→Archive already has rill. Canal→Join already has joinlamps. Never Hub copies. Never move Star Core.
 
 ## Log
 
+- 2026-08-26 Desktop wave 19 mill: Archive→Terraces namerest hex plates (F-lift readable leftover names). Perf bloom-res/DPR/threshold budget. Seln bank-site patrol with intent. Beacon hail disc. $BOLT witness. Haptics off. Fly stays.
 - 2026-08-26 Desktop wave 18 mill: Canal→Wild canalvein Y-forks + lift rims (F-lift readable). Perf PCF/bloom-radius budget. Mira terrace site patrol. Star Core Hall orbit bolts (seat unmoved). $BOLT witness. Haptics off. Fly stays.
 - 2026-08-26 Desktop wave 17 mill: Star Core Hall lightning + gold orbit kisses (seat unmoved). Perf adaptive DPR/bloom/pause-still. Tal span site patrol. Join→Beacon joinhail paper-hail dens. $BOLT witness. Haptics off. Fly stays.
 - 2026-08-26 Desktop wave 16: BETWEEN dens — Canal→Terraces canalrest, Overlook→Beacon aimhail, Canal→Gates canalgate, Wild→Foundry wildfound, Archive→Foundry namefound. Dual-claim lore Seln/Mira, Aure/Lumen, Seln/Kael, Kesh/Orren, Iri/Orren. Star Core untouched.

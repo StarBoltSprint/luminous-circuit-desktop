@@ -3,10 +3,12 @@
 export const POWER_PREF = "high-performance" as const;
 
 export const DPR_FLOOR = 1;
-export const DPR_CEIL = 1.4;
+export const DPR_CEIL = 1.25;
 export const FPS_DROP = 42;
 export const FPS_RAISE = 55;
 export const SETTLE_SEC = 0.65;
+/** UnrealBloomPass composer fraction. Bloom stays on; smaller buffer is cheaper. */
+export const BLOOM_RES = 0.36;
 
 /** world.tick pumps 1–2 laterOn jobs; districts + stamps + grow ≈ 22. */
 export const LATER_TICKS_TO_FREEZE = 28;
@@ -55,14 +57,14 @@ export function rendererTries(canvas: HTMLCanvasElement) {
 
 export function bloomSize(width: number, height: number): { x: number; y: number } {
   return {
-    x: Math.max(1, Math.round(width * 0.45)),
-    y: Math.max(1, Math.round(height * 0.45)),
+    x: Math.max(1, Math.round(width * BLOOM_RES)),
+    y: Math.max(1, Math.round(height * BLOOM_RES)),
   };
 }
 
 export function bloomStrength(coarsePointer: boolean, resonance: number): number {
   const r = Math.max(0, Math.min(100, Number(resonance) || 0));
-  return (coarsePointer ? 0.28 : 0.36) + r / 100 * 0.08;
+  return (coarsePointer ? 0.26 : 0.32) + r / 100 * 0.06;
 }
 
 export function applyBloomStrength(
@@ -76,13 +78,13 @@ export function applyBloomStrength(
   pass.strength = next;
 }
 
-/** Keep UnrealBloomPass at 0.45 composer size across resize / DPR changes. */
+/** Keep UnrealBloomPass at BLOOM_RES composer size across resize / DPR changes. */
 export function wrapBloomHalfRes(pass: {
   setSize: (width: number, height: number) => void;
 }): void {
   const native = pass.setSize.bind(pass);
   pass.setSize = (width: number, height: number) => {
-    native(Math.max(1, width * 0.45), Math.max(1, height * 0.45));
+    native(Math.max(1, width * BLOOM_RES), Math.max(1, height * BLOOM_RES));
   };
 }
 
@@ -90,6 +92,9 @@ export function wrapBloomHalfRes(pass: {
 export const BLOOM_RADIUS = 0.4;
 export const BLOOM_RADIUS_LOW = 0.3;
 export const FPS_BLOOM_SOFT = 38;
+/** Higher threshold = fewer bright pixels enter the bloom kernel. Bloom stays. */
+export const BLOOM_THRESHOLD = 0.7;
+export const BLOOM_THRESHOLD_LOW = 0.82;
 
 export function bloomRadius(fps: number): number {
   if (fps < 28) return BLOOM_RADIUS_LOW;
@@ -105,6 +110,22 @@ export function applyBloomRadius(
   const next = bloomRadius(fps);
   if (Math.abs(pass.radius - next) < 0.008) return;
   pass.radius = next;
+}
+
+export function bloomThreshold(fps: number): number {
+  if (fps < 28) return BLOOM_THRESHOLD_LOW;
+  if (fps < FPS_BLOOM_SOFT) return 0.76;
+  return BLOOM_THRESHOLD;
+}
+
+export function applyBloomThreshold(
+  pass: { threshold: number } | null | undefined,
+  fps: number,
+): void {
+  if (!pass) return;
+  const next = bloomThreshold(fps);
+  if (Math.abs(pass.threshold - next) < 0.01) return;
+  pass.threshold = next;
 }
 
 export type SoftShadowState = {

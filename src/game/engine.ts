@@ -19,6 +19,7 @@ import { gradeHowl, howlMult, gradeLine, aimingParent, markStood, dutyDone, talk
 import {
 	applyBloomRadius,
 	applyBloomStrength,
+	applyBloomThreshold,
 	applyPixelRatio,
 	bloomSize,
 	capDpr,
@@ -441,7 +442,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			const bw = canvas.clientWidth || 1280;
 			const bh = canvas.clientHeight || 720;
 			const half = bloomSize(bw, bh);
-			bloomPass = new UnrealBloomPass(new THREE.Vector2(half.x, half.y), coarsePointer ? .36 : .42, .4, .66);
+			bloomPass = new UnrealBloomPass(new THREE.Vector2(half.x, half.y), coarsePointer ? .26 : .32, .4, .7);
 			wrapBloomHalfRes(bloomPass);
 			composer.addPass(bloomPass);
 			composer.addPass(new OutputPass());
@@ -463,6 +464,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		applyPixelRatio(renderer, composer, stepAdaptiveDpr(dprAdapt, smoothFps, dprDt, window.devicePixelRatio || 1));
 		applyBloomStrength(bloomPass, coarsePointer, resonance);
 		applyBloomRadius(bloomPass, smoothFps);
+		applyBloomThreshold(bloomPass, smoothFps);
 		const soft = stepSoftShadows(shadowSoft, smoothFps, dprDt, coarsePointer);
 		const nextShadow = soft ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
 		if (renderer.shadowMap.type !== nextShadow) renderer.shadowMap.type = nextShadow;

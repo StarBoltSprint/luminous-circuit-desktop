@@ -774,6 +774,7 @@ export function composeScene(
       piece("lamp", rx(10), rz(10), j(6, 10, 15), 3, 0, mat(1)),
       piece("stele", px(-14), pz(-14), j(7, 16, 24), 5, rot, mat(0)),
       piece("spire", rx(14), rz(14), j(8, 40, 56), j(9, 1.6, 2.4), 0, mat(1)),
+      piece("disc", rx(-16), rz(16), 7, j(10, 5.2, 8), rot, mat(2)),
     ];
   }
   if (kind === "trading") {

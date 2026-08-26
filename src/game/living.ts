@@ -1698,24 +1698,30 @@ function pulseSelnHowl(c, citizens) {
 	const now = Date.now();
 	if (now - (c.lastPulse || c.lastHail || 0) < 40e3) return;
 	c.lastPulse = now;
-	const pick = selnCanalSite(c);
+	const sites = selnCanalSites(c);
+	const idx = Math.floor(now / 40e3) % sites.length;
+	const pick = sites[idx];
+	const next = sites[(idx + 1) % sites.length];
 	setRoute(c, pick.x, pick.z);
+	if (next && (Math.abs(next.x - pick.x) > 4 || Math.abs(next.z - pick.z) > 4)) {
+		c.waypoints.push({ x: next.x, z: next.z });
+	}
 	c.job = "watch";
-	c.timer = 10;
+	c.timer = 14;
 	c.thought = "Seln walks the canals — leftover First Howl, never bottled";
-	c.intent = c.thought;
-	noteLive(c, "flow", c.thought);
+	c.intent = "Walking the banks";
+	noteLive(c, "watch", c.thought);
 	let n = 0;
 	for (const o of citizens) {
 		if (o === c) continue;
 		if (o.crewOf !== "seln") continue;
 		if (o.job !== "idle") continue;
-		if (Math.hypot(o.x - c.x, o.z - c.z) >= 40) continue;
+		if (Math.hypot(o.x - c.x, o.z - c.z) >= 50) continue;
 		n += 1;
 		if (n > 3) break;
 		setRoute(o, c.tx, c.tz);
 		o.job = "help";
-		o.timer = 10;
+		o.timer = 14;
 		o.intent = "Walking the banks with Seln";
 		o.thought = o.intent;
 		noteLive(o, "crew", o.intent);
@@ -2132,9 +2138,17 @@ function veyraBreathSite(c) {
 	if (!sites.length) return { x: c.homeX, z: c.homeZ };
 	return sites[Math.floor(Date.now() / 50e3) % sites.length];
 }
+function selnCanalSites(c) {
+	const sites = occupied.filter((o) => (o.shape === "weir" || o.shape === "well" || o.shape === "canal" || o.shape === "cascade" || o.shape === "font" || o.shape === "cradle") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 240);
+	if (sites.length) return sites;
+	return [
+		{ x: c.homeX - 42, z: c.homeZ + 16 },
+		{ x: c.homeX + 28, z: c.homeZ - 34 },
+		{ x: c.homeX - 22, z: c.homeZ - 26 },
+	];
+}
 function selnCanalSite(c) {
-	const sites = occupied.filter((o) => (o.shape === "weir" || o.shape === "well" || o.shape === "canal" || o.shape === "cascade") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 200);
-	if (!sites.length) return { x: c.homeX, z: c.homeZ };
+	const sites = selnCanalSites(c);
 	return sites[Math.floor(Date.now() / 40e3) % sites.length];
 }
 function orrenKilnSite(c) {
