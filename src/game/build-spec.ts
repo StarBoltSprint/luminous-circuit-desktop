@@ -533,6 +533,7 @@ export function composeScene(
       piece("lamp", px(9), pz(9), j(5, 10, 14), 3, 0, mat(1)),
       piece("stele", px(-12), pz(-12), j(8, 12, 18), 5, rot, mat(0)),
       piece("pad", rx(12), rz(12), 6, 5, rot, mat(1)),
+      piece("font", rx(-16), rz(-16), j(9, 8, 12), j(10, 5, 8), 0, mat(2)),
     ];
   }
   if (kind === "archive") {

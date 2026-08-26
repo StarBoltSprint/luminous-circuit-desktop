@@ -173,7 +173,7 @@ const SCENE_LINE: Record<string, string> = {
   path: "A street the Circuit had not chosen yet.",
   font: "A listening pool. Speak only if you mean it.",
   boughs: "A crystal bough. Living stone, not chrome.",
-  kilnwork: "A grow-kiln. Charge becomes crystal.",
+  kilnwork: "A grow-kiln. Orren turns Charge into body — never chrome.",
   veilward: "A ward-veil. Soft. Rest is not a lock.",
   lensing: "A noticing lens. Nesh already saw you.",
   cascade: "A Charge-fall. The canal found a voice.",

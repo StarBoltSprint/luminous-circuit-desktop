@@ -223,6 +223,11 @@ export function createAudio(): AudioBus {
         } catch {
           /* Samsung — Beacon hail body optional, chime still sounds */
         }
+        try {
+          voice(c, { freq: 98, dur: 0.26, type: "sine", gain: 0.004, attack: 0.05, delay: 0.24 });
+        } catch {
+          /* Samsung — kiln body optional, chime still sounds */
+        }
       });
       buzz("talk");
     },

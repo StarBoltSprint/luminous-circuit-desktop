@@ -54,7 +54,7 @@ const DUTY_CHAIN = ["seln", "orren", "voss", "iri"] as const;
 const ASK: Record<string, Omit<CivicAsk, "keeper">> = {
   veyra: { label: "Ask Veyra to steady the breath", hint: "Hub listens. A new ring or font." },
   tal: { label: "Ask Tal to raise a span", hint: "A crossing both sides can believe." },
-  seln: { label: "Ask Seln to tend the current", hint: "Leftover Howl learns a path." },
+  seln: { label: "Ask Seln to tend the current", hint: "Leftover First Howl. Tended, never bottled." },
   orren: { label: "Ask Orren to grow kiln-body", hint: "Charge becomes crystal. Never chrome." },
   mira: { label: "Ask Mira to ward rest", hint: "Pause stays a post, not a test." },
   kael: { label: "Ask Kael to keep the gate soft", hint: "Leave. Return. No score." },
@@ -110,7 +110,7 @@ function doLine(keeper: string): string {
   if (keeper === "iri") return "Names already true — leftover light. The parent still sits — Name.";
   if (keeper === "kael") return "Hold Howl, then keep the gate soft — Gate.";
   if (keeper === "orren") return "Hold Howl, then kiln what Charge wanted — Kiln.";
-  if (keeper === "seln") return "Hold Howl, then tend the current — Tend.";
+  if (keeper === "seln") return "Hold Howl, then tend leftover First Howl — never bottled — Tend.";
   if (keeper === "voss") return "Hold Howl, then join what Charge wanted — Join.";
   if (keeper === "tal") return "Hold Howl, then span what Charge wanted — Span.";
   if (keeper === "rhoa") return "Hold Howl, then chorus at the ring — Chorus.";
@@ -298,7 +298,7 @@ export function resolveHowl(keeper: string | null, ledger: Ledger, grade?: HowlG
     out = { toast: LORE.howl, gather: true, resonance: 8 };
   } else if (keeper === "seln") {
     tryFlow(ledger);
-    out = { toast: "Seln: leftover Howl learned the banks.", gather: false, resonance: 5 };
+    out = { toast: "Seln: leftover First Howl tended, never bottled.", gather: false, resonance: 5 };
   } else if (keeper === "orren") {
     if (skipKiln) {
       out = { toast: "Orren: kiln felt a thin howl. Hold through the gold.", gather: false, resonance: 2 };

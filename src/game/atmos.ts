@@ -36,6 +36,10 @@ function paintSky(geo: THREE.SphereGeometry, radius: number, coreX: number, core
   const gold = new THREE.Color(0x6a4a22);
   const cool = new THREE.Color(0x0a1620);
   const milk = new THREE.Color(0x2c2440);
+  const cyanH = new THREE.Color(0x16384c);
+  const coreCyan = new THREE.Color(0x2ee6ff);
+  const coreWhite = new THREE.Color(0xe8fff8);
+  const coreGold = new THREE.Color(0xc4a060);
   const coreLen = Math.hypot(coreX, coreZ) || 1;
   const core3 = Math.hypot(coreX, coreY, coreZ) || 1;
   for (let i = 0; i < pos.count; i++) {
@@ -48,8 +52,9 @@ function paintSky(geo: THREE.SphereGeometry, radius: number, coreX: number, core
     else c.copy(nadir).lerp(rim, Math.max(0, (ny + 1) / 0.98));
     const toward = Math.max(0, -(x * coreX + z * coreZ) / (radius * coreLen));
     const hz = Math.max(0, 1 - Math.abs(ny) * 2.2);
-    c.lerp(warm, toward * hz * 0.34);
-    c.lerp(gold, toward * toward * hz * 0.22);
+    c.lerp(warm, toward * hz * 0.16);
+    c.lerp(gold, toward * toward * hz * 0.08);
+    c.lerp(cyanH, toward * hz * 0.32);
     const away = Math.max(0, (x * coreX + z * coreZ) / (radius * coreLen));
     c.lerp(cool, away * hz * 0.16);
     const nx = x / radius;
@@ -62,9 +67,11 @@ function paintSky(geo: THREE.SphereGeometry, radius: number, coreX: number, core
     c.g = Math.min(1, c.g * (0.92 + hash(i, 4) * 0.12));
     c.b = Math.min(1, c.b * (0.94 + hash(i, 7) * 0.1));
     const coreDot = (x * coreX + y * coreY + z * coreZ) / ((radius || 1) * core3);
-    if (coreDot > 0.88) {
-      const k = (coreDot - 0.88) / 0.12;
-      c.lerp(gold, k * k * 0.55);
+    if (coreDot > 0.84) {
+      const k = (coreDot - 0.84) / 0.16;
+      c.lerp(coreCyan, k * k * 0.42);
+      c.lerp(coreWhite, k * k * k * 0.22);
+      c.lerp(coreGold, k * k * 0.1);
     }
     cols[i * 3] = c.r;
     cols[i * 3 + 1] = c.g;
@@ -100,15 +107,15 @@ function river(
 
 function goldRingMat() {
   return new THREE.MeshPhysicalMaterial({
-    color: 0xe8c46a,
-    emissive: 0xc4a040,
-    emissiveIntensity: 0.45,
-    roughness: 0.22,
-    metalness: 0.78,
-    iridescence: 0.4,
+    color: 0xf0d078,
+    emissive: 0xe8c46a,
+    emissiveIntensity: 0.85,
+    roughness: 0.14,
+    metalness: 0.82,
+    iridescence: 0.55,
     iridescenceIOR: 1.26,
-    clearcoat: 0.55,
-    clearcoatRoughness: 0.18,
+    clearcoat: 0.72,
+    clearcoatRoughness: 0.12,
     fog: false,
     toneMapped: false,
   });
@@ -122,12 +129,49 @@ function hallCoreTexture() {
   return tex;
 }
 
+function radialAlpha() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 256;
+  const g = c.getContext("2d");
+  if (!g) return null;
+  const grd = g.createRadialGradient(128, 128, 36, 128, 128, 124);
+  grd.addColorStop(0, "rgba(255,255,255,1)");
+  grd.addColorStop(0.56, "rgba(255,255,255,1)");
+  grd.addColorStop(0.66, "rgba(255,255,255,0.4)");
+  grd.addColorStop(0.76, "rgba(255,255,255,0)");
+  g.fillStyle = grd;
+  g.fillRect(0, 0, 256, 256);
+  const t = new THREE.CanvasTexture(c);
+  t.needsUpdate = true;
+  return t;
+}
+
+function coreHaloTexture() {
+  const c = document.createElement("canvas");
+  c.width = c.height = 512;
+  const g = c.getContext("2d");
+  if (!g) return null;
+  const grd = g.createRadialGradient(256, 256, 10, 256, 256, 248);
+  grd.addColorStop(0, "rgba(255,255,255,0.95)");
+  grd.addColorStop(0.12, "rgba(126,240,255,0.58)");
+  grd.addColorStop(0.32, "rgba(46,230,255,0.22)");
+  grd.addColorStop(0.5, "rgba(232,197,106,0.12)");
+  grd.addColorStop(0.72, "rgba(46,230,255,0)");
+  g.fillStyle = grd;
+  g.fillRect(0, 0, 512, 512);
+  const t = new THREE.CanvasTexture(c);
+  t.needsUpdate = true;
+  return t;
+}
+
 /**
- * Procedural atmosphere. Parent hooks with:
- *   laterOn(() => { try { growAtmos(group, coarse); } catch { } });
- * Dispose is world group.clear(). No tick. No photos.
+ * Procedural atmosphere. Parent Star Core is the Hall cyan-lightning globe.
+ * Parent hooks with:
+ *   laterOn(() => { try { atmos = growAtmos(group, coarse); } catch { } });
+ *   // in world.tick(t): try { atmos?.tick(t); } catch { }
+ * Dispose is world group.clear(). No photos.
  */
-export function growAtmos(group: THREE.Group, coarse: boolean): void {
+export function growAtmos(group: THREE.Group, coarse: boolean): { tick: (t: number) => void } {
   const root = new THREE.Group();
   root.name = "atmos";
   group.add(root);
@@ -164,58 +208,85 @@ export function growAtmos(group: THREE.Group, coarse: boolean): void {
   core.renderOrder = -8;
 
   const spark = new THREE.Mesh(
-    new THREE.SphereGeometry(coarse ? 28 : 38, 16, 12),
-    addMat(0x7ef0ff, 0.22),
+    new THREE.SphereGeometry(coarse ? 36 : 56, 20, 16),
+    addMat(0xe8fff8, 0.34),
   );
   spark.name = "star-core-spark";
-  spark.renderOrder = -6;
+  spark.renderOrder = -4;
   spark.castShadow = false;
   spark.receiveShadow = false;
   core.add(spark);
 
   const bloom = new THREE.Mesh(
-    new THREE.SphereGeometry(coarse ? 70 : 96, 16, 12),
+    new THREE.SphereGeometry(coarse ? 120 : 180, 20, 16),
     addMat(0x2ee6ff, 0.08),
   );
   bloom.name = "star-core-bloom";
-  bloom.renderOrder = -8;
+  bloom.renderOrder = -9;
   bloom.castShadow = false;
   bloom.receiveShadow = false;
   core.add(bloom);
 
-  const art = new THREE.Sprite(
-    new THREE.SpriteMaterial({
-      map: hallCoreTexture(),
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.94,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      depthTest: true,
-      fog: false,
-      toneMapped: false,
-    }),
-  );
+  const haloMap = coreHaloTexture();
+  if (haloMap) {
+    const halo = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: haloMap,
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.32,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        depthTest: false,
+        fog: false,
+        toneMapped: false,
+      }),
+    );
+    halo.name = "star-core-halo";
+    const haloS = coarse ? 780 : 1080;
+    halo.scale.set(haloS, haloS, 1);
+    halo.renderOrder = -10;
+    halo.frustumCulled = false;
+    core.add(halo);
+  }
+
+  const artR = coarse ? 400 : 600;
+  const artMat = new THREE.MeshBasicMaterial({
+    map: hallCoreTexture(),
+    alphaMap: radialAlpha() ?? undefined,
+    color: 0xffffff,
+    transparent: true,
+    opacity: 1,
+    depthWrite: false,
+    depthTest: true,
+    fog: false,
+    toneMapped: false,
+    side: THREE.DoubleSide,
+  });
+  const art = new THREE.Mesh(new THREE.CircleGeometry(artR, coarse ? 48 : 72), artMat);
   art.name = "star-core-art";
-  const artS = coarse ? 260 : 420;
-  art.scale.set(artS, artS, 1);
   art.renderOrder = -5;
   art.frustumCulled = false;
+  art.castShadow = false;
+  art.receiveShadow = false;
   core.add(art);
 
   const ringMat = goldRingMat();
-  const ringR = coarse ? 52 : 72;
-  const ringTube = coarse ? 1.4 : 2.1;
-  const ringSeg = coarse ? 48 : 80;
+  const ringRadii = coarse ? [300, 410] : [360, 470, 580];
+  const ringTube = coarse ? 4.2 : 6.2;
+  const ringSeg = coarse ? 64 : 96;
   const orbits = [
-    { rx: 1.12, ry: 0.18, rz: 0.31 },
-    { rx: 0.42, ry: 1.05, rz: -0.22 },
-    { rx: 1.48, ry: -0.4, rz: 0.08 },
+    { rx: 1.12, ry: 0.18, rz: 0.31, spin: 0.045 },
+    { rx: 0.42, ry: 1.05, rz: -0.22, spin: -0.032 },
+    { rx: 1.48, ry: -0.4, rz: 0.08, spin: 0.022 },
   ];
-  const nRings = coarse ? 2 : 3;
-  for (let i = 0; i < nRings; i++) {
+  const ringMeshes: THREE.Mesh[] = [];
+  for (let i = 0; i < ringRadii.length; i++) {
     const o = orbits[i]!;
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(ringR, ringTube, 8, ringSeg), ringMat);
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(ringRadii[i], ringTube * (1 - i * 0.12), 8, ringSeg),
+      ringMat,
+    );
     ring.rotation.set(o.rx, o.ry, o.rz);
     ring.castShadow = false;
     ring.receiveShadow = false;
@@ -223,8 +294,32 @@ export function growAtmos(group: THREE.Group, coarse: boolean): void {
     ring.frustumCulled = false;
     ring.name = `star-core-orbit-${i}`;
     core.add(ring);
+    ringMeshes.push(ring);
+  }
+
+  const boltN = coarse ? 3 : 6;
+  const boltMat = addMat(0x7ef0ff, 0.16);
+  const boltMeshes: THREE.Mesh[] = [];
+  for (let i = 0; i < boltN; i++) {
+    const h = (coarse ? 220 : 340) * (0.7 + hash(i, 11) * 0.6);
+    const bolt = new THREE.Mesh(new THREE.PlaneGeometry(coarse ? 10 : 16, h), boltMat);
+    bolt.rotation.set(hash(i, 3) * 1.4, hash(i, 5) * Math.PI * 2, hash(i, 7) * 1.2);
+    bolt.position.set(
+      (hash(i, 13) - 0.5) * 40,
+      (hash(i, 17) - 0.5) * 40,
+      (hash(i, 19) - 0.5) * 40,
+    );
+    bolt.castShadow = false;
+    bolt.receiveShadow = false;
+    bolt.renderOrder = -4;
+    bolt.frustumCulled = false;
+    bolt.name = `star-core-bolt-${i}`;
+    core.add(bolt);
+    boltMeshes.push(bolt);
   }
   root.add(core);
+  core.updateMatrixWorld(true);
+  art.lookAt(0, 190, 0);
 
   const bandSegs = coarse ? 40 : 72;
   river(root, 3920, 22, 0xc4a060, 0.048, 1.49, 0.05, 310, bandSegs);
@@ -280,4 +375,26 @@ export function growAtmos(group: THREE.Group, coarse: boolean): void {
   stars.castShadow = false;
   stars.receiveShadow = false;
   root.add(stars);
+
+  if (coarse) return { tick() {} };
+
+  return {
+    tick(t: number) {
+      const breath = 1 + Math.sin(t * 0.7) * 0.07;
+      spark.scale.setScalar(breath);
+      bloom.scale.setScalar(1 + Math.sin(t * 0.55) * 0.09);
+      artMat.opacity = 0.92 + Math.sin(t * 0.6) * 0.05;
+      for (let i = 0; i < ringMeshes.length; i++) {
+        const o = orbits[i]!;
+        const ring = ringMeshes[i]!;
+        ring.rotation.y = o.ry + t * o.spin;
+        ring.rotation.z = o.rz + Math.sin(t * 0.12 + i) * 0.04;
+      }
+      for (let i = 0; i < boltMeshes.length; i++) {
+        const bolt = boltMeshes[i]!;
+        bolt.rotation.z = t * (0.08 + i * 0.02);
+        (bolt.material as THREE.MeshBasicMaterial).opacity = 0.1 + (Math.sin(t * 1.3 + i) + 1) * 0.08;
+      }
+    },
+  };
 }

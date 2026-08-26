@@ -100,7 +100,7 @@ function makeRenderer(canvas: HTMLCanvasElement) {
 		r.setClearColor(131848, 1);
 		r.outputColorSpace = THREE.SRGBColorSpace;
 		r.toneMapping = THREE.ACESFilmicToneMapping;
-		r.toneMappingExposure = .88;
+		r.toneMappingExposure = .9;
 		r.shadowMap.enabled = true;
 		r.shadowMap.type = THREE.PCFSoftShadowMap;
 		return r;
@@ -118,7 +118,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 	const renderer = makeRenderer(canvas);
 	const scene = new THREE.Scene();
 	const mobile = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
-	scene.fog = new THREE.FogExp2(528412, mobile ? 16e-5 : 24e-5);
+	scene.fog = new THREE.FogExp2(0x081018, mobile ? 12e-5 : 13e-5);
 	const camera = new THREE.PerspectiveCamera(54, 1, .25, 9e3);
 	const world = buildWorld();
 	scene.add(world.group);
@@ -126,9 +126,12 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		try {
 			const pmrem = new THREE.PMREMGenerator(renderer);
 			const envScene = new THREE.Scene();
-			envScene.add(new THREE.HemisphereLight(8308968, 1181724, 1.25));
-			envScene.add(new THREE.DirectionalLight(9097440, .85));
-			envScene.add(new THREE.DirectionalLight(13148256, .35));
+			envScene.add(new THREE.HemisphereLight(0x6aa8c8, 1181724, 1.35));
+			envScene.add(new THREE.DirectionalLight(9097440, .7));
+			envScene.add(new THREE.DirectionalLight(13148256, .32));
+			const parentEnv = new THREE.DirectionalLight(0x7ef0ff, 1.15);
+			parentEnv.position.set(-4, 1.2, .3);
+			envScene.add(parentEnv);
 			const envSky = new THREE.Mesh(new THREE.SphereGeometry(8, 16, 12), new THREE.MeshBasicMaterial({
 				color: 1384504,
 				side: 1
@@ -143,7 +146,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			envBand.scale.set(1, .28, 1);
 			envScene.add(envBand);
 			scene.environment = pmrem.fromScene(envScene, .06).texture;
-			scene.environmentIntensity = 1.15;
+			scene.environmentIntensity = 1.38;
 			pmrem.dispose();
 		} catch {}
 	}, 500);
@@ -369,7 +372,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 	let hudAcc = 0;
 	let running = true;
 	let last = performance.now();
-	let titleYaw = .4;
+	let titleYaw = 1.22;
 	let speechClear = 0;
 	let briefT = 12;
 	let grokLayer = false;
@@ -417,7 +420,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 			const bw = canvas.clientWidth || 1280;
 			const bh = canvas.clientHeight || 720;
 			const half = bloomSize(bw, bh);
-			bloomPass = new UnrealBloomPass(new THREE.Vector2(half.x, half.y), coarsePointer ? .38 : .44, .42, .7);
+			bloomPass = new UnrealBloomPass(new THREE.Vector2(half.x, half.y), coarsePointer ? .36 : .42, .4, .66);
 			wrapBloomHalfRes(bloomPass);
 			composer.addPass(bloomPass);
 			composer.addPass(new OutputPass());
@@ -436,7 +439,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		const dprDt = Math.min(.25, Math.max(0, (nowDraw - dprClock) / 1e3));
 		dprClock = nowDraw;
 		applyPixelRatio(renderer, composer, stepAdaptiveDpr(dprAdapt, smoothFps, dprDt, window.devicePixelRatio || 1));
-		if (bloomPass) bloomPass.strength = (coarsePointer ? .28 : .34) + resonance / 100 * .1;
+		if (bloomPass) bloomPass.strength = (coarsePointer ? .28 : .36) + resonance / 100 * .08;
 		if (composer) composer.render();
 		else renderer.render(scene, camera);
 	}
@@ -684,9 +687,9 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		const dt = mode === "play" ? raw : raw * .15;
 		if (mode === "title") {
 			titleYaw += raw * .12;
-			const dist = 360;
-			camera.position.set(Math.sin(titleYaw) * dist, 108, Math.cos(titleYaw) * dist);
-			camera.lookAt(0, 64, 0);
+			const dist = 390;
+			camera.position.set(Math.sin(titleYaw) * dist, 132, Math.cos(titleYaw) * dist);
+			camera.lookAt(-180, 168, 40);
 			world.tick(now / 1e3, raw, camera, resonance);
 			afterWorldTick();
 			draw();

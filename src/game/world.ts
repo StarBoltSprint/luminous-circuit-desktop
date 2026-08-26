@@ -17,7 +17,7 @@ import {
 } from "./living";
 import { emptyPouch, CITY_CAP } from "./society";
 import { growWilds } from "./wilds";
-import { growAtmos } from "./atmos";
+import { growAtmos, STAR_CORE } from "./atmos";
 import { growGrounds } from "./grounds";
 import { growPulse } from "./pulse";
 import { growSpans } from "./spans";
@@ -85,6 +85,8 @@ import { growAimPosts } from "./aimposts";
 import { growNameStones } from "./namestones";
 import { growBreathPosts } from "./breathposts";
 import { growFoundryLamps } from "./foundrylamps";
+import { growCanalPosts } from "./canalposts";
+import { growWardGlass } from "./wardglass";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -116,7 +118,7 @@ export type CircuitWorld = {
   dispose: () => void;
 };
 
-const TEX = "/luminous-circuit";
+const TEX = `${import.meta.env.BASE_URL}luminous-circuit`.replace(/\/?$/, "");
 
 function hash2(i, s) {
 	const n = Math.sin(i * 127.1 + s * 311.7) * 43758.5453;
@@ -210,6 +212,7 @@ export function buildWorld(): CircuitWorld {
 	let forgeTick = null;
 	let poolTick = null;
 	let coronaTick = null;
+	let atmosTick = null;
 	function laterOn(fn) {
 		later.push(fn);
 	}
@@ -226,31 +229,35 @@ export function buildWorld(): CircuitWorld {
 	}
 	const mk = (opts) => new MeshPhysicalMaterial({
 		color: opts.color,
-		roughness: opts.roughness ?? .26,
-		metalness: opts.metalness ?? .52,
+		roughness: opts.roughness ?? .16,
+		metalness: opts.metalness ?? .46,
 		emissive: opts.emissive ?? 0,
 		emissiveIntensity: opts.emissiveIntensity ?? 0,
-		envMapIntensity: 1.48,
+		envMapIntensity: 1.82,
 		map: opts.map ?? null,
 		transparent: !!opts.transparent,
 		opacity: opts.opacity ?? 1,
-		clearcoat: opts.coat ?? .7,
-		clearcoatRoughness: .11,
-		iridescence: opts.iri ?? .74,
-		iridescenceIOR: 1.28,
-		iridescenceThicknessRange: [70, 540],
-		sheen: .5,
+		clearcoat: opts.coat ?? .84,
+		clearcoatRoughness: .08,
+		iridescence: opts.iri ?? .88,
+		iridescenceIOR: 1.31,
+		iridescenceThicknessRange: [60, 620],
+		sheen: .62,
 		sheenColor: new Color(opts.sheenHex ?? 8049904)
 	});
 	function addRim(mat, rim, str = .4) {
 		mat.onBeforeCompile = (shader) => {
 			shader.uniforms.uRimCol = { value: new Color(rim) };
 			shader.uniforms.uRimStr = { value: str };
-			shader.fragmentShader = `uniform vec3 uRimCol; uniform float uRimStr;\n` + shader.fragmentShader.replace("#include <emissivemap_fragment>", `#include <emissivemap_fragment>
-           float _rim = pow(1.0 - clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0), 2.7);
-           totalEmissiveRadiance += uRimCol * _rim * uRimStr;`);
+			shader.uniforms.uCoreDir = { value: new THREE.Vector3(STAR_CORE.x, STAR_CORE.y, STAR_CORE.z).normalize() };
+			shader.fragmentShader = `uniform vec3 uRimCol; uniform float uRimStr; uniform vec3 uCoreDir;\n` + shader.fragmentShader.replace("#include <emissivemap_fragment>", `#include <emissivemap_fragment>
+           vec3 _wn = inverseTransformDirection(normalize(normal), viewMatrix);
+           float _rim = pow(1.0 - clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0), 2.4);
+           float _kiss = pow(max(0.0, dot(_wn, uCoreDir)), 1.35);
+           totalEmissiveRadiance += uRimCol * _rim * uRimStr;
+           totalEmissiveRadiance += vec3(0.49, 0.94, 1.0) * _kiss * (uRimStr * 0.95);`);
 		};
-		mat.customProgramCacheKey = () => `rim-${rim}-${str}`;
+		mat.customProgramCacheKey = () => `rim-core-${rim}-${str}`;
 	}
 	const matDeck = mk({
 		color: 6977696,
@@ -264,35 +271,35 @@ export function buildWorld(): CircuitWorld {
 	});
 	const matViolet = mk({
 		color: 8027336,
-		roughness: .24,
-		metalness: .46,
+		roughness: .14,
+		metalness: .42,
 		emissive: 2363488,
-		emissiveIntensity: .4,
+		emissiveIntensity: .52,
 		map: facade,
-		iri: .76,
-		coat: .62,
+		iri: .9,
+		coat: .78,
 		sheenHex: 11571455
 	});
 	const matCyan = mk({
 		color: 8042696,
-		roughness: .2,
-		metalness: .52,
+		roughness: .11,
+		metalness: .48,
 		emissive: 678008,
-		emissiveIntensity: .48,
+		emissiveIntensity: .62,
 		map: facade,
-		iri: .8,
-		coat: .66,
-		sheenHex: 5953776
+		iri: .94,
+		coat: .86,
+		sheenHex: 8320767
 	});
 	const matGold = mk({
 		color: 13940856,
-		roughness: .22,
-		metalness: .64,
+		roughness: .14,
+		metalness: .68,
 		emissive: 6965784,
-		emissiveIntensity: .36,
+		emissiveIntensity: .48,
 		map: gold,
-		iri: .48,
-		coat: .7,
+		iri: .58,
+		coat: .82,
 		sheenHex: 16765040
 	});
 	const matWild = mk({
@@ -317,37 +324,37 @@ export function buildWorld(): CircuitWorld {
 	});
 	const matSpire = mk({
 		color: 9082560,
-		roughness: .18,
-		metalness: .5,
+		roughness: .12,
+		metalness: .46,
 		emissive: 1321040,
-		emissiveIntensity: .44,
+		emissiveIntensity: .58,
 		map: windows,
-		iri: .62,
-		coat: .6
+		iri: .78,
+		coat: .8
 	});
 	const matCrystal = new MeshPhysicalMaterial({
 		color: 12103916,
-		roughness: .08,
-		metalness: .14,
+		roughness: .05,
+		metalness: .12,
 		emissive: 2102352,
-		emissiveIntensity: .4,
-		envMapIntensity: 1.6,
+		emissiveIntensity: .55,
+		envMapIntensity: 1.9,
 		iridescence: 1,
-		iridescenceIOR: 1.3,
-		iridescenceThicknessRange: [50, 540],
-		sheen: .65,
+		iridescenceIOR: 1.32,
+		iridescenceThicknessRange: [40, 620],
+		sheen: .78,
 		sheenColor: new Color(8317176),
-		clearcoat: .92,
-		clearcoatRoughness: .07,
+		clearcoat: .96,
+		clearcoatRoughness: .05,
 		map: facet
 	});
 	matCrystal.bumpMap = facet;
-	matCrystal.bumpScale = .28;
-	matCrystal.clearcoatNormalScale = new Vector2(.4, .4);
+	matCrystal.bumpScale = .38;
+	matCrystal.clearcoatNormalScale = new Vector2(.55, .55);
 	matSpire.bumpMap = windows;
-	matSpire.bumpScale = .18;
+	matSpire.bumpScale = .26;
 	matGold.bumpMap = gold;
-	matGold.bumpScale = .16;
+	matGold.bumpScale = .22;
 	matWild.bumpMap = wild;
 	matWild.bumpScale = .45;
 	const matHeart = new MeshPhysicalMaterial({
@@ -355,24 +362,24 @@ export function buildWorld(): CircuitWorld {
 		roughness: .06,
 		metalness: .12,
 		emissive: 1349808,
-		emissiveIntensity: .78,
-		envMapIntensity: 1.45,
+		emissiveIntensity: .92,
+		envMapIntensity: 1.75,
 		iridescence: 1,
-		iridescenceIOR: 1.26,
-		sheen: .62,
+		iridescenceIOR: 1.28,
+		sheen: .74,
 		sheenColor: new Color(5953776),
-		clearcoat: .85,
-		clearcoatRoughness: .1,
+		clearcoat: .92,
+		clearcoatRoughness: .07,
 		map: heart
 	});
-	addRim(matViolet, 11571455, .36);
-	addRim(matCyan, 5953776, .4);
-	addRim(matGold, 16765040, .32);
-	addRim(matSpire, 9097448, .34);
-	addRim(matCrystal, 13166847, .52);
-	addRim(matHeart, 8320767, .58);
-	addRim(matDeck, 4890816, .18);
-	addRim(matSlab, 4890816, .16);
+	addRim(matViolet, 11571455, .48);
+	addRim(matCyan, 8320767, .56);
+	addRim(matGold, 16765040, .42);
+	addRim(matSpire, 9097448, .46);
+	addRim(matCrystal, 13166847, .7);
+	addRim(matHeart, 8320767, .78);
+	addRim(matDeck, 4890816, .22);
+	addRim(matSlab, 4890816, .2);
 	const matGlow = new MeshBasicMaterial({
 		color: 3854568,
 		transparent: true,
@@ -806,6 +813,7 @@ export function buildWorld(): CircuitWorld {
 		if (m.isMesh) m.castShadow = true;
 	});
 	group.add(spire);
+	try { atmosTick = growAtmos(group, coarse).tick; } catch { /* samsung */ }
 	group.add(new PointLight(3073791, 9, 620, 1.35));
 	const hubLight = new PointLight(8313070, 6.5, 440, 1.3);
 	hubLight.position.set(0, 210, 0);
@@ -813,11 +821,18 @@ export function buildWorld(): CircuitWorld {
 	const goldKiss = new PointLight(14725216, 3.6, 280, 1.5);
 	goldKiss.position.set(50, 64, 36);
 	group.add(goldKiss);
-	const coreKiss = new DirectionalLight(8966376, .22);
-	coreKiss.position.set(-2400, 620, 120);
+	const parentLamp = new PointLight(0x7ef0ff, 8, 6400, 1.05);
+	parentLamp.position.set(STAR_CORE.x * 0.42, STAR_CORE.y * 0.9, STAR_CORE.z * 0.42);
+	parentLamp.name = "star-core-lamp";
+	group.add(parentLamp);
+	const coreKiss = new DirectionalLight(0x88f4ff, .48);
+	coreKiss.position.set(STAR_CORE.x, STAR_CORE.y, STAR_CORE.z);
+	coreKiss.target.position.set(0, 48, 0);
+	coreKiss.name = "star-core-kiss";
 	group.add(coreKiss);
-	group.add(new HemisphereLight(6990020, 460302, .48));
-	const sun = new DirectionalLight(13688556, .78);
+	group.add(coreKiss.target);
+	group.add(new HemisphereLight(0x5a98b8, 0x07060e, .52));
+	const sun = new DirectionalLight(13688556, .64);
 	sun.position.set(280, 480, 220);
 	sun.castShadow = true;
 	sun.shadow.mapSize.set(1024, 1024);
@@ -832,10 +847,10 @@ export function buildWorld(): CircuitWorld {
 	sun.target.position.set(0, 0, 0);
 	group.add(sun);
 	group.add(sun.target);
-	const fill = new DirectionalLight(6970016, .2);
+	const fill = new DirectionalLight(0x4ec8e0, .26);
 	fill.position.set(-220, 90, -240);
 	group.add(fill);
-	const rim = new DirectionalLight(3854568, .14);
+	const rim = new DirectionalLight(0x3ae6ff, .16);
 	rim.position.set(-80, 40, 200);
 	group.add(rim);
 	latheTower("house");
@@ -1486,18 +1501,17 @@ export function buildWorld(): CircuitWorld {
 		mesh.receiveShadow = true;
 		group.add(mesh);
 	}
-	laterOn(() => stamp(geoDen, matSpire, 150, 340, Math.ceil(48), 8, 14, 11, 7, 11));
-	laterOn(() => stamp(geoHallBlock, matCyan, 200, 520, Math.ceil(28), 18, 32, 17, 9, 14));
-	laterOn(() => stamp(geoNeedle, matGold, 280, 640, Math.ceil(36), 22, 48, 23, 5, 8));
+	laterOn(() => stamp(geoWard, matSpire, 150, 340, Math.ceil(48), 8, 16, 11, 7, 11));
+	laterOn(() => stamp(geoHallBlock, matCyan, 200, 520, Math.ceil(28), 18, 36, 17, 9, 14));
+	laterOn(() => stamp(geoSpire, matGold, 280, 640, Math.ceil(36), 22, 56, 23, 5, 8));
 	laterOn(() => stamp(geoGate, matViolet, 360, 780, Math.ceil(22), 14, 22, 29, 8, 12));
-	laterOn(() => stamp(geoDen, matViolet, 480, 980, Math.ceil(40), 7, 13, 53, 6, 10));
-	laterOn(() => stamp(geoHallBlock, matGold, 620, 1200, Math.ceil(24), 16, 28, 59, 8, 13));
-	laterOn(() => stamp(geoNeedle, matCyan, 720, 1400, Math.ceil(30), 18, 40, 73, 5, 8));
-	laterOn(() => stamp(geoDen, matGold, 900, 1680, Math.ceil(28), 7, 12, 81, 5.5, 9));
-	laterOn(() => stamp(geoNeedle, matViolet, 1100, 1900, Math.ceil(18), 16, 34, 97, 4.5, 7));
+	laterOn(() => stamp(geoWard, matViolet, 480, 980, Math.ceil(40), 8, 16, 53, 6, 10));
+	laterOn(() => stamp(geoHallBlock, matGold, 620, 1200, Math.ceil(24), 16, 32, 59, 8, 13));
+	laterOn(() => stamp(geoSpire, matCyan, 720, 1400, Math.ceil(30), 18, 48, 73, 5, 8));
+	laterOn(() => stamp(geoNeedle, matGold, 900, 1680, Math.ceil(28), 10, 22, 81, 5.5, 9));
+	laterOn(() => stamp(geoSpire, matViolet, 1100, 1900, Math.ceil(18), 16, 42, 97, 4.5, 7));
 	laterOn(() => {
 		try { growWilds(group, coarse); } catch { /* samsung */ }
-		try { growAtmos(group, coarse); } catch { /* samsung */ }
 		try { growGrounds(group, coarse); } catch { /* samsung */ }
 		try { pulseTick = growPulse(group, coarse).tick; } catch { /* samsung */ }
 		try { growSpans(group, coarse); } catch { /* samsung */ }
@@ -1565,6 +1579,8 @@ export function buildWorld(): CircuitWorld {
 		try { growNameStones(group, coarse); } catch { /* samsung */ }
 		try { growBreathPosts(group, coarse); } catch { /* samsung */ }
 		try { growFoundryLamps(group, coarse); } catch { /* samsung */ }
+		try { growCanalPosts(group, coarse); } catch { /* samsung */ }
+		try { growWardGlass(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [
@@ -2239,6 +2255,7 @@ export function buildWorld(): CircuitWorld {
 		try { forgeTick?.(t); } catch { /* samsung */ }
 		try { poolTick?.(t); } catch { /* samsung */ }
 		try { coronaTick?.(t); } catch { /* samsung */ }
+		try { atmosTick?.(t); } catch { /* samsung */ }
 		for (const u of clocks) if (u) u.value = t;
 		innerCore.rotation.y = t * .25;
 		innerCore.scale.y = 2.6 + Math.sin(t * 1.4) * .12;

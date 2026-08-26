@@ -238,6 +238,11 @@ function civicAwaySummary(raw: unknown, beats: number, ledger?: Ledger, log?: Se
     const iri = " Iri named leftover light.";
     s = `${s.slice(0, Math.max(0, 180 - iri.length)).trimEnd()}${iri}`;
   }
+  const crystalN = clamp(Math.round(Number(ledger?.crystal) || 0), 0, 99);
+  if (beats > 0 && crystalN >= 1 && !/orren|kiln body/i.test(s)) {
+    const orren = " Orren grew kiln body.";
+    s = `${s.slice(0, Math.max(0, 180 - orren.length)).trimEnd()}${orren}`;
+  }
   return s.slice(0, 180);
 }
 

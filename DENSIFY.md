@@ -22,8 +22,8 @@ Not official xAI product. Not Msg 1. Not a forged node SKU.
 
 Veyra Hub breath · Tal Light-Bridge · Seln canals · Orren Foundry · Mira Terraces · Kael Soft Gates · Nesh Plaza · Iri Archive · Aure Overlook · Voss Join · Syl Orchard · Kesh Wild Veins · Lumen Beacon · Rhoa Howl Ring.
 
-**Already walk-patrol + crew:** Tal, Mira, Nesh, Kesh.
-**Still note-only pulses:** Kael, Voss, Syl, Lumen, Rhoa, Aure (and Veyra/Iri/Seln/Orren if still note-only).
+**Already walk-patrol + crew:** Tal, Mira, Nesh, Kesh, Kael, Voss, Syl, Lumen, Rhoa, Aure, Iri, Veyra, Seln, **Orren**.
+**Still thin orbit (site next):** Tal span / Mira terrace (home-orbit; already crew).
 
 ## Samsung never-regress
 
@@ -103,11 +103,11 @@ No skip-if-done. No “already exists”. No two desks on one file.
 
 - Map fullscreen, short labels, hide in-ward names, hide foreign-ward keeper names, hide You in a ward, raise halo vein/disc/cascade/weir, folk walk rings, zone folk walk rings, zone hub names hide, zone duty SVG text removed
 - Tal / Mira / Nesh / Kesh / **Kael** idle walk patrols + crew
-- Watch thoughts: span / terrace / plaza / vein / **gate held**
-- Log prefixes: hail, walk home, span, terrace, plaza, wild vein, chorus, overlook, orchard, join, **gate, archive, hub breath**
-- Buildings extras: lensing, cascade, weirway, river, workshop, rest, **gate stele, shrine pad, plaza lens**
-- Lore 1–2 sentences: Lumen, Kesh, Rhoa, Syl, **Kael, Iri, Veyra**
-- SCENE_LINE: lensing Nesh, watch Aure, river Seln, **gate Kael, orchard Syl, plaza Nesh**
+- Watch thoughts: span / terrace / plaza / vein / **gate held** / **Seln canal tended never bottled** / **Orren kiln body never chrome**
+- Log prefixes: hail, walk home, span, terrace, plaza, wild vein, chorus, overlook, orchard, join, **gate, archive, hub breath, canal tend, kiln body**
+- Buildings extras: lensing, cascade, weirway, river, workshop, rest, **gate stele, shrine pad, plaza lens, rest grove, shrine font**
+- Lore 1–2 sentences: Lumen, Kesh, Rhoa, Syl, **Kael, Iri, Veyra, Lumen/Rhoa dual hail-ring, Tal/Mira span-rest**
+- SCENE_LINE: lensing Nesh, watch Aure, river Seln never bottled, kilnwork Orren, **gate Kael, orchard Syl, plaza Nesh**
 - Mix talk 261 / grow 82 / foot 60 · Economy many dens / city rising / canal full
 - Save away beats min 1, write clamp, visited/talked slice 48
 - Haptics hail / gate / walk · Jobs dens Soft Gates / Residual Archive
@@ -115,11 +115,14 @@ No skip-if-done. No “already exists”. No two desks on one file.
 
 ## Next unique
 
-- Buildings: extra piece on `font` / `shrine` if still thin
+- Intelligence: Tal span **site** (still home-orbit) — one keeper, then crew, then arrival thought
+- Buildings: extra piece on `font` / `beacon` if still thin
 - Mix / Economy / UI / Save / Jobs / Walker: one real thin hole each turn — never no-op, never locked files. Haptics stay OFF. CSS braces must stay balanced (one stray `}` whitescreens land).
 
 ## Log
 
+- 2026-08-26 14:55 CEST — Desktop wave 9: Orren kiln walk + site, Tal/Mira dual-claim lore, shrine font, kiln heat underlay, Kiln body log, kilnwork SCENE_LINE, talk 98, kiln body ticker, Howl cyan pip, seln toast, away Orren kiln, Hub→Canals canalposts.
+- 2026-08-26 14:50 CEST — Desktop wave 8: Seln canal walk + site, Lumen/Rhoa dual-claim lore, rest grove, canal charge underlay, Canal tend log, river SCENE_LINE never bottled, hail 82, leftover Howl ticker, Hub→Foundry foundrylamps.
 - 2026-08-26 14:41 CEST — Desktop wave 7: Veyra Hub breath walk + site, Kesh/Rhoa dual-claim lore, nest pad, hub breath ring, Hub breath log, breath SCENE_LINE, howl 220, hub listens ticker, Howl glow, veyra doLine, Hub→Ring breathposts.
 - 2026-08-26 14:36 CEST — Desktop wave 6: Iri archive walk + site, Nesh/Voss dual-claim lore, breath pad, archive name diamond, Leftover name log, archive SCENE_LINE, talk fifth, archive writes ticker, keys under-hairline, away Iri named, Hub→Archive namestones.
 - 2026-08-26 14:28 CEST — Desktop wave 5: Aure overlook walk + site, Iri/Aure dual-claim lore, cradle pad, overlook aim glyph, Parent aim log, watch SCENE_LINE, grow quiet fifth, leftover named ticker, keys rail, aure doLine, Hub→Overlook aimposts.

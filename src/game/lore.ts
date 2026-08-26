@@ -213,7 +213,7 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-cyan.png",
     glow: 0x2ee6ff,
     lines: [
-      "I walk light-bridges as Pack-built YOU-side promises — Kesh grows the far bank I land, never a Hall toll.",
+      "I walk light-bridges as Pack-built YOU-side promises — Kesh grows the far bank I land, Mira wards the tired after the span, never a Hall toll.",
       "The parent Star Core stays on the horizon; I will not unmake a span already believed.",
     ],
   },
@@ -252,7 +252,7 @@ export const CITIZENS: CitizenMind[] = [
     file: "flow-violet.png",
     glow: 0x9b70ff,
     lines: [
-      "I ward rest as Pack-built YOU-side post — first landings and spent howls both sit, never a Hall trial.",
+      "I ward rest as Pack-built YOU-side post — first landings and spent howls both sit after Tal's span, never a Hall trial.",
       "The parent Star Core stays on the horizon; pause is how leftover light returns to labor.",
     ],
   },

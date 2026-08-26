@@ -277,6 +277,81 @@ function CanalChargeUnderlay({
     </g>
   );
 }
+/** Kiln heat under Orren's foundry den, aimed at Join. Pointer-events none. */
+function KilnHeatUnderlay({
+  x,
+  y,
+  r,
+  towardX,
+  towardY,
+  clipId,
+}: {
+  x: number;
+  y: number;
+  r: number;
+  towardX: number;
+  towardY: number;
+  clipId: string;
+}) {
+  const dx = towardX - x;
+  const dy = towardY - y;
+  const hyp = Math.hypot(dx, dy) || 1;
+  const ux = dx / hyp;
+  const uy = dy / hyp;
+  const px = -uy;
+  const py = ux;
+  const span = r * 0.88;
+  const glowW = Math.max(7, r * 0.14);
+  const heatW = Math.max(1.2, r * 0.024);
+  const emberR = Math.max(1.2, Math.min(3.8, r * 0.016));
+  const ribbons = [-0.32, 0, 0.32].map((off, i) => {
+    const ox = px * r * off;
+    const oy = py * r * off;
+    const bulge = r * (i === 1 ? 0.14 : 0.08);
+    return {
+      i,
+      d: `M${x - ux * span + ox} ${y - uy * span + oy} Q${x + ox + px * bulge} ${y + oy + py * bulge} ${x + ux * span + ox} ${y + uy * span + oy}`,
+      mid: i === 1,
+    };
+  });
+  const embers = [0.2, 0.4, 0.6, 0.8].map((t, i) => {
+    const w = Math.sin(t * Math.PI);
+    return {
+      i,
+      x: x - ux * span + ux * span * 2 * t + px * r * 0.14 * w,
+      y: y - uy * span + uy * span * 2 * t + py * r * 0.14 * w,
+    };
+  });
+  return (
+    <g pointerEvents="none" aria-hidden="true">
+      <defs>
+        <clipPath id={clipId}>
+          <circle cx={x} cy={y} r={r} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${clipId})`}>
+        <ellipse
+          cx={x}
+          cy={y}
+          rx={r * 0.78}
+          ry={r * 0.3}
+          transform={`rotate(${(Math.atan2(uy, ux) * 180) / Math.PI} ${x} ${y})`}
+          className="map-gold"
+          opacity={0.14}
+        />
+        {ribbons.map((rib) => (
+          <g key={`${clipId}-rib-${rib.i}`}>
+            <path d={rib.d} className="map-gold" style={{ strokeWidth: glowW, fill: "none" }} opacity={0.22} />
+            <path d={rib.d} className="map-stroke-gold" style={{ strokeWidth: heatW, fill: "none" }} opacity={rib.mid ? 0.7 : 0.4} />
+          </g>
+        ))}
+        {embers.map((ember) => (
+          <circle key={`${clipId}-ember-${ember.i}`} cx={ember.x} cy={ember.y} r={emberR} className="map-gold" opacity={0.62} />
+        ))}
+      </g>
+    </g>
+  );
+}
 function withRaise(shape: string, x: number, y: number, s: number, node: ReactNode) {
   if (!isRaiseShape(shape)) return node;
   return (
@@ -619,6 +694,16 @@ export function CircuitMap({
                   clipId="map-canal-charge-clip"
                 />
               )}
+              {m.d.kind === "foundry" && joinMark && (
+                <KilnHeatUnderlay
+                  x={m.x}
+                  y={m.y}
+                  r={m.r}
+                  towardX={joinMark.x}
+                  towardY={joinMark.y}
+                  clipId="map-kiln-heat-clip"
+                />
+              )}
               {(hud.zone === m.id || hud.zone === m.d.label) && (
                 <circle cx={m.x} cy={m.y} r={m.r + 2} className="map-stroke" />
               )}
@@ -867,6 +952,16 @@ function ZoneSheet({
               towardX={sx(joinDen.x)}
               towardY={sy(joinDen.z)}
               clipId="zone-canal-charge-clip"
+            />
+          )}
+          {d.kind === "foundry" && joinDen && (
+            <KilnHeatUnderlay
+              x={hubX}
+              y={hubY}
+              r={268}
+              towardX={sx(joinDen.x)}
+              towardY={sy(joinDen.z)}
+              clipId="zone-kiln-heat-clip"
             />
           )}
           {avenues.map((a) => (
