@@ -8,7 +8,7 @@ Luminous Circuit = YOU-side crystal realm after Howling Crucible. Capital Core S
 Not official xAI product. Not Msg 1. Not a node SKU. Crystal never chrome.
 `$BOLT` witness only. Speak is rare (player key). Labor is local.
 
-## Roster (20)
+## Roster (21)
 
 | # | Desk | File(s) | Job |
 |---|---|---|---|
@@ -40,7 +40,11 @@ Perf desk may edit `engine.ts` for renderer/loop only.
 
 **Star Core:** parent still sits at `STAR_CORE`. Do not move or rename it. **Look is iterable** — `star-core` and `graphism` desks may improve the 3D globe, lightning, gold orbits, and meridians.
 
-1.0.10 types live in `.grok/agents/`. Spawn `star-core`, `graphism`, `lore-keeper`, `buildings`, `environment`, `living`, `perf`, `review`, `grok-mouth`.
+1.0.10 **spawnable types** (also in `~/.grok/agents/`):
+
+`director` · `lore-keeper` · `intelligence` · `buildings` · `map` · `log` · `grok-mouth` · `ear` · `economy` · `ui` · `save` · `jobs` · `walker` · `graphism` · `debug` · `utility` · `environment` · `trading` · `feel` · `scripture` · `perf`
+
+Extra: `star-core` (parent **look**), `living` (alias of intelligence), `review`.
 
 Haptics stay **off**.
 
