@@ -17,6 +17,6 @@ Repo: `luminous-circuit-desktop`. Play: https://starboltsprint.github.io/luminou
 
 The 21 STUDIO desks: `director` `lore-keeper` `intelligence` `buildings` `map` `log` `grok-mouth` `ear` `economy` `ui` `save` `jobs` `walker` `graphism` `debug` `utility` `environment` `trading` `feel` `scripture` `perf`
 
-Extra: `star-core` (look, not seat), `living` (alias of intelligence), `review`.
+Extra: `star-core` (look, not seat), `living` (alias of intelligence), `review`, `bug-fixer` (HUD/fly/keys).
 
 See `STUDIO.md`. Files in `.grok/agents/` and `~/.grok/agents/`.

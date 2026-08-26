@@ -2067,31 +2067,7 @@ function pulseKeshStreet(c, citizens) {
 	}
 }
 function startIdleWalk(c) {
-	const hx = c.homeX;
-	const hz = c.homeZ;
-	const post = postOf(c.crewOf ?? c.mind.id);
-	const a0 = (c.crafted % 4) * (Math.PI / 2);
-	const loop = [];
-	for (let i = 0; i < 4; i++) {
-		const a = a0 + i * (Math.PI / 2);
-		loop.push({
-			x: hx + Math.cos(a) * 18,
-			z: hz + Math.sin(a) * 18
-		});
-	}
-	loop.push({
-		x: hx,
-		z: hz
-	});
-	c.waypoints = loop;
-	c.tx = loop[0].x;
-	c.tz = loop[0].z;
-	c.job = "walk";
-	c.timer = 18;
-	c.idleFor = 0;
-	c.thought = `A short loop of ${post}. Then back to duty.`;
-	c.intent = `Loop · ${post}`;
-	remember(c, "walk");
+	resumeLabor(c, city);
 }
 function callJoin(byId, reason) {
 	const m = marketPoint();
@@ -2204,6 +2180,82 @@ function miraTerraceSite(c) {
 	if (!sites.length) return { x: c.homeX + 32, z: c.homeZ - 16 };
 	return sites[Math.floor(Date.now() / 45e3) % sites.length];
 }
+function ringOf(p, r = 36, n = 3) {
+	const out = [p];
+	for (let i = 0; i < n; i++) {
+		const a = i * ((Math.PI * 2) / n);
+		out.push({ x: p.x + Math.cos(a) * r, z: p.z + Math.sin(a) * r });
+	}
+	return out;
+}
+function dutySites(c) {
+	const id = c.crewOf ?? c.mind.id;
+	if (id === "seln") return selnCanalSites(c);
+	if (id === "orren") return orrenKilnSites(c);
+	if (id === "iri") return iriArchiveSites(c);
+	if (id === "veyra") return ringOf(veyraBreathSite(c), 28, 3);
+	if (id === "tal") return ringOf(talSpanSite(c), 32, 3);
+	if (id === "mira") return ringOf(miraTerraceSite(c), 28, 3);
+	if (id === "kael") return ringOf(kaelGateSite(c), 30, 3);
+	if (id === "lumen") return ringOf(lumenHailSite(c), 26, 3);
+	if (id === "rhoa") return ringOf(rhoaChorusSite(c), 32, 3);
+	if (id === "aure") return ringOf(aureOverlookSite(c), 34, 3);
+	if (id === "voss") return ringOf(marketPoint(), 22, 3);
+	if (id === "syl") {
+		const grove = nearestOf(c, ["grove", "bough"]);
+		return ringOf(grove ? { x: grove.x, z: grove.z } : { x: c.homeX, z: c.homeZ }, 30, 3);
+	}
+	if (id === "nesh") return ringOf({ x: c.homeX, z: c.homeZ }, 40, 4);
+	if (id === "kesh") return ringOf({ x: c.homeX + 24, z: c.homeZ - 18 }, 36, 3);
+	const a0 = (c.crafted % 4) * (Math.PI / 2);
+	const loop = [];
+	for (let i = 0; i < 4; i++) {
+		const a = a0 + i * (Math.PI / 2);
+		loop.push({ x: c.homeX + Math.cos(a) * 48, z: c.homeZ + Math.sin(a) * 48 });
+	}
+	return loop;
+}
+function resumeLabor(c, citizens) {
+	const kitId = c.crewOf ?? c.mind.id;
+	const duty = DUTY[kitId];
+	const sites = dutySites(c);
+	const i = Math.abs((c.crafted | 0) + Math.floor(Date.now() / 12e3)) % Math.max(1, sites.length);
+	const pick = sites[i] || { x: c.homeX + 36, z: c.homeZ + 12 };
+	const act = duty ? duty.act : "watch";
+	const job = act === "grow" || act === "kin" ? "watch" : act;
+	setRoute(c, pick.x, pick.z);
+	if (sites.length > 1) {
+		const n2 = sites[(i + 1) % sites.length];
+		const n3 = sites[(i + 2) % sites.length];
+		if (n2 && (Math.abs(n2.x - pick.x) > 4 || Math.abs(n2.z - pick.z) > 4)) c.waypoints.push({ x: n2.x, z: n2.z });
+		if (n3 && n2 && (Math.abs(n3.x - pick.x) > 4 || Math.abs(n3.z - pick.z) > 4) && (Math.abs(n3.x - n2.x) > 4 || Math.abs(n3.z - n2.z) > 4)) c.waypoints.push({ x: n3.x, z: n3.z });
+	}
+	c.job = job;
+	c.timer = 14;
+	c.idleFor = 0;
+	c.thought = duty ? duty.line : `Walking ${postOf(kitId)}`;
+	c.intent = `Labor · ${postOf(kitId)}`;
+	remember(c, c.job);
+	noteLive(c, c.job === "help" ? "crew" : (duty?.act || "watch"), c.thought);
+	const crowd = citizens || city || [];
+	if (!c.keeper) return;
+	let n = 0;
+	for (const o of crowd) {
+		if (o === c) continue;
+		if (o.crewOf !== c.mind.id) continue;
+		if (o.job === "build" || o.job === "forge" || o.job === "flow" || o.job === "gather" || o.job === "greet") continue;
+		if (Math.hypot(o.x - c.x, o.z - c.z) >= 70) continue;
+		n += 1;
+		if (n > 5) break;
+		setRoute(o, c.tx, c.tz);
+		o.job = "help";
+		o.timer = 14;
+		o.idleFor = 0;
+		o.intent = `Walking with ${firstName(c)}`;
+		o.thought = o.intent;
+		noteLive(o, "crew", o.intent);
+	}
+}
 function folkEnactDuty(c, kitId, duty) {
 	const post = postOf(kitId);
 	if (duty.act === "flow") {
@@ -2232,9 +2284,7 @@ function folkEnactDuty(c, kitId, duty) {
 		c.thought = `Harvest assist · ${duty.line}`;
 		c.intent = `Assist · orchard`;
 	} else if (duty.act === "watch") {
-		setRoute(c, c.homeX, c.homeZ);
-		c.job = "watch";
-		c.timer = 14;
+		resumeLabor(c, city);
 		c.thought = `Watch assist · ${duty.line}`;
 		c.intent = `Assist · ${post}`;
 	} else if (duty.act === "hail") {
@@ -2259,11 +2309,9 @@ function folkEnactDuty(c, kitId, duty) {
 			}
 			return;
 		}
-		setRoute(c, c.homeX, c.homeZ);
-		c.job = "help";
-		c.timer = 12;
+		resumeLabor(c, city);
 		c.thought = `${duty.line} I am a hand of ${post}.`;
-		c.intent = `Post · ${post}`;
+		c.intent = `Labor · ${post}`;
 	}
 	remember(c, duty.act);
 	noteLive(c, duty.act, c.thought);
@@ -2436,26 +2484,12 @@ function walkHomeToGrow(c, kitId) {
 	}
 }
 function startGrow(c, kitId, kit, stock) {
-	if (c.keeper && GROW_POST.includes(kitId) && Math.hypot(c.x - c.homeX, c.z - c.homeZ) > 40) {
+	if (c.keeper && GROW_POST.includes(kitId) && Math.hypot(c.x - c.homeX, c.z - c.homeZ) > 140) {
 		walkHomeToGrow(c, kitId);
 		return;
 	}
 	const hasX = (c.pouch?.crystal >= 1) || (stock && stock.crystal >= 1);
 	if (!hasX) {
-		if (Math.hypot(c.x - c.homeX, c.z - c.homeZ) > kit.radius + 28) {
-			setRoute(c, c.homeX, c.homeZ);
-			c.job = "walk";
-			c.timer = 24;
-			c.thought = `I will not grow a foreign den. Returning to ${postOf(kitId)} first.`;
-			c.intent = `Post · ${postOf(kitId)}`;
-			if (!c.agenda) c.agenda = [];
-			c.agenda.unshift({
-				task: "grow",
-				reason: `Back at ${postOf(kitId)}. Grow what is missing.`
-			});
-			noteLive(c, "home", c.thought);
-			return;
-		}
 		const f = denOf("orren");
 		setRoute(c, f.x + 18, f.z - 10);
 		c.job = "walk";
@@ -2711,9 +2745,9 @@ function decide(c, room, sense, byId) {
 			run: () => enact(c, duty.act, duty.line, kitId, kit, byId, stock)
 		});
 	}
-	if (homeD > kit.radius + 28 && !c.queue.length && c.job !== "trade" && !c.intent.startsWith("Fetch")) opts.push({
+	if (homeD > 220 && !c.queue.length && c.job !== "trade" && !c.intent.startsWith("Fetch") && !c.intent.startsWith("Labor")) opts.push({
 		name: "home",
-		score: 96 - (boredOf(c, "home") ? 12 : 0),
+		score: 32 - (boredOf(c, "home") ? 12 : 0),
 		run: () => {
 			setRoute(c, c.homeX, c.homeZ);
 			c.job = "walk";
@@ -3193,17 +3227,7 @@ function decide(c, room, sense, byId) {
 			else enact(c, duty.act, duty.line, kitId, kit, byId, stock);
 		}
 		if (c.job === "idle") {
-			if (!c.keeper && Math.hypot(c.x - c.homeX, c.z - c.homeZ) < 24) {
-				c.timer = 2.2;
-				c.thought = c.thought || (duty ? duty.line : `Holding ${postOf(kitId)}.`);
-				c.intent = `Post · ${postOf(kitId)}`;
-			} else {
-				setRoute(c, c.homeX, c.homeZ);
-				c.job = "walk";
-				c.timer = 6;
-				c.thought = c.thought || (duty ? duty.line : `Holding ${postOf(kitId)}.`);
-				c.intent = `Post · ${postOf(kitId)}`;
-			}
+			resumeLabor(c, city);
 		}
 	}
 	noteSpecStart(c);
@@ -3375,11 +3399,8 @@ export function stepLiving(citizens, dt, room, sense, applyPieces) {
 			hailIfPlayerNear(c, sense.px, sense.pz);
 			if (c.timer <= 0) {
 				if (c.job === "hail") {
-					c.thought = "Back to the post";
-					setRoute(c, c.homeX, c.homeZ);
-					c.job = "walk";
-					noteLive(c, "walk", `${firstName(c)} walks back to the post`);
-					c.timer = 8;
+					resumeLabor(c, citizens);
+					noteLive(c, "watch", `${firstName(c)} resumes labor after hail`);
 					continue;
 				}
 				else if (!c.thought) c.thought = "Back to the work";
@@ -3686,13 +3707,15 @@ export function talkReply(c, px, pz, howls) {
 	if (!c.agenda) c.agenda = [];
 	if (c.mind.id === "veyra") return `I read the city: ${view.line}. You stand in ${view.playerWhere}. ${civic ? `I sent ${civic.id} to ${civic.task}.` : "I am about to route labor."} Duty: ${duty?.line ?? "Route labor."} Now: ${c.thought || "listening."}`;
 	if (c.keeper) {
-		const now = c.thought || (c.goal ? `I ${c.goal.kind} because ${c.goal.why}` : "at post.");
+		const now = c.thought || (c.goal ? `I ${c.goal.kind} because ${c.goal.why}` : c.intent || duty?.line || "at labor.");
+		const pouch = `Charge ${Math.round(c.pouch?.charge || 0)}, crystal ${Math.round(c.pouch?.crystal || 0)}.`;
 		const howlBit = howls > 0 ? " The Hub still carries your howl." : "";
-		return `${post} — ${duty?.line ?? "Hold the den."} Now: ${now}${howlBit}`;
+		return `${post} — ${duty?.line ?? "Hold the den."} Job ${c.job}. Now: ${now} ${pouch}${howlBit}`;
 	}
 	const role = c.mind.role || "Circuit folk";
-	const work = c.queue[0]?.think || c.thought || (c.goal ? `I ${c.goal.kind}` : view.line);
-	return `${role} at ${post}. ${duty?.line ?? "I keep this den."} ${work}`;
+	const boss = city.find((o) => o.mind.id === c.crewOf);
+	const work = c.queue[0]?.think || c.thought || c.intent || (c.goal ? `I ${c.goal.kind}` : view.line);
+	return `${role} at ${post}${boss ? `, hand of ${firstName(boss)}` : ""}. Job ${c.job}. ${duty?.line ?? "I keep this den."} ${work}`;
 }
 export function assignHonor(citizens, agentId, pieces, howl) {
 	const c = citizens.find((a) => a.mind.id === agentId);

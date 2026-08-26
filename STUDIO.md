@@ -44,7 +44,7 @@ Perf desk may edit `engine.ts` for renderer/loop only.
 
 `director` · `lore-keeper` · `intelligence` · `buildings` · `map` · `log` · `grok-mouth` · `ear` · `economy` · `ui` · `save` · `jobs` · `walker` · `graphism` · `debug` · `utility` · `environment` · `trading` · `feel` · `scripture` · `perf`
 
-Extra: `star-core` (parent **look**), `living` (alias of intelligence), `review`.
+Extra: `star-core` (parent **look**), `living` (alias of intelligence), `review`, `bug-fixer` (HUD/fly/keys holes).
 
 Haptics stay **off**.
 

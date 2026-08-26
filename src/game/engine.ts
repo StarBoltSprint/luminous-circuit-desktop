@@ -350,13 +350,17 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 	function onPtrUp(e) {
 		if (ptr.id !== e.pointerId) return;
 		if (!ptr.dragged && mode === "play") {
-			const g = pickGround(e.clientX, e.clientY);
-			if (g) {
-				walkTo.x = g.x;
-				walkTo.z = g.z;
-				walkTo.on = true;
-				walkMark.position.set(g.x, world.sampleY(g.x, g.z) + .14, g.z);
-				walkMark.visible = true;
+			// Mouse click is look-lock on desktop. Do not also start a ground walk.
+			// Lift: do not queue a walk that surprises when feet return to crystal.
+			if (e.pointerType !== "mouse" && !player.fly) {
+				const g = pickGround(e.clientX, e.clientY);
+				if (g) {
+					walkTo.x = g.x;
+					walkTo.z = g.z;
+					walkTo.on = true;
+					walkMark.position.set(g.x, world.sampleY(g.x, g.z) + .14, g.z);
+					walkMark.visible = true;
+				}
 			}
 		}
 		ptr.id = -1;
