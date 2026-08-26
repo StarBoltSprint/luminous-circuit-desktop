@@ -92,8 +92,17 @@ export function gradeHowl(holdSec: number, target = 1.15): HowlGrade {
 export function howlMult(g: HowlGrade): number {
   if (g === "thin") return 0.45;
   const withThem = withThemNow();
-  if (g === "held") return withThem ? 1.65 : 1.4;
-  return withThem ? 1.2 : 1;
+  const faced = facingDen();
+  if (g === "held") {
+    if (withThem && faced) return 1.8;
+    if (withThem) return 1.65;
+    if (faced) return 1.55;
+    return 1.4;
+  }
+  if (withThem && faced) return 1.35;
+  if (withThem) return 1.2;
+  if (faced) return 1.15;
+  return 1;
 }
 
 export function gradeLine(g: HowlGrade, verb: string): string {
@@ -101,10 +110,18 @@ export function gradeLine(g: HowlGrade, verb: string): string {
     if (leftWindow) return `${verb} was thin. Stay in this window through the gold.`;
     return `${verb} was thin. Hold through the gold, then let go.`;
   }
+  const withThem = withThemNow();
+  const faced = facingDen();
   if (g === "held") {
-    return withThemNow() ? `${verb} landed true. You stood with them.` : `${verb} landed true. The den felt you.`;
+    if (withThem && faced) return `${verb} landed true. You stood with them, facing the den.`;
+    if (withThem) return `${verb} landed true. You stood with them.`;
+    if (faced) return `${verb} landed true. You faced the den.`;
+    return `${verb} landed true. The den felt you.`;
   }
-  return withThemNow() ? `${verb} heard. You stood with them.` : `${verb} heard. Not empty.`;
+  if (withThem && faced) return `${verb} heard. You stood with them, facing the den.`;
+  if (withThem) return `${verb} heard. You stood with them.`;
+  if (faced) return `${verb} heard. You faced the den.`;
+  return `${verb} heard. Not empty.`;
 }
 
 /** Star Core sits west-low. Aim: yaw toward −X, slight look-up. */
@@ -222,6 +239,7 @@ export function facingWho(px: number, pz: number, whoX: number, whoZ: number, ya
   return Math.abs(d) <= maxDeg;
 }
 
+/** Duty den in front of you. Howl facing it is useful. No XP. */
 export function facingDen(maxDeg = 22): boolean {
   return Number.isFinite(lastNeedle) && Math.abs(lastNeedle) <= maxDeg;
 }

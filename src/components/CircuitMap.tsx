@@ -190,6 +190,17 @@ function FolkRing({ x, y, r }: { x: number; y: number; r: number }) {
     </g>
   );
 }
+function denIsRaising(people: HudSnap["people"], d: District) {
+  return people.some((p) => isGrowJob(p.job) && inWard(p.x, p.z, d));
+}
+/** Grow halo on a raising den. Pointer-events none — do not steal ward hits. */
+function DenRaise({ x, y, r }: { x: number; y: number; r: number }) {
+  return (
+    <g pointerEvents="none" aria-hidden="true">
+      {raiseHalo(x, y, Math.max(1.6, (r + 8) / 6.8))}
+    </g>
+  );
+}
 function withRaise(shape: string, x: number, y: number, s: number, node: ReactNode) {
   if (!isRaiseShape(shape)) return node;
   return (
@@ -509,6 +520,7 @@ export function CircuitMap({
               {(hud.zone === m.id || hud.zone === m.d.label) && (
                 <circle cx={m.x} cy={m.y} r={m.r + 2} className="map-stroke" />
               )}
+              {denIsRaising(hud.people, m.d) && <DenRaise x={m.x} y={m.y} r={m.r} />}
               <WardGlyph d={m.d} x={m.x} y={m.y} r={m.r} />
               {!quietLabels.has(m.id) && hud.zone !== m.id && hud.zone !== m.d.label && (
                 <text x={m.lx} y={m.ly} textAnchor="middle" className="map-label">
@@ -748,6 +760,7 @@ function ZoneSheet({
             <path key={`zave-${a.i}`} d={a.d} className="map-avenue" />
           ))}
           <BuildMark x={hubX} y={hubY} shape="pad" s={6.4} />
+          {growers > 0 && <DenRaise x={hubX} y={hubY} r={52} />}
           <WardGlyph d={d} x={360} y={360} r={120} />
           <circle cx={hubX} cy={hubY} r="8" className="map-core" />
           {lamps.map((l) => (

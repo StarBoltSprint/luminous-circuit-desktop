@@ -16,3 +16,4 @@ screenshots/*.jpeg
 .idea
 .vscode
 *.log
+.studio-lock

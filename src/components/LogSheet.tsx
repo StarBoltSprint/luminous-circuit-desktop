@@ -25,6 +25,11 @@ function joinLaborPrefix(id: string, blob: string) {
   return id === "voss" && /join|paper/i.test(blob) ? "Paper join · " : "";
 }
 
+/** Lumen walk-the-hail labor. Welcome, not a score. HUD job is the thought, not raw `watch`. */
+function hailLaborPrefix(id: string, blob: string) {
+  return id === "lumen" && /hail|welcome/i.test(blob) ? "Welcome hail · " : "";
+}
+
 function isIdleJob(job: string) {
   const j = (job || "").trim().toLowerCase();
   return !j || j === "at rest" || j === "idle";
@@ -126,7 +131,7 @@ export function LogSheet({
   const liveAll = (hud.live ?? []).slice().reverse();
   const hailNow = liveAll.filter((l) => /hail|crew/i.test(l.kind)).length;
   const feed = tab === "work" ? liveAll.filter((l) => WORK_KINDS.has(l.kind ?? "")).sort((a, b) => {
-    const rank = (k: string, id = "", text = "") => (joinLaborPrefix(id, text) || k === "crew" || k === "grow" || k === "stood" || k === "build" || k === "forge" || k === "walk" || k === "home" ? 0 : 1);
+    const rank = (k: string, id = "", text = "") => (joinLaborPrefix(id, text) || hailLaborPrefix(id, text) || k === "crew" || k === "grow" || k === "stood" || k === "build" || k === "forge" || k === "walk" || k === "home" ? 0 : 1);
     return rank(a.kind ?? "", a.id, a.text) - rank(b.kind ?? "", b.id, b.text);
   }) : liveAll;
   const grown = Object.entries(
@@ -223,7 +228,7 @@ export function LogSheet({
                 <span className="log-kind">{joinLaborPrefix(l.id, l.text) ? "join" : l.kind}</span>
                 <p>
                   <span className="log-live-pip inline-block h-[6px] w-[6px] shrink-0 rounded-full align-middle mr-1.5" style={{ background: "var(--color-accent)" }} aria-hidden />
-                  {joinLaborPrefix(l.id, l.text)}{l.text}
+                  {joinLaborPrefix(l.id, l.text) || hailLaborPrefix(l.id, l.text)}{l.text}
                 </p>
               </li>
             ))}

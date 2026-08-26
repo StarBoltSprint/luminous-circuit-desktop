@@ -1,3 +1,4 @@
+import { agentById } from "./agents";
 import type { BuildPiece } from "./build-spec";
 import { clampLedger, clampPouch, defaultLedger, CITY_CAP, MAX_AWAY_BEATS, type Ledger, type Pouch } from "./society";
 import type { KinSeed } from "./living";
@@ -129,7 +130,7 @@ export function loadSave(): SaveData {
       kin: Array.isArray(parsed.kin)
         ? (parsed.kin as KinSeed[]).filter((k) => k && typeof k.id === "string" && typeof k.crew === "string").slice(0, 24)
         : [],
-      lastAway: clampLastAway(parsed.lastAway, ledger),
+      lastAway: clampLastAway(parsed.lastAway, ledger, parsed.log),
     };
   } catch {
     return emptySave();
@@ -145,7 +146,7 @@ export function writeSave(data: SaveData) {
         version: SAVE_VERSION,
         log: data.log.slice(-36),
         structures: data.structures.slice(-CITY_CAP),
-        lastAway: clampLastAway(data.lastAway, data.ledger),
+        lastAway: clampLastAway(data.lastAway, data.ledger, data.log),
       }),
     );
   } catch {
@@ -175,12 +176,12 @@ function emptySave(): SaveData {
   };
 }
 
-function clampLastAway(raw: Partial<LastAway> | undefined, ledger?: Ledger): LastAway {
+function clampLastAway(raw: Partial<LastAway> | undefined, ledger?: Ledger, log?: SeasonLine[]): LastAway {
   if (!raw || typeof raw !== "object") return { ...EMPTY_AWAY };
   const beats = Number(raw.beats);
   const at = Number(raw.at);
   let n = Number.isFinite(beats) ? clamp(Math.floor(beats), 0, MAX_AWAY_BEATS) : 0;
-  const summary = civicAwaySummary(raw.summary, n, ledger);
+  const summary = civicAwaySummary(raw.summary, n, ledger, log);
   if (summary && n === 0) n = 1;
   return {
     summary,
@@ -189,8 +190,29 @@ function clampLastAway(raw: Partial<LastAway> | undefined, ledger?: Ledger): Las
   };
 }
 
-/** Away-card: Charge / crystal / scripture. Never coin. */
-function civicAwaySummary(raw: unknown, beats: number, ledger?: Ledger): string {
+/** Most recent keepers on the season log — who labored while away. */
+function laborWho(log: unknown): string {
+  if (!Array.isArray(log)) return "";
+  const names: string[] = [];
+  const seen = new Set<string>();
+  for (let i = log.length - 1; i >= 0 && names.length < 3; i--) {
+    const id = String((log[i] as SeasonLine | undefined)?.agent ?? "")
+      .trim()
+      .toLowerCase();
+    if (!id || seen.has(id)) continue;
+    const a = agentById(id);
+    if (!a) continue;
+    seen.add(id);
+    names.push(a.name.split(" ")[0] || id.charAt(0).toUpperCase() + id.slice(1));
+  }
+  names.reverse();
+  if (names.length <= 1) return names[0] ?? "";
+  if (names.length === 2) return `${names[0]} and ${names[1]}`;
+  return `${names[0]}, ${names[1]}, and ${names[2]}`;
+}
+
+/** Away-card: Charge / crystal / scripture. Names who labored. Never coin. */
+function civicAwaySummary(raw: unknown, beats: number, ledger?: Ledger, log?: SeasonLine[]): string {
   let s = typeof raw === "string" ? raw.replace(/\s+/g, " ").trim() : "";
   s = s
     .replace(/\$\s*\d+(?:\.\d+)?/g, "")
@@ -203,6 +225,13 @@ function civicAwaySummary(raw: unknown, beats: number, ledger?: Ledger): string 
     const scripture = clamp(Math.round(Number(ledger?.scripture) || 0), 0, 99);
     const stock = `Charge ${charge} · crystal ${crystal}${scripture >= 1 ? ` · scripture ${scripture}` : ""}`;
     s = s ? `${s} · ${stock}` : `While you were gone — ${beats} beat${beats === 1 ? "" : "s"}. ${stock}. No coin.`;
+  }
+  const who = beats > 0 ? laborWho(log) : "";
+  if (who && !/labored/i.test(s)) {
+    s = s.replace(/\s*No coin\.?\s*$/i, "").replace(/\s*[.]*\s*$/, "");
+    const extra = `. ${who} labored. No coin.`;
+    const body = s || "While you were gone";
+    return `${body.slice(0, Math.max(0, 180 - extra.length)).trimEnd()}${extra}`;
   }
   return s.slice(0, 180);
 }

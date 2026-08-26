@@ -179,7 +179,7 @@ const SCENE_LINE: Record<string, string> = {
   cascade: "A Charge-fall. The canal found a voice.",
   cradle: "A cradle for leftover First Howl. Seln will not kiln it.",
   mosaic: "Charge for crystal. No coin. Voss holds the join.",
-  beacon: "A hail, not a lock. First landing is not locked out.",
+  beacon: "A hail — welcome, not a score. Lumen keeps those still landing.",
   archive: "A name in residual light. That is our scripture.",
   trading: "A Trading Place. Paper join — Charge for crystal. $BOLT stays outer; Voss takes no coin.",
 };

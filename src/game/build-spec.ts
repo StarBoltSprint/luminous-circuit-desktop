@@ -551,7 +551,8 @@ export function composeScene(
       piece("stele", rx(14), rz(14), j(5, 12, 18), 5, 0, mat(0)),
       piece("lamp", rx(-12), rz(-12), j(2, 10, 16), 3.2, 0, mat(1)),
       piece("ring", x, z, j(6, 10, 16), j(7, 8, 12), 0, mat(1)),
-      piece("lens", px(16), pz(16), j(8, 10, 16), j(9, 5, 8), rot, mat(0))
+      piece("lens", px(16), pz(16), j(8, 10, 16), j(9, 5, 8), rot, mat(0)),
+      piece("grove", px(-16), pz(-16), j(10, 10, 16), j(11, 12, 18), 0, mat(0)),
     ];
   }
   if (kind === "notice") {

@@ -80,6 +80,7 @@ import { growVault } from "./vault";
 import { growRill } from "./rill";
 import { growCairn } from "./cairn";
 import { growJoinLamps } from "./joinlamps";
+import { growHubVeil } from "./hubveil";
 
 const {
   Group, Vector2, LatheGeometry, BoxGeometry, CylinderGeometry, ConeGeometry,
@@ -1555,6 +1556,7 @@ export function buildWorld(): CircuitWorld {
 		try { growRill(group, coarse); } catch { /* samsung */ }
 		try { growCairn(group, coarse); } catch { /* samsung */ }
 		try { growJoinLamps(group, coarse); } catch { /* samsung */ }
+		try { growHubVeil(group, coarse); } catch { /* samsung */ }
 	});
 	const lampN = coarse ? 90 : 200;
 	const lampPal = [

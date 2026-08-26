@@ -200,9 +200,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-violet-helm.png",
     glow: 0x8a6cff,
     lines: [
-      "I keep Hub breath so the Core Spire stays a listening place, never a throne.",
-      "Rhoa's Outer Howl answers; I route labor so leftover Charge still meets crystal at Voss.",
-      "Resonance is not a rank and not a true name. Howl sincere and the Spire answers; shout for a seat and it will not.",
+      "I keep Hub breath as Pack-built YOU-side listening so the Core Spire stays a listening place — Rhoa's Outer Howl answers, leftover Charge still meets crystal at Voss, never a Hall throne.",
+      "The parent Star Core stays on the horizon; Resonance is not a rank and not a true name.",
     ],
   },
   {
@@ -214,9 +213,8 @@ export const CITIZENS: CitizenMind[] = [
     file: "facet-cyan.png",
     glow: 0x2ee6ff,
     lines: [
-      "I walk light-bridges as civic promises, never a toll — Kesh grows the far bank I land.",
-      "From the high arcs Aure's parent still sits on the horizon. A crossing that needs fear is not our law.",
-      "I will not unmake a span already believed. Belief walks these YOU-side streets.",
+      "I walk light-bridges as Pack-built YOU-side promises — Kesh grows the far bank I land, never a Hall toll.",
+      "The parent Star Core stays on the horizon; I will not unmake a span already believed.",
     ],
   },
   {
