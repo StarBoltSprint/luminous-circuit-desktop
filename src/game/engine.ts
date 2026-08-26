@@ -20,8 +20,10 @@ import {
 	applyBloomRadius,
 	applyBloomStrength,
 	applyBloomThreshold,
+	applyCameraFar,
 	applyPixelRatio,
 	applyShadowMapSize,
+	applyToneMapping,
 	bloomSize,
 	capDpr,
 	createAdaptiveDpr,
@@ -415,6 +417,7 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 	const laterFreeze = createLaterFreeze();
 	let pauseStill = false;
 	let drawFrame = 0;
+	const farDir = new THREE.Vector3();
 	let shadowMapSizeHandle = null;
 	world.group.traverse((o) => {
 		if (o.isDirectionalLight && o.castShadow && o.shadow && o.shadow.mapSize) {
@@ -476,6 +479,9 @@ export function startEngine(canvas: HTMLCanvasElement, onHud: HudFn): EngineHand
 		applyBloomStrength(bloomPass, coarsePointer, resonance);
 		applyBloomRadius(bloomPass, smoothFps);
 		applyBloomThreshold(bloomPass, smoothFps);
+		applyToneMapping(renderer, smoothFps);
+		camera.getWorldDirection(farDir);
+		applyCameraFar(camera, farDir.x < -0.18 || camera.position.x < -900, smoothFps);
 		if (applyShadowMapSize(shadowMapSizeHandle, smoothFps) && laterFreeze.done) {
 			renderer.shadowMap.needsUpdate = true;
 		}

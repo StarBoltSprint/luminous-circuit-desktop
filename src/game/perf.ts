@@ -276,6 +276,55 @@ export function shouldSkipCompositor(fps: number, frame: number, mode: string): 
   return (frame & 1) === 1;
 }
 
+/** Reinhard is cheaper than ACES. Bloom / dens / core stay. Does not brighten the halo. */
+export const TONE_ACES = 4;
+export const TONE_REINHARD = 2;
+export const FPS_TONE_SOFT = 38;
+
+export function toneMapping(fps: number): number {
+  if (fps < FPS_TONE_SOFT) return TONE_REINHARD;
+  return TONE_ACES;
+}
+
+export type ToneHandle = {
+  toneMapping: number;
+};
+
+export function applyToneMapping(renderer: ToneHandle | null | undefined, fps: number): void {
+  if (!renderer) return;
+  const next = toneMapping(fps);
+  if (renderer.toneMapping === next) return;
+  renderer.toneMapping = next;
+}
+
+/** City far clip when not aiming the parent. Star Core keeps 9000 when looking west or flying west. */
+export const CAMERA_FAR = 9000;
+export const CAMERA_FAR_CITY = 5600;
+export const CAMERA_FAR_LOW = 3600;
+
+export function cameraFar(lookingCore: boolean, fps: number): number {
+  if (lookingCore) return CAMERA_FAR;
+  if (fps < FPS_TONE_SOFT) return CAMERA_FAR_LOW;
+  return CAMERA_FAR_CITY;
+}
+
+export type FarCamera = {
+  far: number;
+  updateProjectionMatrix: () => void;
+};
+
+export function applyCameraFar(
+  camera: FarCamera | null | undefined,
+  lookingCore: boolean,
+  fps: number,
+): void {
+  if (!camera) return;
+  const next = cameraFar(lookingCore, fps);
+  if (Math.abs(camera.far - next) < 1) return;
+  camera.far = next;
+  camera.updateProjectionMatrix();
+}
+
 export function createLaterFreeze(ticksNeeded = LATER_TICKS_TO_FREEZE) {
   let ticks = 0;
   let done = false;

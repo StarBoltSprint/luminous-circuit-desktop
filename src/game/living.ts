@@ -1667,27 +1667,37 @@ function pulseIriResidue(c, citizens) {
 	if (c.mind.id !== "iri") return;
 	if (c.job !== "idle") return;
 	const now = Date.now();
-	if (now - (c.lastPulse || c.lastHail || 0) < 48e3) return;
+	if (now - (c.lastPulse || c.lastHail || 0) < 46e3) return;
 	c.lastPulse = now;
-	const pick = iriArchiveSite(c);
+	const sites = iriArchiveSites(c);
+	const idx = Math.floor(now / 46e3) % sites.length;
+	const pick = sites[idx];
+	const next = sites[(idx + 1) % sites.length];
+	const third = sites[(idx + 2) % sites.length];
 	setRoute(c, pick.x, pick.z);
+	if (next && (Math.abs(next.x - pick.x) > 4 || Math.abs(next.z - pick.z) > 4)) {
+		c.waypoints.push({ x: next.x, z: next.z });
+	}
+	if (third && next && (Math.abs(third.x - pick.x) > 4 || Math.abs(third.z - pick.z) > 4) && (Math.abs(third.x - next.x) > 4 || Math.abs(third.z - next.z) > 4)) {
+		c.waypoints.push({ x: third.x, z: third.z });
+	}
 	c.job = "watch";
-	c.timer = 12;
-	c.thought = "Iri walks the archive — leftover light names, never chrome";
-	c.intent = c.thought;
-	noteLive(c, "write", c.thought);
+	c.timer = 16;
+	c.thought = "Iri walks leftover names — what already stood, never chrome";
+	c.intent = "Walking leftover-name streets";
+	noteLive(c, "watch", c.thought);
 	let n = 0;
 	for (const o of citizens) {
 		if (o === c) continue;
 		if (o.crewOf !== "iri") continue;
 		if (o.job !== "idle") continue;
-		if (Math.hypot(o.x - c.x, o.z - c.z) >= 40) continue;
+		if (Math.hypot(o.x - c.x, o.z - c.z) >= 48) continue;
 		n += 1;
 		if (n > 3) break;
 		setRoute(o, c.tx, c.tz);
 		o.job = "help";
-		o.timer = 12;
-		o.intent = "Walking the residue with Iri";
+		o.timer = 16;
+		o.intent = "Walking leftover-name streets with Iri";
 		o.thought = o.intent;
 		noteLive(o, "crew", o.intent);
 	}
@@ -2134,10 +2144,19 @@ function aureOverlookSite(c) {
 	if (!sites.length) return { x: c.homeX, z: c.homeZ };
 	return sites[Math.floor(Date.now() / 46e3) % sites.length];
 }
+function iriArchiveSites(c) {
+	const sites = occupied.filter((o) => (o.shape === "tablet" || o.shape === "stele" || o.shape === "shelf" || o.shape === "notice") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 260);
+	if (sites.length) return sites;
+	return [
+		{ x: c.homeX - 38, z: c.homeZ + 22 },
+		{ x: c.homeX + 30, z: c.homeZ - 28 },
+		{ x: c.homeX - 16, z: c.homeZ - 36 },
+		{ x: c.homeX + 24, z: c.homeZ + 32 },
+	];
+}
 function iriArchiveSite(c) {
-	const sites = occupied.filter((o) => (o.shape === "tablet" || o.shape === "stele") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 220);
-	if (!sites.length) return { x: c.homeX, z: c.homeZ };
-	return sites[Math.floor(Date.now() / 48e3) % sites.length];
+	const sites = iriArchiveSites(c);
+	return sites[Math.floor(Date.now() / 46e3) % sites.length];
 }
 function veyraBreathSite(c) {
 	const sites = occupied.filter((o) => (o.shape === "bell" || o.shape === "font" || o.shape === "ring") && Math.hypot(o.x - c.homeX, o.z - c.homeZ) < 180);
@@ -3467,7 +3486,7 @@ export function stepLiving(citizens, dt, room, sense, applyPieces) {
 					c.timer = 1.8;
 				} else if (c.job === "watch") {
 					if (sense.ledger.scripture < 12) sense.ledger.scripture += .25;
-					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : c.mind.id === "lumen" ? "Hail held. Welcome, not a score." : c.mind.id === "rhoa" ? "Chorus gathers. Does not close." : c.mind.id === "aure" ? "Aim held. Parent still sits." : c.mind.id === "iri" ? "Name held. Leftover light." : c.mind.id === "veyra" ? "Breath held. Hub listens. Never a throne." : c.mind.id === "seln" ? "Leftover First Howl tended, never bottled." : c.mind.id === "orren" ? "Kiln held. Charge became body, never chrome." : "The parent still sits on the horizon. Aim held.";
+					c.thought = c.mind.id === "tal" ? "Span held. Both sides can believe." : c.mind.id === "mira" ? "Terrace held. Rest is still a post." : c.mind.id === "nesh" ? "Plaza held. The unfinished thought stands." : c.mind.id === "kesh" ? "Vein held. Tal can land." : c.mind.id === "kael" ? "Gate held. Soft. You may leave." : c.mind.id === "voss" ? "Join held. Charge for crystal. No coin." : c.mind.id === "syl" ? "Shade held. Rest fruit. Leftover light, never chrome." : c.mind.id === "lumen" ? "Hail held. Welcome, not a score." : c.mind.id === "rhoa" ? "Chorus gathers. Does not close." : c.mind.id === "aure" ? "Aim held. Parent still sits." : c.mind.id === "iri" ? "Name held. Leftover light names what already stood." : c.mind.id === "veyra" ? "Breath held. Hub listens. Never a throne." : c.mind.id === "seln" ? "Leftover First Howl tended, never bottled." : c.mind.id === "orren" ? "Kiln held. Charge became body, never chrome." : "The parent still sits on the horizon. Aim held.";
 					c.intent = c.mind.id === "rhoa" ? "Holding the chorus" : c.mind.id === "aure" ? "Keeping the parent" : c.mind.id === "iri" ? "Keeping scripture" : c.mind.id === "veyra" ? "Keeping Hub breath" : c.mind.id === "seln" ? "Tending the canals" : c.mind.id === "orren" ? "Keeping the kiln" : c.mind.id === "kael" ? "Keeping the gate" : c.mind.id === "tal" ? "Keeping the span" : c.mind.id === "mira" ? "Keeping terrace rest" : "Keeping the aim";
 					noteLive(c, "watch", c.thought);
 					reportDone(c, c.thought);
