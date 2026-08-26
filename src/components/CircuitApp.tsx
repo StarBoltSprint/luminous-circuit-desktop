@@ -436,7 +436,7 @@ export function CircuitApp() {
             <div className="flex flex-col items-end gap-2 pointer-events-auto">
               <button
                 type="button"
-                className="action-talk"
+                className="action-lift"
                 aria-label={hud.fly ? "Land on crystal" : "Lift above the city"}
                 onPointerDown={(e) => { e.preventDefault(); engineRef.current?.input.tapFly(); }}
               >

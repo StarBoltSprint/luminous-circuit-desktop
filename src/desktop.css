@@ -14,16 +14,29 @@ body,
   height: 100vh;
 }
 
-body.lc-desktop .stick-base {
-  opacity: 0.28;
+/* Keyboard-first: sticks under the keys plaque. WASD still walks. */
+body.lc-desktop .hud-dock .stick-base {
+  display: none;
+  pointer-events: none;
 }
 
-body.lc-desktop .stick-base:hover,
-body.lc-desktop .stick-base:focus-within {
-  opacity: 1;
+/* Lift/Talk/Howl sit SE; Ward keys stay SW. */
+body.lc-desktop .hud-dock {
+  justify-content: flex-end;
 }
 
-/* Civic key plaque — SW corner over the faded stick. Never the 3D center. */
+/* Cyan Howl-ring on Lift — not Talk gold, never chrome. */
+body.lc-desktop .action-lift {
+  color: var(--color-accent);
+  background: color-mix(in oklab, var(--color-accent) 16%, var(--color-bg));
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-accent) 50%, transparent),
+    0 0 0 5px color-mix(in oklab, var(--color-accent) 12%, transparent),
+    0 0 10px color-mix(in oklab, var(--color-accent) 40%, transparent),
+    0 8px 18px rgba(0, 0, 0, 0.32);
+}
+
+/* Civic key plaque — SW corner. Never the 3D center. Never the Lift cluster. */
 .lc-keys {
   position: fixed;
   left: max(14px, env(safe-area-inset-left));
@@ -32,9 +45,10 @@ body.lc-desktop .stick-base:focus-within {
   top: auto;
   z-index: 12;
   width: max-content;
-  max-width: min(20rem, 32vw);
+  max-width: min(42rem, calc(100vw - 10.5rem));
   margin: 0;
   padding: 10px 12px 11px;
+  overflow: visible;
   pointer-events: none;
   outline: 1px solid color-mix(in oklab, var(--color-gold) 62%, transparent);
   outline-offset: 0;
@@ -95,7 +109,7 @@ body.lc-desktop .stick-base:focus-within {
 
 .lc-keys-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 5px 7px;
   margin: 0;
@@ -104,6 +118,7 @@ body.lc-desktop .stick-base:focus-within {
   font-weight: 500;
   line-height: 1.3;
   letter-spacing: 0.02em;
+  white-space: nowrap;
   color: var(--color-muted);
 }
 
@@ -193,7 +208,7 @@ body.lc-desktop:has(.title-land, .pause-veil, .map-sheet, .debug-sheet, .sheet) 
 
 @media (max-width: 720px) {
   .lc-keys {
-    max-width: min(16rem, calc(42vw - 12px));
+    max-width: calc(100vw - 8.5rem);
   }
 }
 
